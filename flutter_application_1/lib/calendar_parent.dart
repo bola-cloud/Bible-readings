@@ -20,7 +20,6 @@ class _CalanderParentState extends State<CalanderParent> {
   Future<File> _getOpenedDaysFile() async {
     final dir = await getApplicationDocumentsDirectory();
     return File('${dir.path}/openedDays.json'); // writable location
-    
   }
 
   getFileData() async {
@@ -158,7 +157,7 @@ class _CalanderParentState extends State<CalanderParent> {
                         SizedBox(
                           width: isWide ? (constraints.maxWidth/2 - 26) : constraints.maxWidth,
                           child: _buildCard(
-                            title: 'جدول متابعة أسبوعي',
+                            title: 'جدول متابعة شهرى',
                             subtitle: 'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المعالجة',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
@@ -166,7 +165,13 @@ class _CalanderParentState extends State<CalanderParent> {
                               child: const Icon(Icons.calendar_month, color: Colors.orange),
                             ),
                             color: Colors.yellow.shade100.withOpacity(0.9),
-                            onTap: () {},
+                            onTap: () async {
+                              await getFileData();
+                              Navigator.pushNamed(context, '/calendar', arguments: {
+                                'data': data,
+                                'openedDays': openedDays,
+                              });
+                            },
                           ),
                         ),
 

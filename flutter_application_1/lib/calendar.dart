@@ -15,7 +15,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
 
   Map<String,dynamic>? data = {};
-
+  Map<String, String>? notes;
   Set<String> openedDays = {};
 
   Future<File> _getOpenedDaysFile() async {
@@ -31,12 +31,14 @@ class _CalendarState extends State<Calendar> {
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
     openedDays.add("${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}");
     await saveOpenedDays(openedDays);
+    await getNotesData();
     Navigator.pushNamed(context, '/reading', arguments: {
       "items": data,
       "openedDays": openedDays,
       "title": data?["${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}"]?[0] ?? "No title for this day.",
       "reading": data?["${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}"]?[1] ?? "No data for this day.",
-      "date": "${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}"
+      "date": "${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}",
+      "notes": notes,
     });
   }
 
@@ -44,6 +46,30 @@ class _CalendarState extends State<Calendar> {
     String? title = data?["${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}"]?[0];
 
     return title;
+  }
+
+  Future<File> _getNotesFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/notes.json'); // writable location
+  }
+
+  getNotesData() async {
+    final file = await _getNotesFile();
+
+    if (!await file.exists()) {
+      return {}; // empty set if file not yet created
+    }
+
+    final content = await file.readAsString();
+    if (content.trim().isEmpty) return {};
+
+    final Map<String, dynamic> res2 = jsonDecode(content);
+    final notes = res2.map((key, value) => MapEntry(key, value.toString()));
+    setState(() {
+      this.notes = notes;
+    });
+    print(notes);
+
   }
 
 
