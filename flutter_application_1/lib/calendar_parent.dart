@@ -3,9 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter_application_1/styled_button.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CalanderParent extends StatefulWidget {
   const CalanderParent({super.key});
@@ -104,7 +103,7 @@ class _CalanderParentState extends State<CalanderParent> {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/img/backround.jpeg'),
+              image: AssetImage('assets/img/background.jpeg'),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.85), BlendMode.dstATop),
             ),

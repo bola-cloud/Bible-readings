@@ -50,7 +50,7 @@ class Reading extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(date),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -67,7 +67,7 @@ class Reading extends StatelessWidget {
         body: Column(
           children: [
             StyledBodyText(
-              reading
+              '$title\n$reading'
             ),
             StyledButton(
               onPressed: () {

@@ -10,7 +10,7 @@ import 'package:flutter_application_1/home.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Home page smoke test', (WidgetTester tester) async {
+    testWidgets('Home page smoke test', (WidgetTester tester) async {
     // Wrap Home in MaterialApp to provide Material widgets + Directionality
     await tester.pumpWidget(const MaterialApp(home: Home()));
 
@@ -18,5 +18,12 @@ void main() {
     expect(find.text('My Coffee Id'), findsOneWidget);
     // Verify that a body text from Home appears
     expect(find.textContaining('How I like my coffee'), findsOneWidget);
+    // Tap the '+' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+
+    // Verify that our counter has incremented.
+    expect(find.text('0'), findsNothing);
+    expect(find.text('1'), findsOneWidget);
   });
 }

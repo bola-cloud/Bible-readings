@@ -73,7 +73,7 @@ class _CalendarState extends State<Calendar> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calender'),
+        title: const Text('خطوة بخطوة'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -83,6 +83,7 @@ class _CalendarState extends State<Calendar> {
         backgroundColor: Colors.grey,
       ),
       body: TableCalendar(
+        rowHeight: 85,
         firstDay: DateTime.utc(2026, 1, 1),
         lastDay: DateTime.utc(2026, 12, 31),
         focusedDay: DateTime.utc(2026, 1, 1),
@@ -94,24 +95,42 @@ class _CalendarState extends State<Calendar> {
         ),
         calendarBuilders: CalendarBuilders(
           defaultBuilder: (context, day, focusedDay) {
-            String dayKey = "${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}";
+            String dayKey =
+                "${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}";
             bool isOpened = openedDays.contains(dayKey);
+
             return Container(
               decoration: BoxDecoration(
-                color: isOpened ? Colors.blue[500] : null,
-                shape: BoxShape.circle,
+                color: isOpened ? Colors.green : Colors.red,
+                // color: isOpened ? const Color.fromARGB(255, 61, 196, 37) : const Color.fromARGB(255, 213, 211, 161),
+                borderRadius: BorderRadius.circular(12),
               ),
+              padding: const EdgeInsets.all(3),
+              margin: const EdgeInsets.all(5),
               child: Center(
-                child: Text(
-                  '${day.day}''${getCustomLabel(day)==null ? "" : "\n${getCustomLabel(day)}"}', // your custom name
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${day.day}',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    if (getCustomLabel(day) != null)
+                      Text(
+                        getCustomLabel(day)!,
+                        softWrap: true,           // ⬅️ allows wrapping
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                  ],
                 ),
               ),
             );
           },
+
           selectedBuilder: (context, day, _) {
-            String dayKey = "${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}";
+            String dayKey =
+                "${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}";
             bool isOpened = openedDays.contains(dayKey);
 
             return Container(
@@ -119,10 +138,16 @@ class _CalendarState extends State<Calendar> {
                 color: isOpened ? Colors.blue : Colors.green,
                 shape: BoxShape.circle,
               ),
-              alignment: Alignment.center,
-              child: Text(
-                '${day.day}',
-                style: TextStyle(color: Colors.white),
+              padding: const EdgeInsets.all(5),
+              child: Center(
+                child: Text(
+                  '${day.day}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             );
           },
