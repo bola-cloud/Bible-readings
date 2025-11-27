@@ -10,20 +10,13 @@ import 'package:flutter_application_1/home.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const Home());
+  testWidgets('Home page smoke test', (WidgetTester tester) async {
+    // Wrap Home in MaterialApp to provide Material widgets + Directionality
+    await tester.pumpWidget(const MaterialApp(home: Home()));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the app bar title is present
+    expect(find.text('My Coffee Id'), findsOneWidget);
+    // Verify that a body text from Home appears
+    expect(find.textContaining('How I like my coffee'), findsOneWidget);
   });
 }

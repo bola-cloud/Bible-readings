@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   table_calendar: ^3.2.0
   path_provider: ^2.1.2
+  google_fonts: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -61,9 +62,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/img/coffee_bean.png
     - assets/img/coffee_bg.jpg
     - assets/img/sugar_cube.png
+    - assets/img/backround.jpeg
     - data/
 
   # An image asset can refer to one or more resolution-specific "variants", see
