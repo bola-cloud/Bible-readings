@@ -76,7 +76,6 @@ class _ReadingState extends State<Reading> {
   saveNotes(Map<String, dynamic> notes) async {
     final file = await _getNotesFile();
     await file.writeAsString(jsonEncode(notes));
-    print(notes);
   }
 
    @override

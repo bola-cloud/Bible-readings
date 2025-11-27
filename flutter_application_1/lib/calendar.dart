@@ -68,8 +68,6 @@ class _CalendarState extends State<Calendar> {
     setState(() {
       this.notes = notes;
     });
-    print(notes);
-
   }
 
 
