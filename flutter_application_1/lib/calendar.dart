@@ -102,7 +102,8 @@ class _CalendarState extends State<Calendar> {
       body: TableCalendar(
         rowHeight: 85,
         firstDay: DateTime.utc(2026, 1, 1),
-        lastDay: DateTime.utc(2026, 12, 31),
+        // lastDay: DateTime.utc(2026, 12, 31),
+        lastDay: endDay,
         focusedDay: DateTime.utc(2026, 1, 1),
         // selectedDayPredicate: (day) => isSameDay(day, today),
         onDaySelected: _onDaySelected,
@@ -128,16 +129,10 @@ class _CalendarState extends State<Calendar> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (getCustomLabel(day) != null && day.isBefore(endDay.add(const Duration(days: 1))))
-                      Text(
-                        '${day.day}',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    if (day.isAfter(endDay))
-                      Text(
-                        '${day.day}',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w100),
-                      ),
+                    Text(
+                      '${day.day}',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                     if (getCustomLabel(day) != null && day.isBefore(endDay.add(const Duration(days: 1))))
                       Text(
                         getCustomLabel(day)!,
@@ -158,7 +153,7 @@ class _CalendarState extends State<Calendar> {
 
             return Container(
               decoration: BoxDecoration(
-                color: day.isBefore(endDay.add(const Duration(days: 1))) ? (isOpened ? Colors.blue : Colors.green): Colors.grey,
+                color: isOpened ? Colors.blue : Colors.green,
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(5),
