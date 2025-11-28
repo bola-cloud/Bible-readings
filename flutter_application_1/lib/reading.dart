@@ -78,6 +78,16 @@ class _ReadingState extends State<Reading> {
     await file.writeAsString(jsonEncode(notes));
   }
 
+  Future<File> _getOpenedDaysFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/openedDays.json'); // writable location
+  }
+
+  saveOpenedDays(Set<String> openedDays) async {
+    final file = await _getOpenedDaysFile();
+    await file.writeAsString(jsonEncode(openedDays.toList()));
+  }
+
    @override
   Widget build(BuildContext context) {
 
@@ -136,7 +146,9 @@ class _ReadingState extends State<Reading> {
         title: Text(intToArabic(convertToDDMMYYYY(date))),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
+          onPressed: () async{
+            await saveNotes(notes ?? {});
+            await saveOpenedDays(openedDaysItems);
             Navigator.pushNamed(context, '/calendar', arguments: {
               "data": items,
               "openedDays": openedDaysItems,
@@ -145,7 +157,7 @@ class _ReadingState extends State<Reading> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
                   if (openedDaysItems.contains(date)) {
                     openedDaysItems.remove(date);
@@ -153,6 +165,7 @@ class _ReadingState extends State<Reading> {
                     openedDaysItems.add(date);
                   }
                 });
+                await saveOpenedDays(openedDaysItems);
               },
               icon: Icon(
               openedDaysItems.contains(date)
@@ -173,7 +186,10 @@ class _ReadingState extends State<Reading> {
               intToArabic(title),
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.6, // ⬅️ 70% of the height
+                // height: MediaQuery.of(context).size.height * 0.6, // ⬅️ 60% of the height
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+              ),
               child: StyledBodyText(
                 reading
               ),
@@ -195,7 +211,7 @@ class _ReadingState extends State<Reading> {
               ),
             ),
             SizedBox(height: 8),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height * 0.18, // ⬅️ 18% of the height
               child: TextField(
                 maxLines: null,

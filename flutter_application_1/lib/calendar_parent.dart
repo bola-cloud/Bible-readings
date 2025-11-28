@@ -16,31 +16,99 @@ class CalanderParent extends StatefulWidget {
 class _CalanderParentState extends State<CalanderParent> {
   Map<String,dynamic> data = {};
   Set<String> openedDays = {};
+  Map<int,List<bool>> toggles = {};
 
   Future<File> _getOpenedDaysFile() async {
     final dir = await getApplicationDocumentsDirectory();
     return File('${dir.path}/openedDays.json'); // writable location
   }
 
+  Future<File> _getTogglesFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/notes.json'); // writable location
+  }
+
   getFileData() async {
     final String res = await rootBundle.loadString('data/data.json');
     final data = await json.decode(res) as Map<String, dynamic>;
-    final file = await _getOpenedDaysFile();
+    
+    final openDays = await _getOpenedDaysFile();
 
-    if (!await file.exists()) {
+    if (!await openDays.exists()) {
       return {}; // empty set if file not yet created
     }
 
-    final content = await file.readAsString();
-    if (content.trim().isEmpty) return {};
+    final openDaysContent = await openDays.readAsString();
+    if (openDaysContent.trim().isEmpty) return {};
 
-    final List<dynamic> res2 = jsonDecode(content);
+    final List<dynamic> res2 = jsonDecode(openDaysContent);
     final openedDays = res2.cast<String>().toSet();
+
     setState(() {
       this.data = data;
       this.openedDays = openedDays;
     });
 
+  }
+
+  Future<void> deleteTogglesFile() async {
+  final file = await _getTogglesFile();
+
+  if (await file.exists()) {
+    await file.delete();
+    print("toggles file deleted.");
+  } else {
+    print("toggles file does not exist.");
+  }
+}
+
+  getTogglesData() async {
+    final togglesFile = await _getTogglesFile();
+
+    if (!await togglesFile.exists()) {
+      return <int, List<bool>>{};
+    }
+
+    final togglesContent = await togglesFile.readAsString();
+    if (togglesContent.trim().isEmpty) {
+      return <int, List<bool>>{};
+    }
+
+    final decoded = jsonDecode(togglesContent);
+
+    if (decoded is! Map<String, dynamic>) {
+      return <int, List<bool>>{};
+    }
+
+    final Map<int, List<bool>> toggles = {};
+
+    decoded.forEach((key, value) {
+      // Convert key: String → int
+      final intKey = int.tryParse(key);
+      if (intKey == null) return;
+
+      // Convert value: dynamic → List<bool>
+      final List<bool> boolList = [];
+
+      if (value is List) {
+        for (final item in value) {
+          if (item is bool) {
+            boolList.add(item);
+          } else {
+            // If stored as string "true"/"false"
+            boolList.add(item.toString().toLowerCase() == "true");
+          }
+        }
+      }
+
+      toggles[intKey] = boolList;
+    });
+
+    setState(() {
+      this.toggles = toggles;
+    });
+
+    return toggles;
   }
 
   Widget _buildCard({required String title, required String subtitle, required VoidCallback onTap, Color? color, Widget? leading}){
@@ -146,6 +214,7 @@ class _CalanderParentState extends State<CalanderParent> {
                             color: Colors.orange.shade200.withOpacity(0.9),
                             onTap: () async {
                               await getFileData();
+                              // await deleteTogglesFile();
                               Navigator.pushNamed(context, '/calendar', arguments: {
                                 'data': data,
                                 'openedDays': openedDays,
@@ -166,10 +235,9 @@ class _CalanderParentState extends State<CalanderParent> {
                             ),
                             color: Colors.yellow.shade100.withOpacity(0.9),
                             onTap: () async {
-                              await getFileData();
-                              Navigator.pushNamed(context, '/calendar', arguments: {
-                                'data': data,
-                                'openedDays': openedDays,
+                              await getTogglesData();
+                              Navigator.pushNamed(context, '/monthly_data', arguments: {
+                                "toggles": toggles,
                               });
                             },
                           ),

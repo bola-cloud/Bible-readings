@@ -17,20 +17,13 @@ class _CalendarState extends State<Calendar> {
   Map<String,dynamic>? data = {};
   Map<String, String>? notes;
   Set<String> openedDays = {};
-
-  Future<File> _getOpenedDaysFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/openedDays.json'); // writable location
-  }
-
-  saveOpenedDays(Set<String> openedDays) async {
-    final file = await _getOpenedDaysFile();
-    await file.writeAsString(jsonEncode(openedDays.toList()));
-  }
+  DateTime endDay = DateTime.utc(2026,5,6);
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
+    if(selectedDay.isAfter(endDay)){
+      return null;
+    }
     openedDays.add("${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}");
-    await saveOpenedDays(openedDays);
     await getNotesData();
     Navigator.pushNamed(context, '/reading', arguments: {
       "items": data,
@@ -100,7 +93,7 @@ class _CalendarState extends State<Calendar> {
         title: const Text('خطوة بخطوة'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
+          onPressed: () async {
             Navigator.pushNamed(context, '/calendar_parent');
           },
         ),
@@ -125,7 +118,7 @@ class _CalendarState extends State<Calendar> {
 
             return Container(
               decoration: BoxDecoration(
-                color: isOpened ? Colors.green : Colors.red,
+                color: day.isBefore(endDay.add(const Duration(days: 1))) ? (isOpened ? Colors.green : Colors.red): Colors.grey,
                 // color: isOpened ? const Color.fromARGB(255, 61, 196, 37) : const Color.fromARGB(255, 213, 211, 161),
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -135,11 +128,17 @@ class _CalendarState extends State<Calendar> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '${day.day}',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    if (getCustomLabel(day) != null)
+                    if (getCustomLabel(day) != null && day.isBefore(endDay.add(const Duration(days: 1))))
+                      Text(
+                        '${day.day}',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    if (day.isAfter(endDay))
+                      Text(
+                        '${day.day}',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w100),
+                      ),
+                    if (getCustomLabel(day) != null && day.isBefore(endDay.add(const Duration(days: 1))))
                       Text(
                         getCustomLabel(day)!,
                         softWrap: true,           // ⬅️ allows wrapping
@@ -159,7 +158,7 @@ class _CalendarState extends State<Calendar> {
 
             return Container(
               decoration: BoxDecoration(
-                color: isOpened ? Colors.blue : Colors.green,
+                color: day.isBefore(endDay.add(const Duration(days: 1))) ? (isOpened ? Colors.blue : Colors.green): Colors.grey,
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(5),
