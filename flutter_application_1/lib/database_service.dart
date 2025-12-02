@@ -21,7 +21,7 @@ class DatabaseService {
   final String _attendanceMonthColumnName = "month";
   final String _attendanceDataColumnName = "data";
   final String _attendanceNoteColumnName = "note";
-  final String _attendanceManarColumnName = "manar";
+  final String _attendanceMannerColumnName = "manner";
 
   DatabaseService._constructor();
 
@@ -64,7 +64,7 @@ class DatabaseService {
         $_attendanceMonthColumnName INTEGER PRIMARY KEY,
         $_attendanceDataColumnName TEXT NOT NULL,
         $_attendanceNoteColumnName TEXT,
-        $_attendanceManarColumnName TEXT
+        $_attendanceMannerColumnName TEXT
       )
     ''');
 
@@ -195,15 +195,11 @@ class DatabaseService {
     // Convert List<bool> to string of 0 and 1
     String dataString = data.map((e) => e ? '1' : '0').join();
 
-    await db.insert(
-      _attendanceTableName,
-      {
-        _attendanceMonthColumnName: month,
-        _attendanceDataColumnName: dataString,
-        _attendanceNoteColumnName: "",
-        _attendanceManarColumnName: "",
-      },
-    );
+    await db.rawInsert('''
+      INSERT OR REPLACE INTO $_attendanceTableName 
+        ($_attendanceMonthColumnName, $_attendanceDataColumnName, $_attendanceNoteColumnName, $_attendanceMannerColumnName)
+      VALUES (?, ?, ?, ?)
+    ''', [month, dataString, "", ""]);
   }
 
   Future<List<bool>?> getMonthAttendance(int month) async {
@@ -250,12 +246,41 @@ class DatabaseService {
     return result.first[_attendanceNoteColumnName] as String;
   }
 
+  Future<String?> getMonthManner(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceMannerColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) {
+      // No record → return empty or full false list
+      return null;
+    }
+
+    return result.first[_attendanceMannerColumnName] as String;
+  }
+
   Future<void> updateMonthNote(int month, String note) async {
     final db = await database;
 
     await db.update(
       _attendanceTableName,
       {_attendanceNoteColumnName: note},
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+  }
+
+  Future<void> updateMonthManner(int month, String manner) async {
+    final db = await database;
+
+    await db.update(
+      _attendanceTableName,
+      {_attendanceMannerColumnName: manner},
       where: "$_attendanceMonthColumnName = ?",
       whereArgs: [month],
     );

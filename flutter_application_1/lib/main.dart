@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/calendar.dart';
 import 'package:flutter_application_1/calendar_parent.dart';
+import 'package:flutter_application_1/manner.dart';
 import 'package:flutter_application_1/monthly_data.dart';
 import 'package:flutter_application_1/reading.dart';
 
@@ -12,6 +13,7 @@ void main() {
       '/reading': (context) => const Reading(),
       '/calendar_parent': (context) => const CalanderParent(),
       '/monthly_data': (context) => const MonthlyData(),
+      '/manner': (context) => const Manner(),
     },
   ));
 }

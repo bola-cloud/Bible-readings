@@ -19,12 +19,31 @@ class _MonthlyDataState extends State<MonthlyData> {
 
   List<bool>? toggles;
   bool _isLoading = true;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
     super.initState();
     _notesController = TextEditingController();
     _loadData(displayedMonth.month);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_isFirstLoad) {
+      // Read month from arguments if available
+      final args = ModalRoute.of(context)?.settings.arguments as Map?;
+      int month = args?['month'] as int? ?? 1;
+      setState(() {
+        displayedMonth = DateTime(2026, month, 1);
+      });
+      _loadData(month);
+      setState(() {
+        _isFirstLoad = false;
+      });
+    }
   }
 
   Future<void> _loadData(int month) async {
@@ -118,7 +137,7 @@ class _MonthlyDataState extends State<MonthlyData> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () async {
-            Navigator.pushNamed(context, '/calendar_parent');
+            Navigator.pop(context, '/calendar_parent');
           },
         ),
         backgroundColor: Colors.grey,
@@ -234,33 +253,59 @@ class _MonthlyDataState extends State<MonthlyData> {
             ),
           ),
           Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                "سر المصالحة",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center, // Center the text
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              "سر المصالحة",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center, // Center the text
             ),
-            SizedBox(height: 8),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.18, // ⬅️ 18% of the height
-              child: TextField(
-                maxLines: null,
-                expands: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
-                ),
-                keyboardType: TextInputType.multiline,
-                controller: _notesController,
-                onChanged: (value) async {
-                  await _databaseService.updateMonthNote(displayedMonth.month, value);  
+          ),
+          SizedBox(height: 8),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.18, // ⬅️ 18% of the height
+            child: TextField(
+              maxLines: null,
+              expands: true,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
+              ),
+              keyboardType: TextInputType.multiline,
+              controller: _notesController,
+              onChanged: (value) async {
+                await _databaseService.updateMonthNote(displayedMonth.month, value);  
+              },
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Left button: قديس
+              ElevatedButton(
+                onPressed: () {
+                  // Do something when clicked, or leave empty
                 },
+                child: Text("قديس"),
               ),
-            ),
+
+              // Right button: فضيله
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/manner', // your target route
+                    arguments: {
+                      "month": displayedMonth.month, // pass month as argument
+                    },
+                  );
+                },
+                child: Text("فضيله"),
+              ),
+            ],
+          ),
         ],
       ),
     );
