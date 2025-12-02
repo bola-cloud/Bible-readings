@@ -1,9 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/styled_body_text.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Reading extends StatefulWidget {
   const Reading({super.key});
@@ -14,33 +11,45 @@ class Reading extends StatefulWidget {
 
 class _ReadingState extends State<Reading> {
 
-  Map<String, dynamic>? items;
-  Map<String, String>? notes;
-  Set<String>? openedDaysItems;
-  String? date;
+  final DatabaseService _databaseService = DatabaseService.instance;
+  TextEditingController? _notesController;
 
-  late TextEditingController _controller;
+  String title = "";
+  String reading = "";
+  String notes = "";
+  String? date;
+  bool opened = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: notes?[date] ?? "");
-  }
-
-  @override
-  void didUpdateWidget(covariant Reading oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // Update the text only if the date changes
-    if (_controller.text != (notes?[date] ?? "")) {
-      _controller.text = notes?[date] ?? "";
-    }
+    _notesController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _notesController?.dispose();
     super.dispose();
+  }
+
+  void _loadNoteFromDB(String date) async {
+    String? noteContent = await _databaseService.getNoteContentByDate(date);
+    if (noteContent != null) {
+      _notesController?.text = noteContent;
+    }
+  }
+
+  Future<void> _loadData(String date) async {
+    final dataItem = await _databaseService.getdataContentByDate(date);
+    final noteContent = await _databaseService.getNoteContentByDate(date);
+
+    setState(() {
+      title = dataItem?.title ?? "";
+      reading = dataItem?.reading ?? "";
+      opened = dataItem?.opened == 1;
+      notes = noteContent ?? "";
+      _notesController?.text = notes;
+    });
   }
 
   String intToArabic(dynamic n) {
@@ -68,111 +77,38 @@ class _ReadingState extends State<Reading> {
     return "$dd-$mm-$yyyy";
   }  
 
-  Future<File> _getNotesFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/notes.json'); // writable location
-  }
-
-  saveNotes(Map<String, dynamic> notes) async {
-    final file = await _getNotesFile();
-    await file.writeAsString(jsonEncode(notes));
-  }
-
-  Future<File> _getOpenedDaysFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/openedDays.json'); // writable location
-  }
-
-  saveOpenedDays(Set<String> openedDays) async {
-    final file = await _getOpenedDaysFile();
-    await file.writeAsString(jsonEncode(openedDays.toList()));
-  }
-
    @override
   Widget build(BuildContext context) {
 
     final args = ModalRoute.of(context)?.settings.arguments as Map;
-
-    Map<String, dynamic>? items;
-    if (args["items"] != null && args["items"] is Map<String, dynamic>) {
-      items = args["items"];
-    } else {
-      items = {}; // or default values
+    date = args["date"] as String?;
+    if (date != null) {
+      _loadData(date!);
     }
-
-    Set<String> openedDaysItems;
-    if (args["openedDays"] != null && args["openedDays"] is Set<String>) {
-      openedDaysItems = args["openedDays"];
-    } else {
-      openedDaysItems = {}; // or default values
-    }
-
-    String title;
-    if (args["title"] != null && args["title"] is String) {
-      title = args["title"];
-    } else {
-      title = ""; // or default values
-    }
-
-    String reading;
-    if (args["reading"] != null && args["reading"] is String) {
-      reading = args["reading"];
-    } else {
-      reading = ""; // or default values
-    }
-
-    String date;
-    if (args["date"] != null && args["date"] is String) {
-      date = args["date"];
-    } else {
-      date = ""; // or default values
-    }
-
-    Map<String, String>? notes;
-    if (args["notes"] != null && args["notes"] is Map<String, String>) {
-      notes = args["notes"];
-    } else {
-      notes = {}; // or default values
-    }
-
-    setState(() {
-      this.items = items;
-      this.openedDaysItems = openedDaysItems;
-      this.notes = notes;
-    });
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(intToArabic(convertToDDMMYYYY(date))),
+        title: Text(intToArabic(convertToDDMMYYYY(date??""))),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () async{
-            await saveNotes(notes ?? {});
-            await saveOpenedDays(openedDaysItems);
-            Navigator.pushNamed(context, '/calendar', arguments: {
-              "data": items,
-              "openedDays": openedDaysItems,
-            });
+            Navigator.pushNamed(context, '/calendar');
           },
         ),
         actions: [
           IconButton(
               onPressed: () async {
                 setState(() {
-                  if (openedDaysItems.contains(date)) {
-                    openedDaysItems.remove(date);
-                  } else {
-                    openedDaysItems.add(date);
-                  }
+                  opened = !opened;
                 });
-                await saveOpenedDays(openedDaysItems);
+                _databaseService.updateDataOpened(date!, opened? 1: 0);
               },
               icon: Icon(
-              openedDaysItems.contains(date)
+              opened
                 ? Icons.radio_button_checked
                 : Icons.radio_button_unchecked,
               ),
-              color: openedDaysItems.contains(date)
+              color: opened
                 ? Colors.green
                 : Colors.red,
             ),
@@ -221,12 +157,18 @@ class _ReadingState extends State<Reading> {
                   hintText: 'اية لمستك و قرار اخدته',
                 ),
                 keyboardType: TextInputType.multiline,
-                controller: TextEditingController(
-                  text: notes?[date] ?? "",
-                ),
+                controller: _notesController,
                 onChanged: (value) async {
-                  notes?[date] = value;
-                  await saveNotes(notes ?? {});
+                  if(await _databaseService.getNoteContentByDate(date!)==null) {
+                    _databaseService.addNote(date!, value);
+                  } else {
+                    _databaseService.updateNoteContent(date!, value);
+                  }
+                  setState(() {
+                    notes = value;
+                  });
+                  // notes?[date] = value;
+                  // await saveNotes(notes ?? {});
                 },
               ),
             ),

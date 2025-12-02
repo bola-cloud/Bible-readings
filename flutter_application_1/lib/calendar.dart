@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_application_1/database_service.dart';
+import 'package:flutter_application_1/modules/data.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
@@ -14,79 +12,56 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
 
-  Map<String,dynamic>? data = {};
+  Map<String,Data>? data = {};
   Map<String, String>? notes;
-  Set<String> openedDays = {};
   DateTime endDay = DateTime.utc(2026,5,6);
+  final DatabaseService _databaseService = DatabaseService.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final fetchedData = await _databaseService.getData();
+    setState(() {
+      data = fetchedData;
+    });
+  }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
     if(selectedDay.isAfter(endDay)){
-      return null;
+      return;
     }
-    openedDays.add("${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}");
-    await getNotesData();
+    String day = "${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}";
+    _databaseService.updateDataOpened(day, 1);
+    final d = await _databaseService.getData();
+    setState(() {
+      data = d;
+    });
     Navigator.pushNamed(context, '/reading', arguments: {
       "items": data,
-      "openedDays": openedDays,
-      "title": data?["${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}"]?[0] ?? "No title for this day.",
-      "reading": data?["${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}"]?[1] ?? "No data for this day.",
-      "date": "${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}",
-      "notes": notes,
+      "title": data?[day]?.title ?? "No title for this day.",
+      "reading": data?[day]?.reading ?? "No data for this day.",
+      "date": day,
+      "notes": await _databaseService.getNoteContentByDate(day),
+    });
+
+    final refreshedData = await _databaseService.getData();
+    setState(() {
+      data = refreshedData;
     });
   }
 
   String? getCustomLabel(DateTime day) {
-    String? title = data?["${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}"]?[0];
+    String? title = data?["${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}"]?.title;
 
     return title;
   }
 
-  Future<File> _getNotesFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/notes.json'); // writable location
-  }
-
-  getNotesData() async {
-    final file = await _getNotesFile();
-
-    if (!await file.exists()) {
-      return {}; // empty set if file not yet created
-    }
-
-    final content = await file.readAsString();
-    if (content.trim().isEmpty) return {};
-
-    final Map<String, dynamic> res2 = jsonDecode(content);
-    final notes = res2.map((key, value) => MapEntry(key, value.toString()));
-    setState(() {
-      this.notes = notes;
-    });
-  }
-
-
   @override
   Widget build(BuildContext context) {
-    
-    final args = ModalRoute.of(context)?.settings.arguments as Map;
-
-    Map<String, dynamic>? items;
-    if (args["data"] != null && args["data"] is Map<String, dynamic>) {
-      items = args["data"];
-    } else {
-      items = {}; // or default values
-    }
-
-    Set<String> openedDaysItems;
-    if (args["openedDays"] != null && args["openedDays"] is Set<String>) {
-      openedDaysItems = args["openedDays"];
-    } else {
-      openedDaysItems = {}; // or default values
-    }
-
-    setState(() {
-      data = items;
-      openedDays = openedDaysItems;
-    }); 
 
     return Scaffold(
       appBar: AppBar(
@@ -115,7 +90,7 @@ class _CalendarState extends State<Calendar> {
           defaultBuilder: (context, day, focusedDay) {
             String dayKey =
                 "${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}";
-            bool isOpened = openedDays.contains(dayKey);
+            bool isOpened = data?[dayKey]?.opened == 1;
 
             return Container(
               decoration: BoxDecoration(
@@ -141,30 +116,6 @@ class _CalendarState extends State<Calendar> {
                         style: const TextStyle(fontSize: 10),
                       ),
                   ],
-                ),
-              ),
-            );
-          },
-
-          selectedBuilder: (context, day, _) {
-            String dayKey =
-                "${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}";
-            bool isOpened = openedDays.contains(dayKey);
-
-            return Container(
-              decoration: BoxDecoration(
-                color: isOpened ? Colors.blue : Colors.green,
-                shape: BoxShape.circle,
-              ),
-              padding: const EdgeInsets.all(5),
-              child: Center(
-                child: Text(
-                  '${day.day}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
               ),
             );

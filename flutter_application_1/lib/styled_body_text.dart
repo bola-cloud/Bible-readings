@@ -7,16 +7,14 @@ class StyledBodyText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: SingleChildScrollView(
-        child: Text(
-          textDirection: TextDirection.rtl,
-          text,
-          style: TextStyle(
-            color: Colors.brown[900],
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+    return SingleChildScrollView(
+      child: Text(
+        textDirection: TextDirection.rtl,
+        text,
+        style: TextStyle(
+          color: Colors.brown[900],
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
