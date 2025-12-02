@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
+import 'package:flutter_application_1/loading.dart';
 import 'package:flutter_application_1/styled_body_text.dart';
 
 class Reading extends StatefulWidget {
@@ -16,9 +17,10 @@ class _ReadingState extends State<Reading> {
 
   String title = "";
   String reading = "";
-  String notes = "";
   String? date;
   bool opened = false;
+  bool _isLoaded = false;   // prevent multiple loads
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -27,28 +29,32 @@ class _ReadingState extends State<Reading> {
   }
 
   @override
-  void dispose() {
-    _notesController?.dispose();
-    super.dispose();
-  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  void _loadNoteFromDB(String date) async {
-    String? noteContent = await _databaseService.getNoteContentByDate(date);
-    if (noteContent != null) {
-      _notesController?.text = noteContent;
+    // Load only once
+    if (!_isLoaded) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map?;
+      date = args?["date"];
+
+      if (date != null) {
+        _loadData(date!);
+      }
+
+      _isLoaded = true;
     }
   }
 
   Future<void> _loadData(String date) async {
-    final dataItem = await _databaseService.getdataContentByDate(date);
+    final dataItem = await _databaseService.getDataContentByDate(date);
     final noteContent = await _databaseService.getNoteContentByDate(date);
 
     setState(() {
       title = dataItem?.title ?? "";
       reading = dataItem?.reading ?? "";
       opened = dataItem?.opened == 1;
-      notes = noteContent ?? "";
-      _notesController?.text = notes;
+      _notesController?.text = noteContent ?? "";
+      _isLoading = false;
     });
   }
 
@@ -80,13 +86,9 @@ class _ReadingState extends State<Reading> {
    @override
   Widget build(BuildContext context) {
 
-    final args = ModalRoute.of(context)?.settings.arguments as Map;
-    date = args["date"] as String?;
-    if (date != null) {
-      _loadData(date!);
-    }
+    return _isLoading ? Loading() : 
 
-    return Scaffold(
+    Scaffold(
       appBar: AppBar(
         title: Text(intToArabic(convertToDDMMYYYY(date??""))),
         leading: IconButton(
@@ -159,16 +161,7 @@ class _ReadingState extends State<Reading> {
                 keyboardType: TextInputType.multiline,
                 controller: _notesController,
                 onChanged: (value) async {
-                  if(await _databaseService.getNoteContentByDate(date!)==null) {
-                    _databaseService.addNote(date!, value);
-                  } else {
-                    _databaseService.updateNoteContent(date!, value);
-                  }
-                  setState(() {
-                    notes = value;
-                  });
-                  // notes?[date] = value;
-                  // await saveNotes(notes ?? {});
+                  _databaseService.updateNoteContent(date!, value);  
                 },
               ),
             ),

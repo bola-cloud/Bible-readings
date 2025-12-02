@@ -1,12 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/modules/data.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CalanderParent extends StatefulWidget {
@@ -21,78 +16,12 @@ class _CalanderParentState extends State<CalanderParent> {
   Set<String> openedDays = {};
   Map<int,List<bool>> toggles = {};
   List<Data>? dataItems;
-  final DatabaseService _databaseService = DatabaseService.instance;
-
-  Future<File> _getTogglesFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/notes.json'); // writable location
-  }
-
-  Future<void> deleteTogglesFile() async {
-    final file = await _getTogglesFile();
-
-    if (await file.exists()) {
-      await file.delete();
-      print("toggles file deleted.");
-    } else {
-      print("toggles file does not exist.");
-    }
-  }
 
   Future<void> deleteDatabaseIfExists() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'master_db.db');
     await deleteDatabase(path);
     print('deleted');
-  }
-
-  getTogglesData() async {
-    final togglesFile = await _getTogglesFile();
-
-    if (!await togglesFile.exists()) {
-      return <int, List<bool>>{};
-    }
-
-    final togglesContent = await togglesFile.readAsString();
-    if (togglesContent.trim().isEmpty) {
-      return <int, List<bool>>{};
-    }
-
-    final decoded = jsonDecode(togglesContent);
-
-    if (decoded is! Map<String, dynamic>) {
-      return <int, List<bool>>{};
-    }
-
-    final Map<int, List<bool>> toggles = {};
-
-    decoded.forEach((key, value) {
-      // Convert key: String → int
-      final intKey = int.tryParse(key);
-      if (intKey == null) return;
-
-      // Convert value: dynamic → List<bool>
-      final List<bool> boolList = [];
-
-      if (value is List) {
-        for (final item in value) {
-          if (item is bool) {
-            boolList.add(item);
-          } else {
-            // If stored as string "true"/"false"
-            boolList.add(item.toString().toLowerCase() == "true");
-          }
-        }
-      }
-
-      toggles[intKey] = boolList;
-    });
-
-    setState(() {
-      this.toggles = toggles;
-    });
-
-    return toggles;
   }
 
   Widget _buildCard({required String title, required String subtitle, required VoidCallback onTap, Color? color, Widget? leading}){
@@ -197,8 +126,6 @@ class _CalanderParentState extends State<CalanderParent> {
                             ),
                             color: Colors.orange.shade200.withOpacity(0.9),
                             onTap: () async {
-                              await _databaseService.getData();
-                              await deleteTogglesFile();
                               Navigator.pushNamed(context, '/calendar');
                             },
                           ),
@@ -216,11 +143,7 @@ class _CalanderParentState extends State<CalanderParent> {
                             ),
                             color: Colors.yellow.shade100.withOpacity(0.9),
                             onTap: () async {
-                              await getTogglesData();
-                              await deleteDatabaseIfExists();
-                              Navigator.pushNamed(context, '/monthly_data', arguments: {
-                                "toggles": toggles,
-                              });
+                              Navigator.pushNamed(context, '/monthly_data');
                             },
                           ),
                         ),
@@ -236,7 +159,9 @@ class _CalanderParentState extends State<CalanderParent> {
                               child: const Icon(Icons.menu_book, color: Colors.orange),
                             ),
                             color: Colors.orange.shade50.withOpacity(0.95),
-                            onTap: () {},
+                            onTap: () async {
+                              await deleteDatabaseIfExists();
+                            },
                           ),
                         ),
 

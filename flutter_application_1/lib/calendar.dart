@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
+import 'package:flutter_application_1/loading.dart';
 import 'package:flutter_application_1/modules/data.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -16,6 +17,7 @@ class _CalendarState extends State<Calendar> {
   Map<String, String>? notes;
   DateTime endDay = DateTime.utc(2026,5,6);
   final DatabaseService _databaseService = DatabaseService.instance;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -24,9 +26,10 @@ class _CalendarState extends State<Calendar> {
   }
 
   Future<void> _loadData() async {
-    final fetchedData = await _databaseService.getData();
+    final fetchedData = await _databaseService.getDataContent();
     setState(() {
       data = fetchedData;
+      _isLoading = false;
     });
   }
 
@@ -36,22 +39,12 @@ class _CalendarState extends State<Calendar> {
     }
     String day = "${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}";
     _databaseService.updateDataOpened(day, 1);
-    final d = await _databaseService.getData();
-    setState(() {
-      data = d;
-    });
+
     Navigator.pushNamed(context, '/reading', arguments: {
-      "items": data,
-      "title": data?[day]?.title ?? "No title for this day.",
-      "reading": data?[day]?.reading ?? "No data for this day.",
       "date": day,
-      "notes": await _databaseService.getNoteContentByDate(day),
     });
 
-    final refreshedData = await _databaseService.getData();
-    setState(() {
-      data = refreshedData;
-    });
+    await _loadData();
   }
 
   String? getCustomLabel(DateTime day) {
@@ -63,7 +56,9 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return _isLoading ? Loading() : 
+
+    Scaffold(
       appBar: AppBar(
         title: const Text('خطوة بخطوة'),
         leading: IconButton(

@@ -11,14 +11,17 @@ class DatabaseService {
 
   static final DatabaseService instance = DatabaseService._constructor();
 
-  final String _notesTableName = "notes";
-  final String _notesDateColumnName = "date";
-  final String _notesContentColumnName = "content";
   final String _dataTableName = "data";
   final String _dataDateColumnName = "date";
   final String _dataTitleColumnName = "title";
   final String _dataReadingColumnName = "reading";
   final String _dataOpenedColumnName = "opened";
+  final String _dataNoteColumnName = "note";
+  final String _attendanceTableName = "attendance";
+  final String _attendanceMonthColumnName = "month";
+  final String _attendanceDataColumnName = "data";
+  final String _attendanceNoteColumnName = "note";
+  final String _attendanceManarColumnName = "manar";
 
   DatabaseService._constructor();
 
@@ -29,19 +32,14 @@ class DatabaseService {
   }
 
   Future _onCreate(Database db, int version) async {
-    db.execute('''
-      CREATE TABLE $_notesTableName (
-        $_notesDateColumnName TEXT PRIMARY KEY,
-        $_notesContentColumnName TEXT
-      )
-    ''');
 
     db.execute('''
       CREATE TABLE $_dataTableName (
         $_dataDateColumnName TEXT PRIMARY KEY,
         $_dataTitleColumnName TEXT NOT NULL,
         $_dataReadingColumnName TEXT NOT NULL,
-        $_dataOpenedColumnName INTEGER NOT NULL
+        $_dataOpenedColumnName INTEGER NOT NULL,
+        $_dataNoteColumnName TEXT
       )
     ''');
 
@@ -56,9 +54,20 @@ class DatabaseService {
           _dataTitleColumnName: jsonData[item][0],
           _dataReadingColumnName: jsonData[item][1],
           _dataOpenedColumnName: 0,
+          _dataNoteColumnName: ""
         },
       );
     }
+
+    db.execute('''
+      CREATE TABLE $_attendanceTableName (
+        $_attendanceMonthColumnName INTEGER PRIMARY KEY,
+        $_attendanceDataColumnName TEXT NOT NULL,
+        $_attendanceNoteColumnName TEXT,
+        $_attendanceManarColumnName TEXT
+      )
+    ''');
+
   }
 
   Future<Database> getDatabase() async {
@@ -68,50 +77,42 @@ class DatabaseService {
       databasePath,
       version: 1,
       onCreate: (db, version) async {
-        _onCreate(db, version);
+        await _onCreate(db, version);
       }
     );
     return database;
   }
 
-  void addNote(String date, String content) async {
-    final db = await database;
-    await db.insert(_notesTableName, {
-      _notesDateColumnName: date,
-      _notesContentColumnName: content,
-    });
-  }
-
   Future<String?> getNoteContentByDate(String date) async {
     final db = await database;
     final data = await db.query(
-      _notesTableName,
-      columns: [_notesContentColumnName], // only fetch the content
-      where: '$_notesDateColumnName = ?',
+      _dataTableName,
+      columns: [_dataNoteColumnName], // only fetch the content
+      where: '$_dataDateColumnName = ?',
       whereArgs: [date],
     );
 
     if (data.isNotEmpty) {
-      return data.first[_notesContentColumnName] as String;
+      return data.first[_dataNoteColumnName] as String;
     } else {
       return null; // no note found for that date
     }
   }
 
-  void updateNoteContent(String date, String content) async {
+  Future<void> updateNoteContent(String date, String content) async {
     final db = await database;
 
     // Update the content for the given date
     await db.update(
-      _notesTableName,
-      {_notesContentColumnName: content},
-      where: '$_notesDateColumnName = ?',
+      _dataTableName,
+      {_dataNoteColumnName: content},
+      where: '$_dataDateColumnName = ?',
       whereArgs: [date],
     );
   }
 
 
-  void adddata(String date, String title, String reading) async {
+  Future<void> adddata(String date, String title, String reading) async {
     final db = await database;
     await db.insert(_dataTableName, {
       _dataDateColumnName: date,
@@ -120,7 +121,7 @@ class DatabaseService {
     });
   }
 
-  Future<Map<String, Data>> getData() async {
+  Future<Map<String, Data>> getDataContent() async {
     final db = await database;
 
     final dataList = await db.query(
@@ -128,7 +129,6 @@ class DatabaseService {
       columns: [
         _dataDateColumnName,
         _dataTitleColumnName,
-        _dataReadingColumnName,
         _dataOpenedColumnName
       ],
     );
@@ -139,8 +139,9 @@ class DatabaseService {
       final dataItem = Data(
         date: row[_dataDateColumnName] as String,
         title: row[_dataTitleColumnName] as String,
-        reading: row[_dataReadingColumnName] as String,
+        reading: "",
         opened: row[_dataOpenedColumnName] as int,
+        note: ""
       );
       dataMap[dataItem.date] = dataItem;
     }
@@ -148,11 +149,11 @@ class DatabaseService {
     return dataMap;
   }
 
-  Future<Data?> getdataContentByDate(String date) async {
+  Future<Data?> getDataContentByDate(String date) async {
     final db = await database;
     final dataList = await db.query(
       _dataTableName,
-      columns: [_dataDateColumnName,_dataTitleColumnName, _dataReadingColumnName, _dataOpenedColumnName], // only fetch the content
+      columns: [_dataDateColumnName,_dataTitleColumnName, _dataReadingColumnName, _dataOpenedColumnName, _dataNoteColumnName], // only fetch the content
       where: '$_dataDateColumnName = ?',
       whereArgs: [date],
     );
@@ -164,13 +165,14 @@ class DatabaseService {
         title: row[_dataTitleColumnName] as String,
         reading: row[_dataReadingColumnName] as String,
         opened: row[_dataOpenedColumnName] as int,
+        note: row[_dataNoteColumnName] as String
       );
     } else {
       return null; // no data for this date
     }
   }
 
-  void updateDataOpened(String date, int opened) async {
+  Future<void> updateDataOpened(String date, int opened) async {
     final db = await database;
 
     // Update the content for the given date
@@ -186,4 +188,112 @@ class DatabaseService {
     final jsonString = await rootBundle.loadString('data/data.json');
     return jsonString;
   }
+
+  Future<void> addAttendance(int month, List<bool> data) async {
+    final db = await database;
+
+    // Convert List<bool> to string of 0 and 1
+    String dataString = data.map((e) => e ? '1' : '0').join();
+
+    await db.insert(
+      _attendanceTableName,
+      {
+        _attendanceMonthColumnName: month,
+        _attendanceDataColumnName: dataString,
+        _attendanceNoteColumnName: "",
+        _attendanceManarColumnName: "",
+      },
+    );
+  }
+
+  Future<List<bool>?> getMonthAttendance(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceDataColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) {
+      // No record → return empty or full false list
+      return null;
+    }
+
+    final String dataString = result.first[_attendanceDataColumnName] as String;
+
+    // Convert each character ('0'/'1') into a bool
+    List<bool> attendance = dataString
+        .split('')
+        .map((char) => char == '1')
+        .toList();
+
+    return attendance;
+  }
+
+  Future<String?> getMonthNote(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceNoteColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) {
+      // No record → return empty or full false list
+      return null;
+    }
+
+    return result.first[_attendanceNoteColumnName] as String;
+  }
+
+  Future<void> updateMonthNote(int month, String note) async {
+    final db = await database;
+
+    await db.update(
+      _attendanceTableName,
+      {_attendanceNoteColumnName: note},
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+  }
+
+  Future<void> updateMonthIndex(int month, int index, bool present) async {
+    final db = await database;
+
+    // 1. Get current attendance string for the month
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceDataColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+    
+    String dataString = result.first[_attendanceDataColumnName] as String;
+
+    // 2. Convert to list of chars to update
+    List<String> dataList = dataString.split('');
+
+    // Ensure the index is valid (0-based)
+    if (index < 0 || index >= dataList.length) {
+      throw Exception("Index out of range for month");
+    }
+
+    dataList[index] = present ? '1' : '0';
+
+    // 3. Convert back to string
+    String updatedData = dataList.join();
+
+    // 4. Update the DB
+    await db.update(
+      _attendanceTableName,
+      {_attendanceDataColumnName: updatedData},
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+  }
+
 }
