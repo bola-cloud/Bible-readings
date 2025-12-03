@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/battery_widget.dart'; // import the battery widget
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({super.key});
@@ -20,33 +22,39 @@ class _StatisticsState extends State<Statistics> {
 
   @override
   void initState() {
-  super.initState();
-  _calculateStatistics();
+    super.initState();
+    _calculateStatistics();
+  }
+
+  Future<void> deleteDatabaseIfExists() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'master_db.db');
+    await deleteDatabase(path);
   }
 
   Future _calculateStatistics() async {
-  final now = DateTime(2026, 5, 6);
+    final now = DateTime(2026, 5, 6);
 
-  // 1️⃣ Opened days
-  int openedDays = await _databaseService.getOpenedDaysUntil(now);
+    // 1️⃣ Opened days
+    int openedDays = await _databaseService.getOpenedDaysUntil(now);
 
-  // 2️⃣ Total days from 1-1-2026 until today
-  final startDate = DateTime(2026, 1, 1);
-  int totalDays = now.difference(startDate).inDays + 1;
+    // 2️⃣ Total days from 1-1-2026 until today
+    final startDate = DateTime(2026, 1, 1);
+    int totalDays = now.difference(startDate).inDays + 1;
 
-  double percent = totalDays > 0 ? openedDays / totalDays : 0.0;
+    double percent = totalDays > 0 ? openedDays / totalDays : 0.0;
 
-  // 3️⃣ Read all toggles up to current month
-  Map<int, List<bool>> togglesMap = await _databaseService.getTogglesMapUpToMonth(now.month);
+    // 3️⃣ Read all toggles up to current month
+    Map<int, List<bool>> togglesMap = await _databaseService.getTogglesMapUpToMonth(now.month);
 
-  // 4️⃣ Calculate row percentages
-  List<double> rowPercentages = List.generate(3, (index) => calculateRowPercentageAllMonths(togglesMap, index, now.month));
+    // 4️⃣ Calculate row percentages
+    List<double> rowPercentages = List.generate(3, (index) => calculateRowPercentageAllMonths(togglesMap, index, now.month));
 
-  setState(() {
-    _percentage = percent;
-    _rowPercentages = rowPercentages;
-    _isLoading = false;
-  });
+    setState(() {
+      _percentage = percent;
+      _rowPercentages = rowPercentages;
+      _isLoading = false;
+    });
 
   }
 
@@ -80,12 +88,11 @@ class _StatisticsState extends State<Statistics> {
 
       // Calculate columns for the month
       final weeks = getWeeksInMonth(DateTime(2026, month, 1)); // adjust year if needed
-      int columns = weeks.length;
+      int columns = weeks.length + 1;
 
       // Determine start and end index for the row in this month
       int startIndex = rowIndex * columns;
-      if (startIndex != 0) startIndex++; // skip first cell if not first row
-      int endIndex = startIndex + columns;
+      int endIndex = startIndex + columns - 1;
 
       for (int i = startIndex; i < endIndex && i < monthToggles.length; i++) {
         rowTotal++;
@@ -111,6 +118,39 @@ class _StatisticsState extends State<Statistics> {
                 },
               ),
               backgroundColor: Colors.grey,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  tooltip: "حذف البيانات",
+                  onPressed: () async {
+                  bool confirm = await showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text("تأكيد الحذف"),
+                      content: Text("هل تريد حذف كل البيانات؟"),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: Text("لا"),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: Text("نعم"),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm) {
+                    await _databaseService.close();
+                    await deleteDatabaseIfExists();
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    await _calculateStatistics(); // reload statistics after deletion
+                  }
+                },
+              ),
+            ],
             ),
             body: Center(
               child: Padding(

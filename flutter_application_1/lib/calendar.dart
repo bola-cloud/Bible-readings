@@ -64,7 +64,7 @@ class _CalendarState extends State<Calendar> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () async {
-            Navigator.pushNamed(context, '/calendar_parent');
+            Navigator.pushNamed(context, '/home');
           },
         ),
         backgroundColor: Colors.grey,

@@ -25,6 +25,13 @@ class DatabaseService {
 
   DatabaseService._constructor();
 
+  Future<void> close() async {
+    if (_db != null && _db!.isOpen) {
+      await _db!.close();
+      _db = null;
+    }
+  }
+
   Future<Database> get database async {
     if (_db != null) return _db ?? await getDatabase();
     _db = await getDatabase();

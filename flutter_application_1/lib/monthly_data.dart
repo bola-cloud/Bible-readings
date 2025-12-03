@@ -126,13 +126,10 @@ class _MonthlyDataState extends State<MonthlyData> {
     if (toggles == null || toggles!.isEmpty) return 0.0;
 
     final weeks = getWeeksInMonth(displayedMonth);
-    int columns = weeks.length;
+    int columns = weeks.length+1;
 
     int startIndex = rowIndex * columns; // row start in toggles
-    if(startIndex != 0){
-      startIndex++;
-    }
-    int endIndex = startIndex + columns;
+    int endIndex = startIndex + columns -1;
 
     int rowCount = 0;
     int rowTotal = 0;
@@ -162,7 +159,7 @@ class _MonthlyDataState extends State<MonthlyData> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () async {
-            Navigator.pop(context, '/calendar_parent');
+            Navigator.pop(context, '/home');
           },
         ),
         backgroundColor: Colors.grey,
