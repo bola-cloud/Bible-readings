@@ -213,7 +213,7 @@ class _CalanderParentState extends State<CalanderParent> {
                         SizedBox(
                           width: isWide ? (constraints.maxWidth/2 - 26) : constraints.maxWidth,
                           child: _buildCard(
-                            title: 'فضيلة لكل شهر',
+                            title: 'أنجازاتى',
                             subtitle: 'فضيلة لكل شهر علشان تتعلمها وتعيشها عمليًا',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
@@ -221,7 +221,9 @@ class _CalanderParentState extends State<CalanderParent> {
                               child: const Icon(Icons.star, color: Colors.orange),
                             ),
                             color: Colors.orange.shade300.withOpacity(0.95),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(context, '/statistics');
+                            },
                           ),
                         ),
 

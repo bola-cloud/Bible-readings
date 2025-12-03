@@ -79,26 +79,53 @@ class _MannerState extends State<Manner> {
         ),
         backgroundColor: Colors.grey,
       ),
-      body: Scaffold(
-        body: Column(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
+            // ---------------------------------------
+            // TMP IMAGE (you can replace the asset)
+            // ---------------------------------------
+            Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 12),
+              child: Image.asset(
+                "assets/tmp.png",   // <-- PLACEHOLDER IMAGE
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            // ---------------------------------------
+            // TITLE
+            // ---------------------------------------
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 "ممارسة عملية",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
-                textAlign: TextAlign.center, // Center the text
+                textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 8),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.18, // ⬅️ 18% of the height
+
+            SizedBox(height: 12),
+
+            // ---------------------------------------
+            // TEXT FIELD (safe height, no overflow)
+            // ---------------------------------------
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 140,
+                maxHeight: 220,
+              ),
               child: TextField(
                 maxLines: null,
-                expands: true,
+                expands: false,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
@@ -106,7 +133,7 @@ class _MannerState extends State<Manner> {
                 keyboardType: TextInputType.multiline,
                 controller: _mannerController,
                 onChanged: (value) async {
-                  _databaseService.updateMonthManner(month!, value);  
+                  await _databaseService.updateMonthManner(month!, value);
                 },
               ),
             ),

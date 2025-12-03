@@ -117,56 +117,69 @@ class _ReadingState extends State<Reading> {
         ],
         backgroundColor: Colors.grey,
       ),
-      body: Scaffold(
-        body: Column(
-          children: [
-            StyledBodyText(
-              intToArabic(title),
-            ),
-            Container(
-                // height: MediaQuery.of(context).size.height * 0.6, // ⬅️ 60% of the height
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.6,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final availableHeight = constraints.maxHeight;
+
+          final readingHeight = availableHeight * 0.55; // instead of fixed 0.6
+          final notesHeight   = availableHeight * 0.22; // instead of fixed 0.18
+
+          return Column(
+            children: [
+              StyledBodyText(
+                intToArabic(title),
               ),
-              child: StyledBodyText(
-                reading
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 1,
-              color: Colors.black, // You can change the color as needed
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                "ملاحظات",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+
+              /// READING AREA
+              Container(
+                height: readingHeight,
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: StyledBodyText(reading),
                 ),
-                textAlign: TextAlign.center, // Center the text
               ),
-            ),
-            SizedBox(height: 8),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.18, // ⬅️ 18% of the height
-              child: TextField(
-                maxLines: null,
-                expands: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'اية لمستك و قرار اخدته',
+
+              /// Separator line
+              Container(
+                width: double.infinity,
+                height: 1,
+                color: Colors.black,
+              ),
+
+              /// Notes label
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+                child: Text(
+                  "ملاحظات",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                keyboardType: TextInputType.multiline,
-                controller: _notesController,
-                onChanged: (value) async {
-                  _databaseService.updateNoteContent(date!, value);  
-                },
               ),
-            ),
-          ],
-        ),
+
+              /// NOTES TEXT FIELD
+              Container(
+                height: notesHeight,
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: TextField(
+                  maxLines: null,
+                  expands: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'اية لمستك و قرار اخدته',
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  controller: _notesController,
+                  onChanged: (value) async {
+                    _databaseService.updateNoteContent(date!, value);
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

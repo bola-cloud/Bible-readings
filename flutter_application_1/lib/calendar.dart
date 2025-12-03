@@ -70,12 +70,10 @@ class _CalendarState extends State<Calendar> {
         backgroundColor: Colors.grey,
       ),
       body: TableCalendar(
-        rowHeight: 85,
+        rowHeight: 100,
         firstDay: DateTime.utc(2026, 1, 1),
-        // lastDay: DateTime.utc(2026, 12, 31),
         lastDay: endDay,
         focusedDay: DateTime.utc(2026, 1, 1),
-        // selectedDayPredicate: (day) => isSameDay(day, today),
         onDaySelected: _onDaySelected,
         headerStyle: const HeaderStyle(
           formatButtonVisible: false,

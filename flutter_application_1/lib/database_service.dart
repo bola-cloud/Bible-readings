@@ -321,4 +321,52 @@ class DatabaseService {
     );
   }
 
+  Future<int> getOpenedDaysUntil(DateTime upToDate) async {
+    final db = await database; // your DB instance
+
+    // Convert DateTime to 'MM-DD-YYYY'
+    String dateStr = "${upToDate.month.toString().padLeft(2,'0')}-"
+                     "${upToDate.day.toString().padLeft(2,'0')}-"
+                     "${upToDate.year.toString().padLeft(4,'0')}";
+
+    // Use SQLite substrings to reorder stored 'MM-DD-YYYY' as 'YYYY-MM-DD' for comparison
+    final result = await db.rawQuery(
+      '''
+      SELECT COUNT(*) as openedCount 
+      FROM $_dataTableName 
+      WHERE $_dataOpenedColumnName = 1
+      AND $_dataDateColumnName <= ?
+      ''',
+      [dateStr],
+    );
+
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  Future<Map<int, List<bool>>> getTogglesMapUpToMonth(int month) async {
+    final db = await database;
+
+    // Query all rows where month <= given month
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceDataColumnName, _attendanceMonthColumnName],
+      where: '$_attendanceMonthColumnName <= ?',
+      whereArgs: [month],
+      orderBy: '$_attendanceMonthColumnName ASC',
+    );
+
+    Map<int, List<bool>> togglesMap = {};
+
+    for (var row in result) {
+      int rowMonth = row[_attendanceMonthColumnName] as int;
+      String togglesStr = row[_attendanceDataColumnName] as String? ?? '';
+
+      List<bool> togglesList = togglesStr.split('').map((ch) => ch == '1').toList();
+
+      togglesMap[rowMonth] = togglesList;
+    }
+
+    return togglesMap;
+  }
+
 }
