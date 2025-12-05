@@ -27,6 +27,7 @@ class _CalendarState extends State<Calendar> {
 
   Future<void> _loadData() async {
     final fetchedData = await _databaseService.getDataContent();
+    if (!mounted) return;
     setState(() {
       data = fetchedData;
       _isLoading = false;
@@ -39,11 +40,17 @@ class _CalendarState extends State<Calendar> {
     }
     String day =
         "${selectedDay.month.toString().padLeft(2, '0')}-${selectedDay.day.toString().padLeft(2, '0')}-${selectedDay.year}";
+
+    // Capture navigator before any awaits to avoid using BuildContext across async gaps
+    final navigator = Navigator.of(context);
+
     // mark opened immediately
     await _databaseService.updateDataOpened(day, 1);
 
+    if (!mounted) return;
+
     // Navigate and wait for the reading page to pop, then reload data so the calendar reflects any changes
-    await Navigator.pushNamed(context, '/reading', arguments: {"date": day});
+    await navigator.pushNamed('/reading', arguments: {"date": day});
 
     // Reload data after returning
     await _loadData();

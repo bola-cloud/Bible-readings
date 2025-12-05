@@ -153,221 +153,264 @@ class _MonthlyDataState extends State<MonthlyData> {
 
     return _isLoading ? Loading() : 
     
-    Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text(intToArabic("${displayedMonth.year}-${displayedMonth.month.toString().padLeft(2, '0')}"),style: GoogleFonts.cairo()),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          title: Text(intToArabic("${displayedMonth.year}-${displayedMonth.month.toString().padLeft(2, '0')}")+" ",style: GoogleFonts.cairo()),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          actions: [
+            IconButton(onPressed: previousMonth, icon: const Icon(Icons.arrow_back)),
+            IconButton(onPressed: nextMonth, icon: const Icon(Icons.arrow_forward)),
+          ],
         ),
-        backgroundColor: Colors.grey,
-        actions: [
-          IconButton(onPressed: previousMonth, icon: const Icon(Icons.arrow_back)),
-          IconButton(onPressed: nextMonth, icon: const Icon(Icons.arrow_forward)),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Column(
+        body: Stack(
           children: [
-            SizedBox(
-              height: 350, // Fixed safe height for all phones
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columns,
-                  childAspectRatio: 1,
+            // Background image
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/img/background.jpeg'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.90), BlendMode.dstATop),
                 ),
-                itemCount: totalCells,
-                itemBuilder: (context, index) {
-                  if (index < columns) {
-                    if (index == columns - 1) {
-                      return Center(child: Text(""));
-                    }
+              ),
+            ),
 
-                    return Center(
-                      child: Column(
-                        children: [
-                          const Icon(Icons.calendar_today, size: 28),
-                          Text(
-                            intToArabic("${weeks[index].month.toString().padLeft(2,'0')}-${weeks[index].day.toString().padLeft(2,'0')}"),
-                            // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            style: GoogleFonts.cairo()
+            // Pale overlay for readability
+            Container(color: Colors.white.withOpacity(0.30)),
+
+            // Main content
+            SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 80),
+
+                    // Grid inside a card to match Home style
+                    Card(
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      color: Colors.white.withOpacity(0.85),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: SizedBox(
+                          height: 350,
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: columns,
+                              childAspectRatio: 1,
+                            ),
+                            itemCount: totalCells,
+                            itemBuilder: (context, index) {
+                              if (index < columns) {
+                                if (index == columns - 1) {
+                                  return Center(child: Text("", style: GoogleFonts.cairo()));
+                                }
+
+                                return Center(
+                                  child: Column(
+                                    children: [
+                                      const Icon(Icons.calendar_today, size: 28),
+                                      Text(
+                                        intToArabic("${weeks[index].month.toString().padLeft(2,'0')}-${weeks[index].day.toString().padLeft(2,'0')}"),
+                                        style: GoogleFonts.cairo(),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              if (index == columns * 2 - 1) {
+                                return Center(
+                                  child: Text(
+                                    "حضور القداس",
+                                    textDirection: TextDirection.rtl,
+                                    style: GoogleFonts.cairo(),
+                                  ),
+                                );
+                              }
+
+                              if (index == columns * 3 - 1) {
+                                return Center(
+                                  child: Text(
+                                    "حضور الاجتماع",
+                                    textDirection: TextDirection.rtl,
+                                    style: GoogleFonts.cairo(),
+                                  ),
+                                );
+                              }
+
+                              if (index == columns * 4 - 1) {
+                                return Center(
+                                  child: Text(
+                                    "المذبح العائلى",
+                                    textDirection: TextDirection.rtl,
+                                    style: GoogleFonts.cairo(),
+                                  ),
+                                );
+                              }
+
+                              int toggleIndex = index - columns;
+                              bool isOn = toggles?[toggleIndex] ?? false;
+
+                              return Center(
+                                child: IconButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      toggles?[toggleIndex] = !(toggles?[toggleIndex] ?? true);
+                                    });
+                                    await _databaseService.updateMonthIndex(
+                                      displayedMonth.month,
+                                      toggleIndex,
+                                      toggles?[toggleIndex] ?? false,
+                                    );
+                                  },
+                                  icon: Icon(
+                                    isOn ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                                  ),
+                                  color: isOn ? Colors.green : Colors.red,
+                                ),
+                              );
+                            },
                           ),
-                        ],
+                        ),
                       ),
-                    );
-                  }
-
-                  if (index == columns * 2 - 1) {
-                    return Center(
-                      child: Text(
-                        "حضور القداس",
-                        textDirection: TextDirection.rtl,
-                        // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                        style: GoogleFonts.cairo()
-                      ),
-                    );
-                  }
-
-                  if (index == columns * 3 - 1) {
-                    return Center(
-                      child: Text(
-                        "حضور الاجتماع",
-                        textDirection: TextDirection.rtl,
-                        // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                        style: GoogleFonts.cairo()
-                      ),
-                    );
-                  }
-
-                  if (index == columns * 4 - 1) {
-                    return Center(
-                      child: Text(
-                        "المذبح العائلى",
-                        textDirection: TextDirection.rtl,
-                        // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                        style: GoogleFonts.cairo()
-                      ),
-                    );
-                  }
-
-                  int toggleIndex = index - columns;
-                  bool isOn = toggles?[toggleIndex] ?? false;
-
-                  return Center(
-                    child: IconButton(
-                      onPressed: () async {
-                        setState(() {
-                          toggles?[toggleIndex] = !(toggles?[toggleIndex] ?? true);
-                        });
-                        await _databaseService.updateMonthIndex(
-                          displayedMonth.month,
-                          toggleIndex,
-                          toggles?[toggleIndex] ?? false,
-                        );
-                      },
-                      icon: Icon(
-                        isOn ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-                      ),
-                      color: isOn ? Colors.green : Colors.red,
                     ),
-                  );
-                },
+
+                    const SizedBox(height: 16),
+
+                    // Battery bars inside card
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      color: Colors.white.withOpacity(0.85),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+                        child: Column(
+                          children: [
+                            Text("نسبة حضور القداس فى الشهر", style: GoogleFonts.cairo()),
+                            const SizedBox(height: 8),
+                            BatteryWidget(
+                              percentage: _calculateRowPercentage(0),
+                              width: 200,
+                              height: 20,
+                            ),
+                            const SizedBox(height: 12),
+                            Text("نسبة حضور الاجتماع فى الشهر", style: GoogleFonts.cairo()),
+                            const SizedBox(height: 8),
+                            BatteryWidget(
+                              percentage: _calculateRowPercentage(1),
+                              width: 200,
+                              height: 20,
+                            ),
+                            const SizedBox(height: 12),
+                            Text("نسبة المذبح العائلى فى الشهر", style: GoogleFonts.cairo()),
+                            const SizedBox(height: 8),
+                            BatteryWidget(
+                              percentage: _calculateRowPercentage(2),
+                              width: 200,
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Notes section in a card
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      color: Colors.white.withOpacity(0.85),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                "سر المصالحة",
+                                style: GoogleFonts.cairo(fontSize: 16),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                minHeight: 120,
+                                maxHeight: 200,
+                              ),
+                              child: TextField(
+                                maxLines: null,
+                                expands: false,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
+                                  hintStyle: GoogleFonts.cairo(),
+                                ),
+                                controller: _notesController,
+                                onChanged: (value) async {
+                                  await _databaseService.updateMonthNote(
+                                    displayedMonth.month,
+                                    value,
+                                  );
+                                },
+                              ),
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  child: Text("قديس", style: GoogleFonts.cairo()),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/manner',
+                                      arguments: {"month": displayedMonth.month},
+                                    );
+                                  },
+                                  child: Text("فضيله", style: GoogleFonts.cairo()),
+                                ),
+                              ],
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-            ),
-
-            // -----------------------------
-            // Battery Widgets for each row
-            // -----------------------------
-            SizedBox(height: 16),
-            Column(
-              children: [
-                Text("نسبة حضور القداس فى الشهر", 
-                // style: TextStyle(fontWeight: FontWeight.bold)
-                style: GoogleFonts.cairo()
-                ),
-                BatteryWidget(
-                  percentage: _calculateRowPercentage(0),
-                  width: 200,
-                  height: 20,
-                ),
-                SizedBox(height: 8),
-                Text("نسبة حضور الاجتماع فى الشهر", 
-                // style: TextStyle(fontWeight: FontWeight.bold)
-                style: GoogleFonts.cairo()
-                ),
-                BatteryWidget(
-                  percentage: _calculateRowPercentage(1),
-                  width: 200,
-                  height: 20,
-                ),
-                SizedBox(height: 8),
-                Text("نسبة المذبح العائلى فى الشهر", 
-                // style: TextStyle(fontWeight: FontWeight.bold)
-                style: GoogleFonts.cairo()
-                ),
-                BatteryWidget(
-                  percentage: _calculateRowPercentage(2),
-                  width: 200,
-                  height: 20,
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-
-            // -----------------------------
-            // Title
-            // -----------------------------
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                "سر المصالحة",
-                // style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                style: GoogleFonts.cairo(),
-                textAlign: TextAlign.center,
-              ),
-            ),
-
-            SizedBox(height: 8),
-
-            // -----------------------------
-            // Notes TextField
-            // -----------------------------
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: 120,
-                maxHeight: 200,
-              ),
-              child: TextField(
-                maxLines: null,
-                expands: false,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
-                  hintStyle: GoogleFonts.cairo()
-                ),
-                controller: _notesController,
-                onChanged: (value) async {
-                  await _databaseService.updateMonthNote(
-                    displayedMonth.month,
-                    value,
-                  );
-                },
-              ),
-            ),
-
-            SizedBox(height: 12),
-
-            // -----------------------------
-            // Buttons Row
-            // -----------------------------
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text("قديس"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/manner',
-                      arguments: {"month": displayedMonth.month},
-                    );
-                  },
-                  child: Text("فضيله"),
-                ),
-              ],
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }
