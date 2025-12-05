@@ -93,8 +93,8 @@ class _ReadingState extends State<Reading> {
         title: Text(intToArabic(convertToDDMMYYYY(date??""))),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () async{
-            Navigator.pushNamed(context, '/calendar');
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
         actions: [

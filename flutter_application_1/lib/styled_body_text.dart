@@ -12,7 +12,7 @@ class StyledBodyText extends StatelessWidget {
         textDirection: TextDirection.rtl,
         text,
         style: TextStyle(
-          color: Colors.brown[900],
+          color: Colors.black,
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),

@@ -158,8 +158,8 @@ class _MonthlyDataState extends State<MonthlyData> {
         title: Text(intToArabic("${displayedMonth.year}-${displayedMonth.month.toString().padLeft(2, '0')}")),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () async {
-            Navigator.pop(context, '/home');
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.grey,

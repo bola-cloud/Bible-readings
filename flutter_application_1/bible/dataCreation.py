@@ -545,7 +545,7 @@ for date, address in schedule.items():
     chapter_texts = []
 
     for chapter in chapter_range:
-        content = "الاصحاح " + int_to_arabic(chapter) + "\n"
+        content = "الاصحاح " + int_to_arabic(chapter) + ":\n"
         json_file = f"bible/output/{book_code}_{chapter}.json"
         if not os.path.exists(json_file):
             print(f"File not found: {json_file}")

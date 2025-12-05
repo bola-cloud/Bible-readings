@@ -65,10 +65,6 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
         ),
         extendBodyBehindAppBar: true,
         body: Container(
@@ -93,7 +89,7 @@ class _HomeState extends State<Home> {
                         children: [
                           const SizedBox(height: 80),
                           const SizedBox(height: 12),
-//                           Text('كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.', style: GoogleFonts.cairo(fontSize: 14, color: Colors.brown[800]), textAlign: TextAlign.center),
+                          Text('كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.', style: GoogleFonts.cairo(fontSize: 14, color: Colors.brown[800]), textAlign: TextAlign.center),
                           const SizedBox(height: 18),
                         ],
                       ),

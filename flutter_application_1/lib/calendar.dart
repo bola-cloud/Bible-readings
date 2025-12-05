@@ -63,8 +63,8 @@ class _CalendarState extends State<Calendar> {
         title: const Text('خطوة بخطوة'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () async {
-            Navigator.pushNamed(context, '/home');
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.grey,
