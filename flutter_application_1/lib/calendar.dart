@@ -103,7 +103,10 @@ class _CalendarState extends State<Calendar> {
                 image: DecorationImage(
                   image: AssetImage("assets/img/background.jpeg"),
                   fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.75), BlendMode.dstATop),
+                  colorFilter: ColorFilter.mode(
+                    Colors.white.withOpacity(0.75),
+                    BlendMode.dstATop,
+                  ),
                 ),
               ),
               child: Column(
@@ -112,12 +115,36 @@ class _CalendarState extends State<Calendar> {
                   TableCalendar(
                     rowHeight: 100,
                     firstDay: DateTime.utc(2026, 1, 1),
-                    lastDay: DateTime.utc(2026, endDay.month+1, 0),
+                    lastDay: DateTime.utc(2026, endDay.month + 1, 0),
                     focusedDay: DateTime.utc(2026, 1, 1),
                     onDaySelected: _onDaySelected,
-                    headerStyle: const HeaderStyle(
-                      formatButtonVisible: false,
+                    // headerStyle: const HeaderStyle(
+                    //   formatButtonVisible: false,
+                    //   titleCentered: true,
+                    // ),
+                    // Header (month + arrows)
+                    headerStyle: HeaderStyle(
+                      formatButtonVisible:
+                          false, // hide format button if desired
                       titleCentered: true,
+                      titleTextStyle: TextStyle(
+                        fontWeight: FontWeight.bold, // make month name bold
+                        fontSize: 18,
+                      ),
+                      leftChevronIcon: Icon(Icons.arrow_back, size: 24),
+                      rightChevronIcon: Icon(Icons.arrow_forward, size: 24),
+                    ),
+
+                    // Days of week (Mon, Tue, ...)
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                      weekdayStyle: TextStyle(
+                        fontWeight: FontWeight.bold, // bold weekdays
+                        fontSize: 14,
+                      ),
+                      weekendStyle: TextStyle(
+                        fontWeight: FontWeight.bold, // bold weekends
+                        fontSize: 14,
+                      ),
                     ),
                     calendarBuilders: CalendarBuilders(
                       defaultBuilder: (context, day, focusedDay) {
