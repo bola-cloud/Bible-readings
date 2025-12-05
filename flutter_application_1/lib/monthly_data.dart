@@ -143,6 +143,26 @@ class _MonthlyDataState extends State<MonthlyData> {
     return rowTotal > 0 ? rowCount / rowTotal : 0.0;
   }
 
+  String getArabicMonthName(int month) {
+    const arabicMonths = [
+      "شهر يناير",
+      "شهر فبراير",
+      "شهر مارس",
+      "شهر أبريل",
+      "شهر مايو",
+      "شهر يونيو",
+      "شهر يوليو",
+      "شهر أغسطس",
+      "شهر سبتمبر",
+      "شهر أكتوبر",
+      "شهر نوفمبر",
+      "شهر ديسمبر",
+    ];
+
+    if (month < 1 || month > 12) return "شهر غير معروف"; // fallback
+    return arabicMonths[month - 1];
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -156,7 +176,7 @@ class _MonthlyDataState extends State<MonthlyData> {
     Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text("${intToArabic("${displayedMonth.year}-${displayedMonth.month.toString().padLeft(2, '0')}")} ",style: GoogleFonts.cairo()),
+        title: Text("${getArabicMonthName(displayedMonth.month)} ",style: GoogleFonts.cairo(fontWeight: FontWeight.bold)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {

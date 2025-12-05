@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/battery_widget.dart'; // import the battery widget
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -45,30 +46,39 @@ class _StatisticsState extends State<Statistics> {
     double percent = totalDays > 0 ? openedDays / totalDays : 0.0;
 
     // 3️⃣ Read all toggles up to current month
-    Map<int, List<bool>> togglesMap = await _databaseService.getTogglesMapUpToMonth(now.month);
+    Map<int, List<bool>> togglesMap = await _databaseService
+        .getTogglesMapUpToMonth(now.month);
 
     // 4️⃣ Calculate row percentages
-    List<double> rowPercentages = List.generate(3, (index) => calculateRowPercentageAllMonths(togglesMap, index, now.month));
+    List<double> rowPercentages = List.generate(
+      3,
+      (index) => calculateRowPercentageAllMonths(togglesMap, index, now.month),
+    );
 
     setState(() {
       _percentage = percent;
       _rowPercentages = rowPercentages;
       _isLoading = false;
     });
-
   }
 
   // Get the first day of each week in the month
-  List<DateTime> getWeeksInMonth(DateTime month, {int weekStart = DateTime.sunday}){
+  List<DateTime> getWeeksInMonth(
+    DateTime month, {
+    int weekStart = DateTime.sunday,
+  }) {
     List<DateTime> weeks = [];
 
     DateTime firstOfMonth = DateTime(month.year, month.month, 1);
     DateTime lastOfMonth = DateTime(month.year, month.month + 1, 0);
 
     // Start from the weekStart before or equal to the first day of the month
-    DateTime currentWeekStart = firstOfMonth.subtract(Duration(days: (firstOfMonth.weekday - weekStart + 7) % 7));
+    DateTime currentWeekStart = firstOfMonth.subtract(
+      Duration(days: (firstOfMonth.weekday - weekStart + 7) % 7),
+    );
 
-    while (currentWeekStart.isBefore(lastOfMonth) || currentWeekStart.isAtSameMomentAs(lastOfMonth)) {
+    while (currentWeekStart.isBefore(lastOfMonth) ||
+        currentWeekStart.isAtSameMomentAs(lastOfMonth)) {
       weeks.add(currentWeekStart);
       currentWeekStart = currentWeekStart.add(Duration(days: 7));
     }
@@ -76,8 +86,11 @@ class _StatisticsState extends State<Statistics> {
     return weeks;
   }
 
-  double calculateRowPercentageAllMonths(Map<int, List<bool>> togglesMap, int rowIndex, int currentMonth) {
-    
+  double calculateRowPercentageAllMonths(
+    Map<int, List<bool>> togglesMap,
+    int rowIndex,
+    int currentMonth,
+  ) {
     int rowCount = 0;
     int rowTotal = 0;
 
@@ -87,7 +100,9 @@ class _StatisticsState extends State<Statistics> {
       if (monthToggles == null || monthToggles.isEmpty) continue;
 
       // Calculate columns for the month
-      final weeks = getWeeksInMonth(DateTime(2026, month, 1)); // adjust year if needed
+      final weeks = getWeeksInMonth(
+        DateTime(2026, month, 1),
+      ); // adjust year if needed
       int columns = weeks.length + 1;
 
       // Determine start and end index for the row in this month
@@ -105,101 +120,139 @@ class _StatisticsState extends State<Statistics> {
 
   @override
   Widget build(BuildContext context) {
-
     return _isLoading
         ? Loading()
         : Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
-              title: Text("أنجازاتى"),
+              title: Text(
+                "أنجازاتى",
+                style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+              ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.transparent,
+              centerTitle: true,
               actions: [
                 IconButton(
                   icon: Icon(Icons.delete),
                   tooltip: "حذف البيانات",
                   onPressed: () async {
-                  bool confirm = await showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: Text("تأكيد الحذف"),
-                      content: Text("هل تريد حذف كل البيانات؟"),
-                      actions: [
-                        TextButton(
+                    bool confirm = await showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text("تأكيد الحذف"),
+                        content: Text("هل تريد حذف كل البيانات؟"),
+                        actions: [
+                          TextButton(
                             onPressed: () => Navigator.pop(ctx, false),
                             child: Text("لا"),
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, true),
                             child: Text("نعم"),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirm) {
-                    await _databaseService.close();
-                    await deleteDatabaseIfExists();
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    await _calculateStatistics(); // reload statistics after deletion
-                  }
-                },
-              ),
-            ],
-            ),
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "نسبة التأملات المفتوحة حتى اليوم",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 32),
-                    BatteryWidget(
-                      percentage: _percentage,
-                    ),
-                    SizedBox(height: 32),
-                    // Extra batteries for القداس, الاجتماع, المذبح العائلى
-                    Column(
-                      children: List.generate(3, (index) {
-                        String label = ["نسبة حضور القداس حتى اليوم", "نسبة حضور الاجتماع حتى اليوم", "نسبة ممارسة المذبح العائلى حتى اليوم"][index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                label,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 8),
-                              BatteryWidget(
-                                percentage: _rowPercentages[index],
-                                height: 25,
-                              ),
-                            ],
                           ),
-                        );
-                      }),
+                        ],
+                      ),
+                    );
+                    if (confirm) {
+                      await _databaseService.close();
+                      await deleteDatabaseIfExists();
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await _calculateStatistics(); // reload statistics after deletion
+                    }
+                  },
+                ),
+              ],
+            ),
+            body: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/img/background.jpeg'),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.8),
+                        BlendMode.dstATop,
+                      ),
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                    Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      color: Colors.white.withOpacity(0.85),
+                      child: SizedBox(
+                        height: 500, // <-- Force the card height
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "نسبة التأملات المفتوحة حتى اليوم",
+                                  style: GoogleFonts.cairo(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 32),
+                                BatteryWidget(percentage: _percentage),
+                                SizedBox(height: 32),
+                                Column(
+                                  children: List.generate(3, (index) {
+                                    String label = [
+                                      "نسبة حضور القداس حتى اليوم",
+                                      "نسبة حضور الاجتماع حتى اليوم",
+                                      "نسبة ممارسة المذبح العائلى حتى اليوم",
+                                    ][index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            label,
+                                            style: GoogleFonts.cairo(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          SizedBox(height: 8),
+                                          BatteryWidget(
+                                            percentage: _rowPercentages[index],
+                                            height: 25,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
           );
   }

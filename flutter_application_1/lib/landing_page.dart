@@ -71,7 +71,7 @@ class _LandingPageState extends State<LandingPage>
 
           /// --- Pale Overlay ---
           Container(
-            color: Colors.white.withOpacity(0.30), // soft pale overlay
+            color: Colors.white.withOpacity(0.50), // soft pale overlay
           ),
 
           /// --- Main Content ---

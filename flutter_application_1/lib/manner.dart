@@ -63,6 +63,26 @@ class _MannerState extends State<Manner> {
     return s;
   }
 
+  String getArabicMonthName(int month) {
+    const arabicMonths = [
+      "شهر يناير",
+      "شهر فبراير",
+      "شهر مارس",
+      "شهر أبريل",
+      "شهر مايو",
+      "شهر يونيو",
+      "شهر يوليو",
+      "شهر أغسطس",
+      "شهر سبتمبر",
+      "شهر أكتوبر",
+      "شهر نوفمبر",
+      "شهر ديسمبر",
+    ];
+
+    if (month < 1 || month > 12) return "قضيله شهر غير معروف"; // fallback
+    return "فضيله ${arabicMonths[month - 1]}";
+  }
+
    @override
   Widget build(BuildContext context) {
 
@@ -70,14 +90,15 @@ class _MannerState extends State<Manner> {
 
     Scaffold(
       appBar: AppBar(
-        title: Text(intToArabic(month??"")),
+        title: Text(getArabicMonthName(month?? 0)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () async{
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 16),
@@ -91,50 +112,59 @@ class _MannerState extends State<Manner> {
             Container(
               margin: const EdgeInsets.only(top: 12, bottom: 12),
               child: Image.asset(
-                "assets/tmp.png",   // <-- PLACEHOLDER IMAGE
-                height: 180,
-                width: double.infinity,
-                fit: BoxFit.contain,
+                "assets/img/background.jpeg",   // <-- PLACEHOLDER IMAGE
+                // height: 180,
+                // width: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
 
             // ---------------------------------------
             // TITLE
             // ---------------------------------------
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                "ممارسة عملية",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-
-            SizedBox(height: 12),
-
-            // ---------------------------------------
-            // TEXT FIELD (safe height, no overflow)
-            // ---------------------------------------
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: 140,
-                maxHeight: 220,
-              ),
-              child: TextField(
-                maxLines: null,
-                expands: false,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
-                ),
-                keyboardType: TextInputType.multiline,
-                controller: _mannerController,
-                onChanged: (value) async {
-                  await _databaseService.updateMonthManner(month!, value);
-                },
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              color: Colors.white.withOpacity(0.85),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      "ممارسة عملية",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  
+                  SizedBox(height: 12),
+                  
+                  // ---------------------------------------
+                  // TEXT FIELD (safe height, no overflow)
+                  // ---------------------------------------
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 120,
+                      maxHeight: 120,
+                    ),
+                    child: TextField(
+                      maxLines: null,
+                      expands: false,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      controller: _mannerController,
+                      onChanged: (value) async {
+                        await _databaseService.updateMonthManner(month!, value);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
