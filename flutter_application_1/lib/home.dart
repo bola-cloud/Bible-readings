@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/modules/data.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_application_1/sujood_hour.dart';
+import 'package:flutter_application_1/daily_meditation.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -147,7 +149,9 @@ class _HomeState extends State<Home> {
                               child: const Icon(Icons.menu_book, color: Colors.orange),
                             ),
                             color: Colors.orange.shade50.withOpacity(0.95),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const DailyMeditation()));
+                            },
                           ),
                         ),
 
@@ -177,7 +181,10 @@ class _HomeState extends State<Home> {
                               child: const Icon(Icons.self_improvement, color: Colors.orange),
                             ),
                             color: Colors.yellow.shade50.withOpacity(0.95),
-                            onTap: () {},
+                            onTap: () {
+                              // Pass current month to the Manner page
+                              Navigator.pushNamed(context, '/manner', arguments: {'month': DateTime.now().month});
+                            },
                           ),
                         ),
 
@@ -192,7 +199,9 @@ class _HomeState extends State<Home> {
                               child: const Icon(Icons.access_time, color: Colors.orange),
                             ),
                             color: Colors.orange.shade200.withOpacity(0.95),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const SujoodHour()));
+                            },
                           ),
                         ),
 

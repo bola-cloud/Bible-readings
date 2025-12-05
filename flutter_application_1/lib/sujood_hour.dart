@@ -1,0 +1,227 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class SujoodHour extends StatefulWidget {
+  const SujoodHour({super.key});
+
+  @override
+  State<SujoodHour> createState() => _SujoodHourState();
+}
+
+class _SujoodHourState extends State<SujoodHour> {
+  final List<Map<String, String>> _steps = const [
+    {
+      'title': '1- حضر وقتك ومكانك',
+      'body': 'ادخل الكنيسة إلى بيت القربان في صمت. خلِ بالك إنك داخل لحضور يسوع الحقيقي في سر الإفخارستيا.'
+    },
+    {
+      'title': '2- الدخول بسجود الجسد',
+      'body': 'عند دخولك، أعمل انحناءة عميقة أو ركوع على الركبتين تكريمًا للمسيح الحاضر.'
+    },
+    {
+      'title': '3- اطلب حضور الروح القدس',
+      'body': 'اجلس بهدوء أو اسجد على ركبتيك، اطلب من الروح القدس ينقي قلبك ويملأك بالسلام.'
+    },
+    {
+      'title': '4- زمن الصمت',
+      'body': 'اقعد في صمت أمام يسوع، زي صديق يقعد مع صديقه. مش ضروري تتكلم كثير، الأهم هو حضورك القلبي.'
+    },
+    {
+      'title': '5- قراءة أو تأمل قصير',
+      'body': 'ممكن تقرأ آية من الكتاب المقدس أو تتأمل كلمة قصيرة تربطك بالمسيح الحاضر.'
+    },
+    {
+      'title': '6- صلِ من قلبك',
+      'body': 'كلم يسوع بحرية؛ اشكره على حضوره، احكي له همومك وطلباتك وقدم له حياتك وأحبابك.'
+    },
+    {
+      'title': '7- زمن التأمل العملي',
+      'body': 'بعد الصلاة اقعد ساكت وخلي قلبك مفتوح. انظر ليسوع الموجود في سر القربان، ودعه يتكلم.'
+    },
+    {
+      'title': '8- التقدمة والقرار',
+      'body': 'قدم نفسك ليسوع: "خذني يا رب", واختر قرار عملي صغير تعيشه بعد الخروج.'
+    },
+    {
+      'title': '9- كتابة الخلاصة',
+      'body': 'بعد ما تخلص السجود، اكتب: إيه اللي حسيت بيه أو الكلمة اللي لمستك، والقرار اللي أخدته.'
+    },
+  ];
+
+  late final PageController _pageController;
+  double _page = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // viewportFraction < 1 creates space for the neighboring cards; adjust for hover look
+    _pageController = PageController(viewportFraction: 0.78);
+    _pageController.addListener(() {
+      setState(() {
+        _page = _pageController.page ?? _pageController.initialPage.toDouble();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.removeListener(() {});
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildCard(BuildContext context, Map<String, String> step, int index) {
+    const Color cardColor = Color(0xFFF8EDE0); // soft peach
+    const Color titleColor = Color(0xFF6B2626); // maroon for titles
+    const Color bodyColor = Color(0xFF6B2626);
+
+    // compute scale based on distance from current page
+    final double distance = (_page - index).abs();
+    final double scale = (1 - (distance * 0.12)).clamp(0.88, 1.0);
+
+    return Transform.scale(
+      scale: scale,
+      alignment: Alignment.center,
+      child: Card(
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        color: cardColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // small circular icon placeholder
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
+                ),
+                child: Center(child: Icon(Icons.church, color: Colors.brown)),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                step['title'] ?? '',
+                style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                step['body'] ?? '',
+                style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isWide = width > 700;
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+            },
+          ),
+          title: Text('خطوات ساعة السجود', style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
+        ),
+        body: Stack(
+          children: [
+            // background image
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/img/background.jpeg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            // pale overlay
+            Container(color: Colors.white.withOpacity(0.30)),
+
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+
+                    // Swiper area: horizontal PageView with hovering center card
+                    SizedBox(
+                      height: isWide ? 360 : 420,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: _steps.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: isWide ? 12 : 10),
+                            child: _buildCard(context, _steps[index], index),
+                          );
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // indicators (dots)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(_steps.length, (i) {
+                        final Color active = const Color(0xFF6B2626);
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                          width: ((_page.round() == i) ? 16 : 8).toDouble(),
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: (_page.round() == i) ? active : Colors.grey,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        );
+                      }),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // footer note area (like design)
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'السجود أمام القربان هو مدرسة حب وصدق... كن حاضرًا بكل قلبك',
+                            style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF6B2626)),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

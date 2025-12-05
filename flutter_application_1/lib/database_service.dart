@@ -264,11 +264,65 @@ class DatabaseService {
     );
 
     if (result.isEmpty) {
-      // No record → return empty or full false list
+      // No record → return null
       return null;
     }
 
     return result.first[_attendanceMannerColumnName] as String;
+  }
+
+  // --- New: per-step manner notes stored as JSON in the manner column ---
+  // Returns a map where keys are step indexes (as int) and values are the saved note strings.
+  Future<Map<int, String>> getMonthMannerMap(int month) async {
+    final raw = await getMonthManner(month);
+    if (raw == null || raw.isEmpty) return {};
+
+    try {
+      final decoded = json.decode(raw) as Map<String, dynamic>;
+      final Map<int, String> out = {};
+      decoded.forEach((k, v) {
+        final idx = int.tryParse(k);
+        if (idx != null) out[idx] = v?.toString() ?? '';
+      });
+      return out;
+    } catch (_) {
+      // If it's not JSON (legacy single-string), return it as index 0 content
+      return {0: raw};
+    }
+  }
+
+  // Update a single step note for a month. Stores all steps as JSON in the manner column.
+  Future<void> updateMonthMannerStep(int month, int stepIndex, String note) async {
+    final db = await database;
+
+    // Read existing manner JSON (if any)
+    final existing = await getMonthMannerMap(month);
+    existing[stepIndex] = note;
+
+    final encoded = json.encode(existing.map((k, v) => MapEntry(k.toString(), v)));
+
+    // If a row exists for the month, update; otherwise insert
+    final existingRow = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceMonthColumnName],
+      where: '$_attendanceMonthColumnName = ?',
+      whereArgs: [month],
+    );
+
+    if (existingRow.isEmpty) {
+      await db.rawInsert('''
+        INSERT OR REPLACE INTO $_attendanceTableName
+          ($_attendanceMonthColumnName, $_attendanceDataColumnName, $_attendanceNoteColumnName, $_attendanceMannerColumnName)
+        VALUES (?, ?, ?, ?)
+      ''', [month, '', '', encoded]);
+    } else {
+      await db.update(
+        _attendanceTableName,
+        {_attendanceMannerColumnName: encoded},
+        where: '$_attendanceMonthColumnName = ?',
+        whereArgs: [month],
+      );
+    }
   }
 
   Future<void> updateMonthNote(int month, String note) async {

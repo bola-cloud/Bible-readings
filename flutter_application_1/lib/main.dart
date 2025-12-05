@@ -6,6 +6,7 @@ import 'package:flutter_application_1/manner.dart';
 import 'package:flutter_application_1/monthly_data.dart';
 import 'package:flutter_application_1/reading.dart';
 import 'package:flutter_application_1/statistics.dart';
+import 'package:flutter_application_1/sujood_hour.dart';
 
 // Add imports for desktop sqflite ffi initialization
 import 'dart:io';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/monthly_data': (context) => const MonthlyData(),
         '/statistics': (context) => const Statistics(),
         '/manner': (context) => const Manner(),
+        '/sujood_hour': (context) => const SujoodHour(),
       },
     );
   }
