@@ -57,7 +57,7 @@ class _LandingPageState extends State<LandingPage>
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/img/background.jpeg"),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),

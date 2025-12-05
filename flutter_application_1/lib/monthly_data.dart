@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/battery_widget.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MonthlyData extends StatefulWidget {
   const MonthlyData({super.key});
@@ -155,7 +156,7 @@ class _MonthlyDataState extends State<MonthlyData> {
     Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text(intToArabic("${displayedMonth.year}-${displayedMonth.month.toString().padLeft(2, '0')}")),
+        title: Text(intToArabic("${displayedMonth.year}-${displayedMonth.month.toString().padLeft(2, '0')}"),style: GoogleFonts.cairo()),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -194,7 +195,8 @@ class _MonthlyDataState extends State<MonthlyData> {
                           const Icon(Icons.calendar_today, size: 28),
                           Text(
                             intToArabic("${weeks[index].month.toString().padLeft(2,'0')}-${weeks[index].day.toString().padLeft(2,'0')}"),
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: GoogleFonts.cairo()
                           ),
                         ],
                       ),
@@ -206,7 +208,8 @@ class _MonthlyDataState extends State<MonthlyData> {
                       child: Text(
                         "حضور القداس",
                         textDirection: TextDirection.rtl,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        style: GoogleFonts.cairo()
                       ),
                     );
                   }
@@ -216,7 +219,8 @@ class _MonthlyDataState extends State<MonthlyData> {
                       child: Text(
                         "حضور الاجتماع",
                         textDirection: TextDirection.rtl,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        style: GoogleFonts.cairo()
                       ),
                     );
                   }
@@ -226,7 +230,8 @@ class _MonthlyDataState extends State<MonthlyData> {
                       child: Text(
                         "المذبح العائلى",
                         textDirection: TextDirection.rtl,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        // style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        style: GoogleFonts.cairo()
                       ),
                     );
                   }
@@ -262,21 +267,30 @@ class _MonthlyDataState extends State<MonthlyData> {
             SizedBox(height: 16),
             Column(
               children: [
-                Text("نسبة حضور القداس فى الشهر", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("نسبة حضور القداس فى الشهر", 
+                // style: TextStyle(fontWeight: FontWeight.bold)
+                style: GoogleFonts.cairo()
+                ),
                 BatteryWidget(
                   percentage: _calculateRowPercentage(0),
                   width: 200,
                   height: 20,
                 ),
                 SizedBox(height: 8),
-                Text("نسبة حضور الاجتماع فى الشهر", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("نسبة حضور الاجتماع فى الشهر", 
+                // style: TextStyle(fontWeight: FontWeight.bold)
+                style: GoogleFonts.cairo()
+                ),
                 BatteryWidget(
                   percentage: _calculateRowPercentage(1),
                   width: 200,
                   height: 20,
                 ),
                 SizedBox(height: 8),
-                Text("نسبة المذبح العائلى فى الشهر", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("نسبة المذبح العائلى فى الشهر", 
+                // style: TextStyle(fontWeight: FontWeight.bold)
+                style: GoogleFonts.cairo()
+                ),
                 BatteryWidget(
                   percentage: _calculateRowPercentage(2),
                   width: 200,
@@ -293,7 +307,8 @@ class _MonthlyDataState extends State<MonthlyData> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 "سر المصالحة",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                // style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: GoogleFonts.cairo(),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -314,6 +329,7 @@ class _MonthlyDataState extends State<MonthlyData> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
+                  hintStyle: GoogleFonts.cairo()
                 ),
                 controller: _notesController,
                 onChanged: (value) async {

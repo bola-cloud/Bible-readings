@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
 import 'package:flutter_application_1/modules/data.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
@@ -12,10 +13,9 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-
-  Map<String,Data>? data = {};
+  Map<String, Data>? data = {};
   Map<String, String>? notes;
-  DateTime endDay = DateTime.utc(2026,5,6);
+  DateTime endDay = DateTime.utc(2026, 5, 6);
   final DatabaseService _databaseService = DatabaseService.instance;
   bool _isLoading = true;
 
@@ -34,87 +34,137 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
-    if(selectedDay.isAfter(endDay)){
+    if (selectedDay.isAfter(endDay)) {
       return;
     }
-    String day = "${selectedDay.month.toString().padLeft(2,'0')}-${selectedDay.day.toString().padLeft(2,'0')}-${selectedDay.year}";
+    String day =
+        "${selectedDay.month.toString().padLeft(2, '0')}-${selectedDay.day.toString().padLeft(2, '0')}-${selectedDay.year}";
     _databaseService.updateDataOpened(day, 1);
 
-    Navigator.pushNamed(context, '/reading', arguments: {
-      "date": day,
-    });
+    Navigator.pushNamed(context, '/reading', arguments: {"date": day});
 
     await _loadData();
   }
 
   String? getCustomLabel(DateTime day) {
-    String? title = data?["${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}"]?.title;
+    String? title =
+        data?["${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}-${day.year}"]
+            ?.title;
 
     return title;
   }
 
+  Widget _buildBlackDay(DateTime day) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.transparent, // FULL BLACK BACKGROUND
+        shape: BoxShape.rectangle,
+      ),
+      child: Text(
+        '${day.day}',
+        style: TextStyle(
+          color: Colors.black, // MAKE TEXT WHITE TO BE VISIBLE
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    return _isLoading ? Loading() : 
-
-    Scaffold(
-      appBar: AppBar(
-        title: const Text('خطوة بخطوة'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.grey,
-      ),
-      body: TableCalendar(
-        rowHeight: 100,
-        firstDay: DateTime.utc(2026, 1, 1),
-        lastDay: endDay,
-        focusedDay: DateTime.utc(2026, 1, 1),
-        onDaySelected: _onDaySelected,
-        headerStyle: const HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
-        ),
-        calendarBuilders: CalendarBuilders(
-          defaultBuilder: (context, day, focusedDay) {
-            String dayKey =
-                "${day.month.toString().padLeft(2,'0')}-${day.day.toString().padLeft(2,'0')}-${day.year}";
-            bool isOpened = data?[dayKey]?.opened == 1;
-
-            return Container(
-              decoration: BoxDecoration(
-                color: day.isBefore(endDay.add(const Duration(days: 1))) ? (isOpened ? Colors.green : Colors.red): Colors.grey,
-                // color: isOpened ? const Color.fromARGB(255, 61, 196, 37) : const Color.fromARGB(255, 213, 211, 161),
-                borderRadius: BorderRadius.circular(12),
+    return _isLoading
+        ? Loading()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('خطوة بخطوة', style: GoogleFonts.cairo()),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-              padding: const EdgeInsets.all(3),
-              margin: const EdgeInsets.all(5),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${day.day}',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    if (getCustomLabel(day) != null && day.isBefore(endDay.add(const Duration(days: 1))))
-                      Text(
-                        getCustomLabel(day)!,
-                        softWrap: true,           // ⬅️ allows wrapping
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                  ],
+              backgroundColor: Colors.transparent,
+              centerTitle: true,
+            ),
+            extendBodyBehindAppBar: true,
+            body: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/img/background.jpeg"),
+                  fit: BoxFit.fill,
                 ),
               ),
-            );
-          },
-        ),
-      )
-    );
+              child: Column(
+                children: [
+                  SizedBox(height: 80),
+                  TableCalendar(
+                    rowHeight: 100,
+                    firstDay: DateTime.utc(2026, 1, 1),
+                    lastDay: DateTime.utc(2026, endDay.month+1, 0),
+                    focusedDay: DateTime.utc(2026, 1, 1),
+                    onDaySelected: _onDaySelected,
+                    headerStyle: const HeaderStyle(
+                      formatButtonVisible: false,
+                      titleCentered: true,
+                    ),
+                    calendarBuilders: CalendarBuilders(
+                      defaultBuilder: (context, day, focusedDay) {
+                        String dayKey =
+                            "${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}-${day.year}";
+                        bool isOpened = data?[dayKey]?.opened == 1;
+
+                        if (day.month == endDay.month && day.isAfter(endDay)) {
+                          return _buildBlackDay(day);
+                        }
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            color:
+                                day.isBefore(
+                                  endDay.add(const Duration(days: 1)),
+                                )
+                                ? (isOpened ? Colors.green : Colors.red)
+                                : Colors.grey,
+                            // color: isOpened ? const Color.fromARGB(255, 61, 196, 37) : const Color.fromARGB(255, 213, 211, 161),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.all(3),
+                          margin: const EdgeInsets.all(5),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${day.day}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                if (getCustomLabel(day) != null &&
+                                    day.isBefore(
+                                      endDay.add(const Duration(days: 1)),
+                                    ))
+                                  Text(
+                                    getCustomLabel(day)!,
+                                    softWrap: true, // ⬅️ allows wrapping
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      outsideBuilder: (context, day, focusedDay) {
+                        return _buildBlackDay(day);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
   }
 }

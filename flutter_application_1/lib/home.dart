@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/img/background.jpeg'),
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
               colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.85), BlendMode.dstATop),
             ),
           ),

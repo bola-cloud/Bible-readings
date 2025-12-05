@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
 import 'package:flutter_application_1/styled_body_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Reading extends StatefulWidget {
   const Reading({super.key});
@@ -90,7 +91,7 @@ class _ReadingState extends State<Reading> {
 
     Scaffold(
       appBar: AppBar(
-        title: Text(intToArabic(convertToDDMMYYYY(date??""))),
+        title: Text(intToArabic(convertToDDMMYYYY(date??"")), style: GoogleFonts.cairo(),),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -131,7 +132,7 @@ class _ReadingState extends State<Reading> {
               ),
 
               /// READING AREA
-              Container(
+              SizedBox(
                 height: readingHeight,
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
