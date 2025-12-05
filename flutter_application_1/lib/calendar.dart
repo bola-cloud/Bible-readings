@@ -39,10 +39,13 @@ class _CalendarState extends State<Calendar> {
     }
     String day =
         "${selectedDay.month.toString().padLeft(2, '0')}-${selectedDay.day.toString().padLeft(2, '0')}-${selectedDay.year}";
-    _databaseService.updateDataOpened(day, 1);
+    // mark opened immediately
+    await _databaseService.updateDataOpened(day, 1);
 
-    Navigator.pushNamed(context, '/reading', arguments: {"date": day});
+    // Navigate and wait for the reading page to pop, then reload data so the calendar reflects any changes
+    await Navigator.pushNamed(context, '/reading', arguments: {"date": day});
 
+    // Reload data after returning
     await _loadData();
   }
 

@@ -24,7 +24,7 @@ class _LandingPageState extends State<LandingPage>
     // Fade animation
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
@@ -35,9 +35,16 @@ class _LandingPageState extends State<LandingPage>
     _controller.repeat(reverse: true);
 
     // Navigate after 3 seconds
-    Timer(Duration(seconds: 3), () async {
-      await _databaseService.database;
-      Navigator.pushReplacementNamed(context, "/home");
+    Timer(const Duration(seconds: 3), () async {
+      // ensure DB is ready (some platforms need initialization)
+      try {
+        await _databaseService.database;
+      } catch (_) {}
+
+      if (!mounted) return;
+
+      // Use pushReplacementNamed to replace the landing page with home
+      Navigator.pushReplacementNamed(context, '/home');
     });
   }
 
@@ -54,10 +61,10 @@ class _LandingPageState extends State<LandingPage>
         children: [
           /// --- Background Image ---
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/img/background.jpeg"),
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -76,29 +83,29 @@ class _LandingPageState extends State<LandingPage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 100),
+                    const SizedBox(height: 100),
                     // Animated Cross Icon
                     ScaleTransition(
                       scale: _crossAnimation,
-                      child: Icon(
+                      child: const Icon(
                         Icons.church,
                         size: 90,
                         color: Colors.black,
                       ),
                     ),
 
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
 
                     // Spinner
-                    CircularProgressIndicator(
+                    const CircularProgressIndicator(
                       strokeWidth: 3,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                     ),
 
-                    SizedBox(height: 50),
+                    const SizedBox(height: 50),
 
                     // Credits Section
-                    Text(
+                    const Text(
                       "Developed by:",
                       style: TextStyle(
                         fontSize: 20,
@@ -107,33 +114,33 @@ class _LandingPageState extends State<LandingPage>
                       ),
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // YOU
-                    Text(
+                    const Text(
                       "• Samer Walaa\n  Email: samer.walaa18@gmail.com",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 17, color: Colors.black),
                     ),
 
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
                     // Developer X
-                    Text(
+                    const Text(
                       "• Bola Eshak\n  Email: <X_EMAIL_HERE>",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 17, color: Colors.black),
                     ),
 
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
 
                     // Footer
-                    Text(
+                    const Text(
                       "Made with ❤️ for God’s glory",
                       style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
