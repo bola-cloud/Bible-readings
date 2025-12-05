@@ -71,9 +71,10 @@ class _HomeState extends State<Home> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/img/background.jpeg'),
-              fit: BoxFit.fill,
-              colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.85), BlendMode.dstATop),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.75), BlendMode.dstATop),
             ),
+
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: LayoutBuilder(

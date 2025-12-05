@@ -102,7 +102,8 @@ class _CalendarState extends State<Calendar> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/img/background.jpeg"),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.75), BlendMode.dstATop),
                 ),
               ),
               child: Column(
