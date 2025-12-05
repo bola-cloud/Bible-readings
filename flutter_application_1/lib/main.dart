@@ -1,5 +1,9 @@
+// Add imports for desktop sqflite ffi initialization
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/calendar.dart';
+import 'package:flutter_application_1/carlo.dart';
 import 'package:flutter_application_1/home.dart';
 import 'package:flutter_application_1/landing_page.dart';
 import 'package:flutter_application_1/manner.dart';
@@ -8,8 +12,6 @@ import 'package:flutter_application_1/reading.dart';
 import 'package:flutter_application_1/statistics.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
 
-// Add imports for desktop sqflite ffi initialization
-import 'dart:io';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
@@ -45,6 +47,7 @@ class MyApp extends StatelessWidget {
         '/statistics': (context) => const Statistics(),
         '/manner': (context) => const Manner(),
         '/sujood_hour': (context) => const SujoodHour(),
+        '/carlo': (context) => const FloatingCardsPage(),
       },
     );
   }

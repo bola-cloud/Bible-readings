@@ -71,6 +71,7 @@ flutter:
     - assets/icons/readings.png
     - assets/icons/settings.png
     - assets/img/background.jpeg
+    - assets/img/carlo.jpg
     - data/
 
   # An image asset can refer to one or more resolution-specific "variants", see

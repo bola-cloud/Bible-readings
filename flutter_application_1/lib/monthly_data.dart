@@ -412,7 +412,13 @@ class _MonthlyDataState extends State<MonthlyData> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/carlo',
+                                    arguments: {"month": displayedMonth.month},
+                                  );
+                                },
                                 child: Text("قديس", style: GoogleFonts.cairo()),
                               ),
                               ElevatedButton(
