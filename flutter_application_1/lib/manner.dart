@@ -79,7 +79,6 @@ class _MannerState extends State<Manner> {
       "شهر ديسمبر",
     ];
 
-    if (month < 1 || month > 12) return "قضيله شهر غير معروف"; // fallback
     return "فضيله ${arabicMonths[month - 1]}";
   }
 
