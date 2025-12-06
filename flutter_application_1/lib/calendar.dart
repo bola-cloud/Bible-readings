@@ -1,3 +1,4 @@
+// ...existing code...
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
@@ -26,12 +27,21 @@ class _CalendarState extends State<Calendar> {
   }
 
   Future<void> _loadData() async {
-    final fetchedData = await _databaseService.getDataContent();
+    final fetchedData = await _database_service_getDataContentSafe();
     if (!mounted) return;
     setState(() {
       data = fetchedData;
       _isLoading = false;
     });
+  }
+
+  // safe wrapper in case of DB issues
+  Future<Map<String, Data>?> _database_service_getDataContentSafe() async {
+    try {
+      return await _databaseService.getDataContent();
+    } catch (_) {
+      return {};
+    }
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
@@ -64,30 +74,14 @@ class _CalendarState extends State<Calendar> {
     return title;
   }
 
-  Widget _buildBlackDay(DateTime day) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.transparent, // FULL BLACK BACKGROUND
-        shape: BoxShape.rectangle,
-      ),
-      child: Text(
-        '${day.day}',
-        style: TextStyle(
-          color: Colors.black, // MAKE TEXT WHITE TO BE VISIBLE
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return _isLoading
         ? Loading()
         : Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
-              title: Text('خطوة بخطوة', style: GoogleFonts.cairo()),
+              title: Text('تأملاتى', style: GoogleFonts.cairo(fontWeight: FontWeight.bold)),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -97,111 +91,131 @@ class _CalendarState extends State<Calendar> {
               backgroundColor: Colors.transparent,
               centerTitle: true,
             ),
-            extendBodyBehindAppBar: true,
-            body: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/img/background.jpg"),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.white.withOpacity(0.75),
-                    BlendMode.dstATop,
+            body: Stack(
+              children: [
+                // Background image (match monthly_data styling)
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/img/background.jpg"),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.90),
+                        BlendMode.dstATop,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: 80),
-                  TableCalendar(
-                    rowHeight: 100,
-                    firstDay: DateTime.utc(2026, 1, 1),
-                    lastDay: DateTime.utc(2026, endDay.month + 1, 0),
-                    focusedDay: DateTime.utc(2026, 1, 1),
-                    onDaySelected: _onDaySelected,
-                    // headerStyle: const HeaderStyle(
-                    //   formatButtonVisible: false,
-                    //   titleCentered: true,
-                    // ),
-                    // Header (month + arrows)
-                    headerStyle: HeaderStyle(
-                      formatButtonVisible:
-                          false, // hide format button if desired
-                      titleCentered: true,
-                      titleTextStyle: TextStyle(
-                        fontWeight: FontWeight.bold, // make month name bold
-                        fontSize: 18,
-                      ),
-                      leftChevronIcon: Icon(Icons.arrow_back, size: 24),
-                      rightChevronIcon: Icon(Icons.arrow_forward, size: 24),
+
+                // Pale overlay for readability (matches monthly_data)
+                Container(color: Colors.white.withOpacity(0.30)),
+
+                // Main content using same padding/scroll pattern as monthly_data
+                SingleChildScrollView(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 0,
+                      vertical: 20,
                     ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 80),
 
-                    // Days of week (Mon, Tue, ...)
-                    daysOfWeekStyle: DaysOfWeekStyle(
-                      weekdayStyle: TextStyle(
-                        fontWeight: FontWeight.bold, // bold weekdays
-                        fontSize: 14,
-                      ),
-                      weekendStyle: TextStyle(
-                        fontWeight: FontWeight.bold, // bold weekends
-                        fontSize: 14,
-                      ),
-                    ),
-                    calendarBuilders: CalendarBuilders(
-                      defaultBuilder: (context, day, focusedDay) {
-                        String dayKey =
-                            "${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}-${day.year}";
-                        bool isOpened = data?[dayKey]?.opened == 1;
-
-                        if (day.month == endDay.month && day.isAfter(endDay)) {
-                          return _buildBlackDay(day);
-                        }
-
-                        return Container(
-                          decoration: BoxDecoration(
-                            color:
-                                day.isBefore(
-                                  endDay.add(const Duration(days: 1)),
-                                )
-                                ? (isOpened ? Colors.green : Colors.red)
-                                : Colors.grey,
-                            // color: isOpened ? const Color.fromARGB(255, 61, 196, 37) : const Color.fromARGB(255, 213, 211, 161),
-                            borderRadius: BorderRadius.circular(12),
+                        // Calendar inside a card to match monthly_data style
+                        Card(
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          padding: const EdgeInsets.all(3),
-                          margin: const EdgeInsets.all(5),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${day.day}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          color: Colors.white.withOpacity(0.85),
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: TableCalendar(
+                              rowHeight: 100,
+                              firstDay: DateTime.utc(2026, 1, 1),
+                              lastDay: endDay,
+                              focusedDay: DateTime.utc(2026, 1, 1),
+                              onDaySelected: _onDaySelected,
+                              headerStyle: HeaderStyle(
+                                formatButtonVisible: false,
+                                titleCentered: true,
+                                titleTextStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 ),
-                                if (getCustomLabel(day) != null &&
-                                    day.isBefore(
-                                      endDay.add(const Duration(days: 1)),
-                                    ))
-                                  Text(
-                                    getCustomLabel(day)!,
-                                    softWrap: true, // ⬅️ allows wrapping
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 10),
-                                  ),
-                              ],
+                                leftChevronIcon: Icon(
+                                  Icons.arrow_back,
+                                  size: 24,
+                                ),
+                                rightChevronIcon: Icon(
+                                  Icons.arrow_forward,
+                                  size: 24,
+                                ),
+                              ),
+                              calendarBuilders: CalendarBuilders(
+                                defaultBuilder: (context, day, focusedDay) {
+                                  String dayKey =
+                                      "${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}-${day.year}";
+                                  bool isOpened = data?[dayKey]?.opened == 1;
+
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          day.isBefore(
+                                            endDay.add(const Duration(days: 1)),
+                                          )
+                                          ? (isOpened
+                                                ? Colors.green
+                                                : Colors.red)
+                                          : Colors.grey,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    padding: const EdgeInsets.all(3),
+                                    margin: const EdgeInsets.all(5),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '${day.day}',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          if (getCustomLabel(day) != null &&
+                                              day.isBefore(
+                                                endDay.add(
+                                                  const Duration(days: 1),
+                                                ),
+                                              ))
+                                            Text(
+                                              getCustomLabel(day)!,
+                                              softWrap: true,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        );
-                      },
-                      outsideBuilder: (context, day, focusedDay) {
-                        return _buildBlackDay(day);
-                      },
+                        ),
+
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
   }

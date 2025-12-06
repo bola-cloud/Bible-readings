@@ -1,3 +1,4 @@
+// ...existing code...
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
@@ -12,7 +13,6 @@ class Reading extends StatefulWidget {
 }
 
 class _ReadingState extends State<Reading> {
-
   final DatabaseService _databaseService = DatabaseService.instance;
   TextEditingController? _notesController;
 
@@ -20,7 +20,7 @@ class _ReadingState extends State<Reading> {
   String reading = "";
   String? date;
   bool opened = false;
-  bool _isLoaded = false;   // prevent multiple loads
+  bool _isLoaded = false; // prevent multiple loads
   bool _isLoading = true;
 
   @override
@@ -48,8 +48,7 @@ class _ReadingState extends State<Reading> {
 
   Future<void> _loadData(String date) async {
     final dataItem = await _databaseService.getDataContentByDate(date);
-    final noteContent = await _databaseService.getNoteContentByDate(date);
-
+    final noteContent = await _database_service_getNoteSafe(date);
     setState(() {
       title = dataItem?.title ?? "";
       reading = dataItem?.reading ?? "";
@@ -59,9 +58,18 @@ class _ReadingState extends State<Reading> {
     });
   }
 
+  // safe wrapper for getting note (keeps previous behaviour)
+  Future<String?> _database_service_getNoteSafe(String date) async {
+    try {
+      return await _databaseService.getNoteContentByDate(date);
+    } catch (_) {
+      return null;
+    }
+  }
+
   String intToArabic(dynamic n) {
     const english = "0123456789";
-    const arabic  = "٠١٢٣٤٥٦٧٨٩";
+    const arabic = "٠١٢٣٤٥٦٧٨٩";
 
     String s = n.toString();
 
@@ -82,106 +90,203 @@ class _ReadingState extends State<Reading> {
     String yyyy = parts[2];
 
     return "$dd-$mm-$yyyy";
-  }  
+  }
 
-   @override
+  @override
   Widget build(BuildContext context) {
-
-    return _isLoading ? Loading() : 
-
-    Scaffold(
-      appBar: AppBar(
-        title: Text(intToArabic(convertToDDMMYYYY(date??"")), style: GoogleFonts.cairo(),),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                setState(() {
-                  opened = !opened;
-                });
-                _databaseService.updateDataOpened(date!, opened? 1: 0);
-              },
-              icon: Icon(
-              opened
-                ? Icons.radio_button_checked
-                : Icons.radio_button_unchecked,
+    return _isLoading
+        ? Loading()
+        : Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              title: Text(
+                intToArabic(convertToDDMMYYYY(date ?? "")),
+                style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
               ),
-              color: opened
-                ? Colors.green
-                : Colors.red,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      opened = !opened;
+                    });
+                    _databaseService.updateDataOpened(date!, opened ? 1 : 0);
+                  },
+                  icon: Icon(
+                    opened
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
+                  ),
+                  color: opened ? Colors.green : Colors.red,
+                ),
+              ],
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              centerTitle: true,
             ),
-        ],
-        backgroundColor: Colors.grey,
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final availableHeight = constraints.maxHeight;
-
-          final readingHeight = availableHeight * 0.55; // instead of fixed 0.6
-          final notesHeight   = availableHeight * 0.22; // instead of fixed 0.18
-
-          return Column(
-            children: [
-              StyledBodyText(
-                intToArabic(title),
-              ),
-
-              /// READING AREA
-              SizedBox(
-                height: readingHeight,
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: StyledBodyText(reading),
-                ),
-              ),
-
-              /// Separator line
-              Container(
-                width: double.infinity,
-                height: 1,
-                color: Colors.black,
-              ),
-
-              /// Notes label
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
-                child: Text(
-                  "ملاحظات",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            body: Stack(
+              children: [
+                // Background image
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/img/background.jpg'),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.90),
+                        BlendMode.dstATop,
+                      ),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
 
-              /// NOTES TEXT FIELD
-              Container(
-                height: notesHeight,
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: TextField(
-                  maxLines: null,
-                  expands: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'اية لمستك و قرار اخدته',
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  controller: _notesController,
-                  onChanged: (value) async {
-                    _databaseService.updateNoteContent(date!, value);
+                // Pale overlay for readability (matches monthly_data style)
+                Container(color: Colors.white.withOpacity(0.30)),
+
+                // Main content split into two sections:
+                // 1) Card with title + reading
+                // 2) Card with notes (padding + container)
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final availableHeight = constraints.maxHeight;
+                    final readingHeight = availableHeight * 0.55;
+                    final notesMinHeight = 120.0;
+                    final notesMaxHeight = availableHeight * 0.30;
+
+                    return SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const SizedBox(height: 80),
+
+                            // Section 1: Title + Reading inside a Card
+                            Card(
+                              elevation: 6,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              color: Colors.white.withOpacity(0.85),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    // Title
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                      ),
+                                      child: Text(
+                                        intToArabic(title),
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.cairo(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Divider(),
+                                    const SizedBox(height: 8),
+
+                                    // Reading area (scrollable)
+                                    SizedBox(
+                                      height: readingHeight,
+                                      child: SingleChildScrollView(
+                                        physics: const BouncingScrollPhysics(),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0,
+                                          ),
+                                          child: StyledBodyText(reading),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            // Section 2: Notes card (padding + container)
+                            Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              color: Colors.white.withOpacity(0.85),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                      ),
+                                      child: Text(
+                                        "ملاحظات",
+                                        style: GoogleFonts.cairo(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        minHeight: notesMinHeight,
+                                        maxHeight: notesMaxHeight,
+                                      ),
+                                      child: TextField(
+                                        maxLines: null,
+                                        expands: false,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          hintText: 'اية لمستك و قرار اخدته',
+                                          hintStyle: GoogleFonts.cairo(),
+                                        ),
+                                        keyboardType: TextInputType.multiline,
+                                        controller: _notesController,
+                                        onChanged: (value) async {
+                                          if (date != null) {
+                                            await _databaseService
+                                                .updateNoteContent(
+                                                  date!,
+                                                  value,
+                                                );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    );
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
           );
-        },
-      ),
-    );
   }
 }
