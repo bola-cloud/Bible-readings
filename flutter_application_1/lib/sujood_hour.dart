@@ -10,42 +10,50 @@ class SujoodHour extends StatefulWidget {
 
 class _SujoodHourState extends State<SujoodHour> {
   final List<Map<String, String>> _steps = const [
-  
     {
       'title': '١ - حضر وقتك ومكانك',
-      'body': 'ادخل الكنيسة إلى بيت القربان في صمت. خلِ بالك إنك داخل لحضور يسوع الحقيقي في سر الإفخارستيا.'
+      'body':
+          'ادخل الكنيسة إلى بيت القربان في صمت. خلِ بالك إنك داخل لحضور يسوع الحقيقي في سر الإفخارستيا.',
     },
     {
       'title': '٢ - الدخول بسجود الجسد',
-      'body': 'عند دخولك، أعمل انحناءة عميقة أو ركوع على الركبتين تكريمًا للمسيح الحاضر.'
+      'body':
+          'عند دخولك، أعمل انحناءة عميقة أو ركوع على الركبتين تكريمًا للمسيح الحاضر.',
     },
     {
       'title': '٣ - اطلب حضور الروح القدس',
-      'body': 'اجلس بهدوء أو اسجد على ركبتيك، اطلب من الروح القدس ينقي قلبك ويملأك بالسلام.'
+      'body':
+          'اجلس بهدوء أو اسجد على ركبتيك، اطلب من الروح القدس ينقي قلبك ويملأك بالسلام.',
     },
     {
       'title': '٤ - من الصمت',
-      'body': 'اقعد في صمت أمام يسوع، زي صديق يقعد مع صديقه. مش ضروري تتكلم كثير، الأهم هو حضورك القلبي.'
+      'body':
+          'اقعد في صمت أمام يسوع، زي صديق يقعد مع صديقه. مش ضروري تتكلم كثير، الأهم هو حضورك القلبي.',
     },
     {
       'title': '٥ - قراءة أو تأمل قصير',
-      'body': 'ممكن تقرأ آية من الكتاب المقدس أو تتأمل كلمة قصيرة تربطك بالمسيح الحاضر.'
+      'body':
+          'ممكن تقرأ آية من الكتاب المقدس أو تتأمل كلمة قصيرة تربطك بالمسيح الحاضر.',
     },
     {
       'title': '٦ - صلِ من قلبك',
-      'body': 'كلم يسوع بحرية؛ اشكره على حضوره، احكي له همومك وطلباتك وقدم له حياتك وأحبابك.'
+      'body':
+          'كلم يسوع بحرية؛ اشكره على حضوره، احكي له همومك وطلباتك وقدم له حياتك وأحبابك.',
     },
     {
       'title': '٧ - زمن التأمل العملي',
-      'body': 'بعد الصلاة اقعد ساكت وخلي قلبك مفتوح. انظر ليسوع الموجود في سر القربان، ودعه يتكلم.'
+      'body':
+          'بعد الصلاة اقعد ساكت وخلي قلبك مفتوح. انظر ليسوع الموجود في سر القربان، ودعه يتكلم.',
     },
     {
       'title': '٨ - التقدمة والقرار',
-      'body': 'قدم نفسك ليسوع: "خذني يا رب", واختر قرار عملي صغير تعيشه بعد الخروج.'
+      'body':
+          'قدم نفسك ليسوع: "خذني يا رب", واختر قرار عملي صغير تعيشه بعد الخروج.',
     },
     {
       'title': '٩ - كتابة الخلاصة',
-      'body': 'بعد ما تخلص السجود، اكتب: إيه اللي حسيت بيه أو الكلمة اللي لمستك، والقرار اللي أخدته.'
+      'body':
+          'بعد ما تخلص السجود، اكتب: إيه اللي حسيت بيه أو الكلمة اللي لمستك، والقرار اللي أخدته.',
     },
   ];
 
@@ -87,10 +95,15 @@ class _SujoodHourState extends State<SujoodHour> {
         alignment: Alignment.center,
         child: Card(
           elevation: 6,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           color: cardColor,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 18.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -101,20 +114,35 @@ class _SujoodHourState extends State<SujoodHour> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Center(child: Icon(Icons.church, color: Colors.brown)),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   step['title'] ?? '',
-                  style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
+                  style: GoogleFonts.cairo(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: titleColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   step['body'] ?? '',
-                  style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
+                  style: GoogleFonts.cairo(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: bodyColor,
+                    height: 1.6,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -141,10 +169,21 @@ class _SujoodHourState extends State<SujoodHour> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/home',
+                (route) => false,
+              );
             },
           ),
-          title: Text('خطوات ساعة السجود', style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
+          title: Text(
+            'خطوات ساعة السجود',
+            style: GoogleFonts.cairo(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF6B2626),
+            ),
+          ),
         ),
         body: Stack(
           children: [
@@ -162,7 +201,10 @@ class _SujoodHourState extends State<SujoodHour> {
 
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 16.0,
+                ),
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
@@ -173,7 +215,11 @@ class _SujoodHourState extends State<SujoodHour> {
                       children: [
                         Text(
                           'السجود أمام القربان هو مدرسة حب وصدق... كن حاضرًا بكل قلبك',
-                          style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF6B2626)),
+                          style: GoogleFonts.cairo(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF6B2626),
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
@@ -188,7 +234,9 @@ class _SujoodHourState extends State<SujoodHour> {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: isWide ? 12 : 10),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isWide ? 12 : 10,
+                            ),
                             child: _buildCard(context, _steps[index], index),
                           );
                         },
@@ -216,7 +264,6 @@ class _SujoodHourState extends State<SujoodHour> {
 
                     // footer note area (like design)
                     const SizedBox(height: 12),
-
                   ],
                 ),
               ),

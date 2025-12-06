@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -38,7 +39,7 @@ class _LandingPageState extends State<LandingPage>
     Timer(const Duration(seconds: 3), () async {
       // ensure DB is ready (some platforms need initialization)
       try {
-        await _databaseService.database;
+        await _database_service_ready();
       } catch (_) {}
 
       if (!mounted) return;
@@ -46,6 +47,14 @@ class _LandingPageState extends State<LandingPage>
       // Use pushReplacementNamed to replace the landing page with home
       Navigator.pushReplacementNamed(context, '/home');
     });
+  }
+
+  Future<void> _database_service_ready() async {
+    try {
+      await _databaseService.database;
+    } catch (_) {
+      // ignore
+    }
   }
 
   @override
@@ -56,6 +65,8 @@ class _LandingPageState extends State<LandingPage>
 
   @override
   Widget build(BuildContext context) {
+    final maxWidth = 720.0;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -71,77 +82,121 @@ class _LandingPageState extends State<LandingPage>
 
           /// --- Pale Overlay ---
           Container(
-            color: Colors.white.withOpacity(0.50), // soft pale overlay
+            color: Colors.white.withOpacity(0.3), // soft pale overlay
           ),
 
-          /// --- Main Content ---
+          /// --- Main Content in a Card (matches monthly_data style) ---
           FadeTransition(
             opacity: _fadeAnimation,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 100),
-                    // Animated Cross Icon
-                    ScaleTransition(
-                      scale: _crossAnimation,
-                      child: const Icon(
-                        Icons.church,
-                        size: 90,
-                        color: Colors.black,
+            child: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: Card(
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      color: Colors.white.withOpacity(0.95),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 28.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 6),
+
+                            // Animated Cross Icon
+                            ScaleTransition(
+                              scale: _crossAnimation,
+                              child: const Icon(
+                                Icons.church,
+                                size: 90,
+                                color: Colors.black,
+                              ),
+                            ),
+
+                            const SizedBox(height: 18),
+
+                            // Spinner
+                            const SizedBox(
+                              height: 36,
+                              width: 36,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.black),
+                              ),
+                            ),
+
+                            const SizedBox(height: 18),
+
+                            // Title / Credits
+                            Text(
+                              "تطبيق تأملاتى",
+                              style: GoogleFonts.cairo(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            const SizedBox(height: 14),
+
+                            // Short description
+                            Text(
+                              "ابدأ رحلتك اليومية مع كلمة الرب — تأمل، صلِ، وسجل ما يحرك قلبك.",
+                              style: GoogleFonts.cairo(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            const SizedBox(height: 18),
+
+                            // Credits block
+                            Column(
+                              children: [
+                                Text(
+                                  "Developed by:",
+                                  style: GoogleFonts.cairo(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Samer Walaa\nsamer.walaa18@gmail.com",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.cairo(fontSize: 13),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Bola Eshak\n<email@example.com>",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.cairo(fontSize: 13),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // Footer note
+                            Text(
+                              "Made with ❤️ for God’s glory",
+                              style: GoogleFonts.cairo(fontSize: 13),
+                            ),
+
+                            const SizedBox(height: 6),
+                          ],
+                        ),
                       ),
                     ),
-
-                    const SizedBox(height: 40),
-
-                    // Spinner
-                    const CircularProgressIndicator(
-                      strokeWidth: 3,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    // Credits Section
-                    const Text(
-                      "Developed by:",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // YOU
-                    const Text(
-                      "• Samer Walaa\n  Email: samer.walaa18@gmail.com",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 17, color: Colors.black),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    // Developer X
-                    const Text(
-                      "• Bola Eshak\n  Email: <X_EMAIL_HERE>",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 17, color: Colors.black),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Footer
-                    const Text(
-                      "Made with ❤️ for God’s glory",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-
-                    const SizedBox(height: 10),
-                  ],
+                  ),
                 ),
               ),
             ),

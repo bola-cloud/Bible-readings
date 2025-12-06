@@ -80,8 +80,12 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'مقدمة كراسة',
-            style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+            'خطوة بخطوة',
+            style: GoogleFonts.cairo(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF6B2626),
+            ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -94,7 +98,7 @@ class _HomeState extends State<Home> {
               image: AssetImage('assets/img/background.jpg'),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.75),
+                Colors.white.withOpacity(0.7),
                 BlendMode.dstATop,
               ),
             ),
@@ -112,7 +116,15 @@ class _HomeState extends State<Home> {
                     Center(
                       child: Column(
                         children: [
-                          Text('كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.', style: GoogleFonts.cairo(fontSize: 14, color: Colors.brown[800]), textAlign: TextAlign.center),    
+                          Text(
+                            'كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.',
+                            style: GoogleFonts.cairo(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF6B2626),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ],
                       ),
                     ),
@@ -323,8 +335,9 @@ class _HomeState extends State<Home> {
                     Text(
                       'الفكرة مش إنك تملأ كراسة... لكن إنك تنمو روحياً وتكتشف جمال الحياة مع ربنا.',
                       style: GoogleFonts.cairo(
-                        fontSize: 13,
-                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF6B2626),
                       ),
                       textAlign: TextAlign.center,
                     ),
