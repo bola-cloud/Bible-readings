@@ -110,19 +110,49 @@ class _ReadingState extends State<Reading> {
                 },
               ),
               actions: [
-                IconButton(
+                // IconButton(
+                //   onPressed: () async {
+                //     setState(() {
+                //       opened = !opened;
+                //     });
+                //     _databaseService.updateDataOpened(date!, opened ? 1 : 0);
+                //   },
+                //   icon: Icon(
+                //     opened
+                //         ? Icons.radio_button_checked
+                //         : Icons.radio_button_unchecked,
+                //   ),
+                //   color: opened ? Colors.green : Colors.red,
+                //   iconSize: 50,
+                // ),
+                ElevatedButton.icon(
                   onPressed: () async {
                     setState(() {
                       opened = !opened;
                     });
-                    _databaseService.updateDataOpened(date!, opened ? 1 : 0);
+
+                    await _databaseService.updateDataOpened(date!, opened ? 1 : 0);
                   },
                   icon: Icon(
-                    opened
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
+                    opened ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                    size: 20,
+                    color: Colors.white,
                   ),
-                  color: opened ? Colors.green : Colors.red,
+                  label: Text(
+                    opened ? "قرأته" : "لم أقرأه",
+                    style: GoogleFonts.cairo(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: opened ? Colors.green : Colors.red,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
                 ),
               ],
               backgroundColor: Colors.transparent,
