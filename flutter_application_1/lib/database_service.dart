@@ -6,7 +6,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
-  
   static Database? _db;
 
   static final DatabaseService instance = DatabaseService._constructor();
@@ -22,6 +21,12 @@ class DatabaseService {
   final String _attendanceDataColumnName = "data";
   final String _attendanceNoteColumnName = "note";
   final String _attendanceMannerColumnName = "manner";
+  final String _attendanceFadilaColumnName = "fadila";
+  final String _attendanceFadilaStagesColumnName = "fadila_stages";
+  final String _attendanceSaintColumnName = "saint";
+  final String _attendanceSaintStagesColumnName = "saint_stages";
+  final String _attendanceFadilaImagePathColumnName = "fadila_img";
+  final String _attendanceSaintImagePathColumnName = "saint_img";
 
   DatabaseService._constructor();
 
@@ -39,7 +44,6 @@ class DatabaseService {
   }
 
   Future _onCreate(Database db, int version) async {
-
     db.execute('''
       CREATE TABLE $_dataTableName (
         $_dataDateColumnName TEXT PRIMARY KEY,
@@ -51,19 +55,18 @@ class DatabaseService {
     ''');
 
     final String res = await rootBundle.loadString('data/data.json');
-    final jsonData = await json.decode(res) as Map<String, dynamic>;// path to your JSON file
+    final jsonData =
+        await json.decode(res)
+            as Map<String, dynamic>; // path to your JSON file
 
     for (var item in jsonData.keys) {
-      await db.insert(
-        _dataTableName,
-        {
-          _dataDateColumnName: item,
-          _dataTitleColumnName: jsonData[item][0],
-          _dataReadingColumnName: jsonData[item][1],
-          _dataOpenedColumnName: 0,
-          _dataNoteColumnName: ""
-        },
-      );
+      await db.insert(_dataTableName, {
+        _dataDateColumnName: item,
+        _dataTitleColumnName: jsonData[item][0],
+        _dataReadingColumnName: jsonData[item][1],
+        _dataOpenedColumnName: 0,
+        _dataNoteColumnName: "",
+      });
     }
 
     db.execute('''
@@ -71,10 +74,15 @@ class DatabaseService {
         $_attendanceMonthColumnName INTEGER PRIMARY KEY,
         $_attendanceDataColumnName TEXT NOT NULL,
         $_attendanceNoteColumnName TEXT,
-        $_attendanceMannerColumnName TEXT
+        $_attendanceMannerColumnName TEXT,
+        $_attendanceFadilaColumnName TEXT,
+        $_attendanceFadilaStagesColumnName TEXT,
+        $_attendanceSaintColumnName TEXT,
+        $_attendanceSaintStagesColumnName TEXT,
+        $_attendanceFadilaImagePathColumnName TEXT,
+        $_attendanceSaintImagePathColumnName TEXT
       )
     ''');
-
   }
 
   Future<Database> getDatabase() async {
@@ -85,7 +93,7 @@ class DatabaseService {
       version: 1,
       onCreate: (db, version) async {
         await _onCreate(db, version);
-      }
+      },
     );
     return database;
   }
@@ -118,7 +126,6 @@ class DatabaseService {
     );
   }
 
-
   Future<void> adddata(String date, String title, String reading) async {
     final db = await database;
     await db.insert(_dataTableName, {
@@ -136,7 +143,7 @@ class DatabaseService {
       columns: [
         _dataDateColumnName,
         _dataTitleColumnName,
-        _dataOpenedColumnName
+        _dataOpenedColumnName,
       ],
     );
 
@@ -148,7 +155,7 @@ class DatabaseService {
         title: row[_dataTitleColumnName] as String,
         reading: "",
         opened: row[_dataOpenedColumnName] as int,
-        note: ""
+        note: "",
       );
       dataMap[dataItem.date] = dataItem;
     }
@@ -160,7 +167,13 @@ class DatabaseService {
     final db = await database;
     final dataList = await db.query(
       _dataTableName,
-      columns: [_dataDateColumnName,_dataTitleColumnName, _dataReadingColumnName, _dataOpenedColumnName, _dataNoteColumnName], // only fetch the content
+      columns: [
+        _dataDateColumnName,
+        _dataTitleColumnName,
+        _dataReadingColumnName,
+        _dataOpenedColumnName,
+        _dataNoteColumnName,
+      ], // only fetch the content
       where: '$_dataDateColumnName = ?',
       whereArgs: [date],
     );
@@ -172,7 +185,7 @@ class DatabaseService {
         title: row[_dataTitleColumnName] as String,
         reading: row[_dataReadingColumnName] as String,
         opened: row[_dataOpenedColumnName] as int,
-        note: row[_dataNoteColumnName] as String
+        note: row[_dataNoteColumnName] as String,
       );
     } else {
       return null; // no data for this date
@@ -202,11 +215,151 @@ class DatabaseService {
     // Convert List<bool> to string of 0 and 1
     String dataString = data.map((e) => e ? '1' : '0').join();
 
-    await db.rawInsert('''
+    await db.rawInsert(
+      '''
       INSERT OR REPLACE INTO $_attendanceTableName 
-        ($_attendanceMonthColumnName, $_attendanceDataColumnName, $_attendanceNoteColumnName, $_attendanceMannerColumnName)
-      VALUES (?, ?, ?, ?)
-    ''', [month, dataString, "", ""]);
+        ($_attendanceMonthColumnName, $_attendanceDataColumnName, $_attendanceNoteColumnName, $_attendanceMannerColumnName, $_attendanceFadilaColumnName, $_attendanceFadilaStagesColumnName, $_attendanceSaintColumnName, $_attendanceSaintStagesColumnName, $_attendanceFadilaImagePathColumnName, $_attendanceSaintImagePathColumnName)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''',
+      [month, dataString, "", "", "", "", "", "", "", ""],
+    );
+
+    // 2. Load fadila JSON
+    final String fadilaJsonString = await rootBundle.loadString(
+      'data/fadila.json',
+    );
+    final fadilaJson = jsonDecode(fadilaJsonString);
+
+    // Fetch fadila info for this month
+    final fadilaObject = fadilaJson['months'][month.toString()];
+    final String fadilaName = fadilaObject['name'];
+    final List<dynamic> fadilaStages = fadilaObject['stages'];
+    final String fadilaImage = fadilaObject['image'];
+
+    // 3. Load saint JSON
+    final String saintJsonString = await rootBundle.loadString(
+      'data/saint.json',
+    );
+    final saintJson = jsonDecode(saintJsonString);
+
+    // Fetch saint info for this month
+    final saintObject = saintJson['months'][month.toString()];
+    final String saintName = saintObject['name'];
+    final List<dynamic> saintStages = saintObject['stages'];
+    final String saintImage = saintObject['image'];
+
+    // 4. Update the record with all new info
+    await db.update(
+      _attendanceTableName,
+      {
+        _attendanceFadilaColumnName: fadilaName,
+        _attendanceFadilaStagesColumnName: jsonEncode(fadilaStages),
+        _attendanceSaintColumnName: saintName,
+        _attendanceSaintStagesColumnName: jsonEncode(saintStages),
+        _attendanceFadilaImagePathColumnName: fadilaImage,
+        _attendanceSaintImagePathColumnName: saintImage,
+      },
+      where: '$_attendanceMonthColumnName = ?',
+      whereArgs: [month],
+    );
+  }
+
+  Future<String?> getMonthFadilaName(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceFadilaColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) return null;
+
+    return result.first[_attendanceFadilaColumnName] as String?;
+  }
+
+  Future<String?> getMonthFadilaImage(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceFadilaImagePathColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) return null;
+
+    return result.first[_attendanceFadilaImagePathColumnName] as String?;
+  }
+
+  Future<List<dynamic>> getMonthFadilaStages(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceFadilaStagesColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) return [];
+
+    final raw = result.first[_attendanceFadilaStagesColumnName] as String?;
+
+    if (raw == null || raw.isEmpty) return [];
+
+    return jsonDecode(raw) as List<dynamic>;
+  }
+
+  Future<String?> getMonthSaintName(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceSaintColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) return null;
+
+    return result.first[_attendanceSaintColumnName] as String?;
+  }
+
+  Future<String?> getMonthSaintImage(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceSaintImagePathColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) return null;
+
+    return result.first[_attendanceSaintImagePathColumnName] as String?;
+  }
+
+  Future<List<dynamic>> getMonthSaintStages(int month) async {
+    final db = await database;
+
+    final result = await db.query(
+      _attendanceTableName,
+      columns: [_attendanceSaintStagesColumnName],
+      where: "$_attendanceMonthColumnName = ?",
+      whereArgs: [month],
+    );
+
+    if (result.isEmpty) return [];
+
+    final raw = result.first[_attendanceSaintStagesColumnName] as String?;
+
+    if (raw == null || raw.isEmpty) return [];
+
+    return jsonDecode(raw) as List<dynamic>;
   }
 
   Future<List<bool>?> getMonthAttendance(int month) async {
@@ -271,60 +424,6 @@ class DatabaseService {
     return result.first[_attendanceMannerColumnName] as String;
   }
 
-  // --- New: per-step manner notes stored as JSON in the manner column ---
-  // Returns a map where keys are step indexes (as int) and values are the saved note strings.
-  Future<Map<int, String>> getMonthMannerMap(int month) async {
-    final raw = await getMonthManner(month);
-    if (raw == null || raw.isEmpty) return {};
-
-    try {
-      final decoded = json.decode(raw) as Map<String, dynamic>;
-      final Map<int, String> out = {};
-      decoded.forEach((k, v) {
-        final idx = int.tryParse(k);
-        if (idx != null) out[idx] = v?.toString() ?? '';
-      });
-      return out;
-    } catch (_) {
-      // If it's not JSON (legacy single-string), return it as index 0 content
-      return {0: raw};
-    }
-  }
-
-  // Update a single step note for a month. Stores all steps as JSON in the manner column.
-  Future<void> updateMonthMannerStep(int month, int stepIndex, String note) async {
-    final db = await database;
-
-    // Read existing manner JSON (if any)
-    final existing = await getMonthMannerMap(month);
-    existing[stepIndex] = note;
-
-    final encoded = json.encode(existing.map((k, v) => MapEntry(k.toString(), v)));
-
-    // If a row exists for the month, update; otherwise insert
-    final existingRow = await db.query(
-      _attendanceTableName,
-      columns: [_attendanceMonthColumnName],
-      where: '$_attendanceMonthColumnName = ?',
-      whereArgs: [month],
-    );
-
-    if (existingRow.isEmpty) {
-      await db.rawInsert('''
-        INSERT OR REPLACE INTO $_attendanceTableName
-          ($_attendanceMonthColumnName, $_attendanceDataColumnName, $_attendanceNoteColumnName, $_attendanceMannerColumnName)
-        VALUES (?, ?, ?, ?)
-      ''', [month, '', '', encoded]);
-    } else {
-      await db.update(
-        _attendanceTableName,
-        {_attendanceMannerColumnName: encoded},
-        where: '$_attendanceMonthColumnName = ?',
-        whereArgs: [month],
-      );
-    }
-  }
-
   Future<void> updateMonthNote(int month, String note) async {
     final db = await database;
 
@@ -357,7 +456,7 @@ class DatabaseService {
       where: "$_attendanceMonthColumnName = ?",
       whereArgs: [month],
     );
-    
+
     String dataString = result.first[_attendanceDataColumnName] as String;
 
     // 2. Convert to list of chars to update
@@ -386,9 +485,10 @@ class DatabaseService {
     final db = await database; // your DB instance
 
     // Convert DateTime to 'MM-DD-YYYY'
-    String dateStr = "${upToDate.month.toString().padLeft(2,'0')}-"
-                     "${upToDate.day.toString().padLeft(2,'0')}-"
-                     "${upToDate.year.toString().padLeft(4,'0')}";
+    String dateStr =
+        "${upToDate.month.toString().padLeft(2, '0')}-"
+        "${upToDate.day.toString().padLeft(2, '0')}-"
+        "${upToDate.year.toString().padLeft(4, '0')}";
 
     // Use SQLite substrings to reorder stored 'MM-DD-YYYY' as 'YYYY-MM-DD' for comparison
     final result = await db.rawQuery(
@@ -422,12 +522,14 @@ class DatabaseService {
       int rowMonth = row[_attendanceMonthColumnName] as int;
       String togglesStr = row[_attendanceDataColumnName] as String? ?? '';
 
-      List<bool> togglesList = togglesStr.split('').map((ch) => ch == '1').toList();
+      List<bool> togglesList = togglesStr
+          .split('')
+          .map((ch) => ch == '1')
+          .toList();
 
       togglesMap[rowMonth] = togglesList;
     }
 
     return togglesMap;
   }
-
 }

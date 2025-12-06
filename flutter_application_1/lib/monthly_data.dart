@@ -49,14 +49,17 @@ class _MonthlyDataState extends State<MonthlyData> {
   }
 
   Future<void> _loadData(int month) async {
-    List<bool>? toggles = await _databaseService.getMonthAttendance(month);
-    if(toggles == null){
-      final weeks = getWeeksInMonth(displayedMonth);
-      int totalCells = (weeks.length + 1) * 4; // 4 rows total
-      List<bool> togglesList = List.generate(totalCells - (weeks.length + 1), (_) => false);
-      await _databaseService.addAttendance(displayedMonth.month, togglesList);
-      toggles = await _databaseService.getMonthAttendance(month);
+    for(int i=month; i<=endMonth.month; i++){
+      List<bool>? toggles = await _databaseService.getMonthAttendance(i);
+      if(toggles == null){
+        final weeks = getWeeksInMonth(DateTime(2026,i));
+        int totalCells = (weeks.length + 1) * 4; // 4 rows total
+        List<bool> togglesList = List.generate(totalCells - (weeks.length + 1), (_) => false);
+        await _databaseService.addAttendance(i, togglesList);
+        toggles = await _databaseService.getMonthAttendance(i);
+      }
     }
+    List<bool>? toggles = await _databaseService.getMonthAttendance(month);
     final noteContent = await _databaseService.getMonthNote(month);
     setState(() {
       this.toggles = toggles;
@@ -197,7 +200,7 @@ class _MonthlyDataState extends State<MonthlyData> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/img/background.jpeg'),
+                image: AssetImage('assets/img/background.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.90), BlendMode.dstATop),
               ),
@@ -415,7 +418,7 @@ class _MonthlyDataState extends State<MonthlyData> {
                                 onPressed: () {
                                   Navigator.pushNamed(
                                     context,
-                                    '/carlo',
+                                    '/saint',
                                     arguments: {"month": displayedMonth.month},
                                   );
                                 },

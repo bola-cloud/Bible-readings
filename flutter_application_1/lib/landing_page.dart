@@ -63,7 +63,7 @@ class _LandingPageState extends State<LandingPage>
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/img/background.jpeg"),
+                image: AssetImage("assets/img/landing_background.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -102,7 +102,7 @@ class _LandingPageState extends State<LandingPage>
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                     ),
 
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 30),
 
                     // Credits Section
                     const Text(
@@ -132,7 +132,7 @@ class _LandingPageState extends State<LandingPage>
                       style: TextStyle(fontSize: 17, color: Colors.black),
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
 
                     // Footer
                     const Text(

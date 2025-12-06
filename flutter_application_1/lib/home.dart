@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/modules/data.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
-import 'package:flutter_application_1/daily_meditation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -72,7 +71,7 @@ class _HomeState extends State<Home> {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/img/background.jpeg'),
+              image: AssetImage('assets/img/background.jpg'),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.75), BlendMode.dstATop),
             ),
@@ -150,7 +149,7 @@ class _HomeState extends State<Home> {
                             ),
                             color: Colors.orange.shade50.withOpacity(0.95),
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => const DailyMeditation()));
+                              Navigator.pushNamed(context, '/daily_meditation');
                             },
                           ),
                         ),
@@ -182,8 +181,8 @@ class _HomeState extends State<Home> {
                             ),
                             color: Colors.yellow.shade50.withOpacity(0.95),
                             onTap: () {
-                              // Pass current month to the Manner page
-                              Navigator.pushNamed(context, '/manner', arguments: {'month': DateTime.now().month});
+                              // Pass current month to the f7s_al_damer page
+                              Navigator.pushNamed(context, '/f7s_al_damer', arguments: {'month': DateTime.now().month});
                             },
                           ),
                         ),

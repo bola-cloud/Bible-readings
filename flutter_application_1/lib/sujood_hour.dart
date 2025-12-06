@@ -10,40 +10,41 @@ class SujoodHour extends StatefulWidget {
 
 class _SujoodHourState extends State<SujoodHour> {
   final List<Map<String, String>> _steps = const [
+  
     {
-      'title': '1- حضر وقتك ومكانك',
+      'title': '١ - حضر وقتك ومكانك',
       'body': 'ادخل الكنيسة إلى بيت القربان في صمت. خلِ بالك إنك داخل لحضور يسوع الحقيقي في سر الإفخارستيا.'
     },
     {
-      'title': '2- الدخول بسجود الجسد',
+      'title': '٢ - الدخول بسجود الجسد',
       'body': 'عند دخولك، أعمل انحناءة عميقة أو ركوع على الركبتين تكريمًا للمسيح الحاضر.'
     },
     {
-      'title': '3- اطلب حضور الروح القدس',
+      'title': '٣ - اطلب حضور الروح القدس',
       'body': 'اجلس بهدوء أو اسجد على ركبتيك، اطلب من الروح القدس ينقي قلبك ويملأك بالسلام.'
     },
     {
-      'title': '4- زمن الصمت',
+      'title': '٤ - من الصمت',
       'body': 'اقعد في صمت أمام يسوع، زي صديق يقعد مع صديقه. مش ضروري تتكلم كثير، الأهم هو حضورك القلبي.'
     },
     {
-      'title': '5- قراءة أو تأمل قصير',
+      'title': '٥ - قراءة أو تأمل قصير',
       'body': 'ممكن تقرأ آية من الكتاب المقدس أو تتأمل كلمة قصيرة تربطك بالمسيح الحاضر.'
     },
     {
-      'title': '6- صلِ من قلبك',
+      'title': '٦ - صلِ من قلبك',
       'body': 'كلم يسوع بحرية؛ اشكره على حضوره، احكي له همومك وطلباتك وقدم له حياتك وأحبابك.'
     },
     {
-      'title': '7- زمن التأمل العملي',
+      'title': '٧ - زمن التأمل العملي',
       'body': 'بعد الصلاة اقعد ساكت وخلي قلبك مفتوح. انظر ليسوع الموجود في سر القربان، ودعه يتكلم.'
     },
     {
-      'title': '8- التقدمة والقرار',
+      'title': '٨ - التقدمة والقرار',
       'body': 'قدم نفسك ليسوع: "خذني يا رب", واختر قرار عملي صغير تعيشه بعد الخروج.'
     },
     {
-      'title': '9- كتابة الخلاصة',
+      'title': '٩ - كتابة الخلاصة',
       'body': 'بعد ما تخلص السجود، اكتب: إيه اللي حسيت بيه أو الكلمة اللي لمستك، والقرار اللي أخدته.'
     },
   ];
@@ -79,42 +80,45 @@ class _SujoodHourState extends State<SujoodHour> {
     final double distance = (_page - index).abs();
     final double scale = (1 - (distance * 0.12)).clamp(0.88, 1.0);
 
-    return Transform.scale(
-      scale: scale,
-      alignment: Alignment.center,
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        color: cardColor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // small circular icon placeholder
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Transform.scale(
+        scale: scale,
+        alignment: Alignment.center,
+        child: Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          color: cardColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // small circular icon placeholder
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
+                  ),
+                  child: Center(child: Icon(Icons.church, color: Colors.brown)),
                 ),
-                child: Center(child: Icon(Icons.church, color: Colors.brown)),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                step['title'] ?? '',
-                style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                step['body'] ?? '',
-                style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
-                textAlign: TextAlign.center,
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  step['title'] ?? '',
+                  style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  step['body'] ?? '',
+                  style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -127,7 +131,7 @@ class _SujoodHourState extends State<SujoodHour> {
     final isWide = width > 700;
 
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: TextDirection.ltr,
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -148,7 +152,7 @@ class _SujoodHourState extends State<SujoodHour> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/img/background.jpeg'),
+                  image: AssetImage('assets/img/background.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -164,6 +168,18 @@ class _SujoodHourState extends State<SujoodHour> {
                     const SizedBox(height: 16),
 
                     // Swiper area: horizontal PageView with hovering center card
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'السجود أمام القربان هو مدرسة حب وصدق... كن حاضرًا بكل قلبك',
+                          style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF6B2626)),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
+
                     SizedBox(
                       height: isWide ? 360 : 420,
                       child: PageView.builder(
@@ -179,9 +195,9 @@ class _SujoodHourState extends State<SujoodHour> {
                       ),
                     ),
 
+                    // indicators (dots)
                     const SizedBox(height: 12),
 
-                    // indicators (dots)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(_steps.length, (i) {
@@ -198,22 +214,8 @@ class _SujoodHourState extends State<SujoodHour> {
                       }),
                     ),
 
-                    const SizedBox(height: 12),
-
                     // footer note area (like design)
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'السجود أمام القربان هو مدرسة حب وصدق... كن حاضرًا بكل قلبك',
-                            style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF6B2626)),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                    ),
+                    const SizedBox(height: 12),
 
                   ],
                 ),

@@ -176,7 +176,7 @@ class _StatisticsState extends State<Statistics> {
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/img/background.jpeg'),
+                      image: AssetImage('assets/img/background.jpg'),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                         Colors.white.withOpacity(0.8),

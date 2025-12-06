@@ -3,14 +3,14 @@ import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Manner extends StatefulWidget {
-  const Manner({super.key});
+class Saint extends StatefulWidget {
+  const Saint({super.key});
 
   @override
-  State<Manner> createState() => _MannerState();
+  State<Saint> createState() => _SaintState();
 }
 
-class _MannerState extends State<Manner> {
+class _SaintState extends State<Saint> {
   final DatabaseService _database_service = DatabaseService.instance;
   TextEditingController? _mannerController;
 
@@ -74,9 +74,9 @@ class _MannerState extends State<Manner> {
   Future<void> _loadData(int month) async {
     // load per-step notes map (uses new DB helper that returns JSON-decoded map)
     final note = await _database_service.getMonthManner(month);
-    final img = await _database_service.getMonthFadilaImage(month);
-    final title = await _database_service.getMonthFadilaName(month);
-    final stages = await _database_service.getMonthFadilaStages(month);
+    final img = await _database_service.getMonthSaintImage(month);
+    final title = await _database_service.getMonthSaintName(month);
+    final stages = await _database_service.getMonthSaintStages(month);
 
     if (!mounted) return;
     setState(() {
@@ -99,7 +99,9 @@ class _MannerState extends State<Manner> {
 
     final titleTextStyle = GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.w700, color: titleColor);
     final bodyTextStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6);
-    final noteTitleStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w700, color: bodyColor);
+  
+    final width = MediaQuery.of(context).size.width;
+    final isWide = width > 700;
 
     return _isLoading
         ? Loading()
@@ -143,7 +145,8 @@ class _MannerState extends State<Manner> {
                         children: [
                           const SizedBox(height: 16),
 
-                          Expanded(
+                          SizedBox(
+                            height: isWide ? 360 : 420,
                             child: PageView.builder(
                               controller: _pageController,
                               itemCount: _stages.length,
@@ -235,47 +238,6 @@ class _MannerState extends State<Manner> {
                                 ),
                               );
                             }),
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          // Notes card (styled to match SujoodHour aesthetic)
-                          Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            color: Colors.white.withOpacity(0.95),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text('ممارسة عمليه', style: noteTitleStyle, textAlign: TextAlign.center),
-                                  const SizedBox(height: 8),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(minHeight: 120, maxHeight: 200),
-                                    child: TextField(
-                                      controller: _mannerController,
-                                      maxLines: null,
-                                      expands: false,
-                                      style: GoogleFonts.cairo(fontSize: 15, color: bodyColor),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        hintText: 'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
-                                        hintStyle: GoogleFonts.cairo(color: Colors.black45),
-                                      ),
-                                      onChanged: (value) async {
-                                        if (month != null) {
-                                          // save per-step note
-                                          await _database_service.updateMonthManner(month!, value);
-                                          // update local cache
-                                          note = value;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
 
                           const SizedBox(height: 12),

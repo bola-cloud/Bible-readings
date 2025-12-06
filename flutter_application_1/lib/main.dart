@@ -4,14 +4,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/calendar.dart';
 import 'package:flutter_application_1/carlo.dart';
+import 'package:flutter_application_1/daily_meditation.dart';
+import 'package:flutter_application_1/f7s_al_damer.dart';
 import 'package:flutter_application_1/home.dart';
 import 'package:flutter_application_1/landing_page.dart';
 import 'package:flutter_application_1/manner.dart';
 import 'package:flutter_application_1/monthly_data.dart';
 import 'package:flutter_application_1/reading.dart';
+import 'package:flutter_application_1/saint.dart';
 import 'package:flutter_application_1/statistics.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
-
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
@@ -45,9 +47,12 @@ class MyApp extends StatelessWidget {
         '/reading': (context) => const Reading(),
         '/monthly_data': (context) => const MonthlyData(),
         '/statistics': (context) => const Statistics(),
-        '/manner': (context) => const Manner(),
+        '/f7s_al_damer': (context) => const F7sAlDamer(),
         '/sujood_hour': (context) => const SujoodHour(),
         '/carlo': (context) => const FloatingCardsPage(),
+        '/daily_meditation': (context) => const DailyMeditation(),
+        '/manner': (context) => const Manner(),
+        '/saint': (context) => const Saint(),
       },
     );
   }

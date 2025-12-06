@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/database_service.dart';
-import 'package:flutter_application_1/loading.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Manner extends StatefulWidget {
-  const Manner({super.key});
+class F7sAlDamer extends StatefulWidget {
+  const F7sAlDamer({super.key});
 
   @override
-  State<Manner> createState() => _MannerState();
+  State<F7sAlDamer> createState() => _F7sAlDamerState();
 }
 
-class _MannerState extends State<Manner> {
-  final DatabaseService _database_service = DatabaseService.instance;
+class _F7sAlDamerState extends State<F7sAlDamer> {
   TextEditingController? _mannerController;
-
-  int? month;
-  bool _isLoaded = false; // prevent multiple loads
-  bool _isLoading = true;
-  String img = "";
-  String title = "";
 
   // Page view state
   late PageController _pageController;
@@ -26,10 +17,28 @@ class _MannerState extends State<Manner> {
   double _page = 0.0; // track page position for hovering effect
 
   // Example stages content (you can replace texts with exact content)
-  List<dynamic> _stages = [];
-
-  // per-step notes loaded from DB
-  String note = "";
+  final List<Map<String, String>> _stages = [
+    {
+      'title': '١ - اطلب حضور الله',
+      'body': 'اجلس دقيقة صامت: قل: "يارب، افتح عينى أشوف يومى بنورك."',
+    },
+    {
+      'title': '٢ - قل شكراً',
+      'body': 'اكتب أو فكر فى النعم اللى ربنا اعطاهالك النهاردة. مثال: كلمة طيبة، مساعدة من صديق.',
+    },
+    {
+      'title': '٣ - راجع يومك',
+      'body': 'راجع على مواقف يومك: أين كنت قريب من ربنا؟ أين جرحت محبة؟',
+    },
+    {
+      'title': '٤ - اطلب المغفرة',
+      'body': 'صلِ وقل: "سامحنى يا رب" وادرب قلب جديد.',
+    },
+    {
+      'title': '٥ - خذ قرار صغير للغد',
+      'body': 'اختر خطوة بسيطة: مساعد صديق، كلمة تشجيع، التزام بالصلاة.',
+    },
+  ];
 
   @override
   void initState() {
@@ -55,42 +64,6 @@ class _MannerState extends State<Manner> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // Load only once
-    if (!_isLoaded) {
-      final args = ModalRoute.of(context)?.settings.arguments as Map?;
-      month = args?['month'] as int?;
-
-      if (month != null) {
-        _loadData(month!);
-      }
-
-      _isLoaded = true;
-    }
-  }
-
-  Future<void> _loadData(int month) async {
-    // load per-step notes map (uses new DB helper that returns JSON-decoded map)
-    final note = await _database_service.getMonthManner(month);
-    final img = await _database_service.getMonthFadilaImage(month);
-    final title = await _database_service.getMonthFadilaName(month);
-    final stages = await _database_service.getMonthFadilaStages(month);
-
-    if (!mounted) return;
-    setState(() {
-      this.img = img?? "";
-      this.title = title?? "";
-      this.note = note?? "";
-      _stages = stages;
-      // set controller to the current page's note (index 0 by default)
-      _mannerController?.text = this.note;
-      _isLoading = false;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     // Design colors matched to SujoodHour: soft peach card, maroon titles/body
     const Color cardBackground = Color(0xFFF8EDE0); // soft peach
@@ -99,34 +72,30 @@ class _MannerState extends State<Manner> {
 
     final titleTextStyle = GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.w700, color: titleColor);
     final bodyTextStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6);
-    final noteTitleStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w700, color: bodyColor);
+    final width = MediaQuery.of(context).size.width;
+    final isWide = width > 700;
 
-    return _isLoading
-        ? Loading()
-        : Directionality(
+    return Directionality(
             textDirection: TextDirection.ltr,
             child: Scaffold(
               extendBodyBehindAppBar: true,
               appBar: AppBar(
-                title: Text(title, style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () async {
-                    // Return to Home directly
-                    Navigator.pop(context);
-                  },
-                ),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                title: Text('خطوات فحص الضمير', style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
               ),
               body: Stack(
                 children: [
                   // Background
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(img),
+                        image: AssetImage('assets/img/background.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -143,16 +112,12 @@ class _MannerState extends State<Manner> {
                         children: [
                           const SizedBox(height: 16),
 
-                          Expanded(
+                          // PageView with stage cards (hovering center card)
+                          SizedBox(
+                            height: isWide ? 360 : 420,
                             child: PageView.builder(
                               controller: _pageController,
                               itemCount: _stages.length,
-                              onPageChanged: (idx) async {
-                                // update controller to show the note for the newly visible step
-                                if (_mannerController?.text != note) {
-                                  _mannerController?.text = note;
-                                }
-                              },
                               itemBuilder: (context, index) {
                                 final stage = _stages[index];
                                 // compute scale based on distance from current page
@@ -235,47 +200,6 @@ class _MannerState extends State<Manner> {
                                 ),
                               );
                             }),
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          // Notes card (styled to match SujoodHour aesthetic)
-                          Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            color: Colors.white.withOpacity(0.95),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text('ممارسة عمليه', style: noteTitleStyle, textAlign: TextAlign.center),
-                                  const SizedBox(height: 8),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(minHeight: 120, maxHeight: 200),
-                                    child: TextField(
-                                      controller: _mannerController,
-                                      maxLines: null,
-                                      expands: false,
-                                      style: GoogleFonts.cairo(fontSize: 15, color: bodyColor),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        hintText: 'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
-                                        hintStyle: GoogleFonts.cairo(color: Colors.black45),
-                                      ),
-                                      onChanged: (value) async {
-                                        if (month != null) {
-                                          // save per-step note
-                                          await _database_service.updateMonthManner(month!, value);
-                                          // update local cache
-                                          note = value;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
 
                           const SizedBox(height: 12),

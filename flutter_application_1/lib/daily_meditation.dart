@@ -10,15 +10,15 @@ class DailyMeditation extends StatefulWidget {
 
 class _DailyMeditationState extends State<DailyMeditation> {
   final List<Map<String, String>> _items = const [
-    {'title': 'حضّر وقتك ومكانك', 'body': 'اختر وقت ثابت ومكان هادئ'},
-    {'title': 'اطلب حضور الله', 'body': 'اجلس دقيقة صامت واطلب حضور الروح القدس'},
-    {'title': 'اقرأ النص الكتابي', 'body': 'اقرأ ببطء وتأمل في كل كلمة من النص المختار'},
-    {'title': 'توقف عند كلمة أو آية', 'body': 'اسأل نفسك: ماذا تعني هذه الكلمة لي اليوم؟'},
-    {'title': 'صلّ بالكلمة', 'body': 'حوّل الكلمات إلى صلاة شخصية'},
-    {'title': 'اختر خطوة عمليّة', 'body': 'قرار عملي بسيط تطبقه اليوم لتعيش التأمل'},
-    {'title': 'اكتب خلاصة', 'body': 'سجل ما شعرت به والقرار الذي اتخذته'},
-    {'title': 'اختم بالشكر', 'body': 'اشكر الرب على كلمته وحضوره'},
-    {'title': 'طبق وانمُ', 'body': 'طبق القرار وراقب نمو حياتك الروحية'},
+    {'title': '١ - حضّر وقتك ومكانك', 'body': 'اختر وقت ثابت ومكان هادئ'},
+    {'title': '٢ - اطلب حضور الله', 'body': 'اجلس دقيقة صامت واطلب حضور الروح القدس'},
+    {'title': '٣ - اقرأ النص الكتابي', 'body': 'اقرأ ببطء وتأمل في كل كلمة من النص المختار'},
+    {'title': '٤ - توقف عند كلمة أو آية', 'body': 'اسأل نفسك: ماذا تعني هذه الكلمة لي اليوم؟'},
+    {'title': '٥ - صلّ بالكلمة', 'body': 'حوّل الكلمات إلى صلاة شخصية'},
+    {'title': '٦ - اختر خطوة عمليّة', 'body': 'قرار عملي بسيط تطبقه اليوم لتعيش التأمل'},
+    {'title': '٧ - اكتب خلاصة', 'body': 'سجل ما شعرت به والقرار الذي اتخذته'},
+    {'title': '٨ - اختم بالشكر', 'body': 'اشكر الرب على كلمته وحضوره'},
+    {'title': '٩ - طبق وانمُ', 'body': 'طبق القرار وراقب نمو حياتك الروحية'},
   ];
 
   late PageController _pageController;
@@ -103,7 +103,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
     final isWide = width > 700;
 
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: TextDirection.ltr,
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -121,7 +121,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/img/background.jpeg'),
+                  image: AssetImage('assets/img/background.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -134,6 +134,18 @@ class _DailyMeditationState extends State<DailyMeditation> {
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'التأمل ليس مجرد قراءة، لكنه موعد حب بينك وبين يسوع. اختر وقتًا ثابتًا وكل يوم اقرأ وتأمل واكتب.',
+                          style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF6B2626)),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
 
                     SizedBox(
                       height: isWide ? 360 : 420,
@@ -169,20 +181,6 @@ class _DailyMeditationState extends State<DailyMeditation> {
                     ),
 
                     const SizedBox(height: 12),
-
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'التأمل ليس مجرد قراءة، لكنه موعد حب بينك وبين يسوع. اختر وقتًا ثابتًا وكل يوم اقرأ وتأمل واكتب.',
-                            style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF6B2626)),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                    ),
 
                   ],
                 ),
