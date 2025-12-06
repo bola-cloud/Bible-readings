@@ -49,16 +49,7 @@ class _MonthlyDataState extends State<MonthlyData> {
   }
 
   Future<void> _loadData(int month) async {
-    for(int i=month; i<=endMonth.month; i++){
-      List<bool>? toggles = await _databaseService.getMonthAttendance(i);
-      if(toggles == null){
-        final weeks = getWeeksInMonth(DateTime(2026,i));
-        int totalCells = (weeks.length + 1) * 4; // 4 rows total
-        List<bool> togglesList = List.generate(totalCells - (weeks.length + 1), (_) => false);
-        await _databaseService.addAttendance(i, togglesList);
-        toggles = await _databaseService.getMonthAttendance(i);
-      }
-    }
+    await _databaseService.feedMonthData();
     List<bool>? toggles = await _databaseService.getMonthAttendance(month);
     final noteContent = await _databaseService.getMonthNote(month);
     setState(() {

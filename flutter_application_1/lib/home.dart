@@ -108,17 +108,15 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Header image / title
-                    // Center(
-                    //   child: Column(
-                    //     children: [
-                    //       const SizedBox(height: 80),
-                    //       const SizedBox(height: 12),
-                    //       Text('كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.', style: GoogleFonts.cairo(fontSize: 14, color: Colors.brown[800]), textAlign: TextAlign.center),
-                    //       const SizedBox(height: 18),
-                    //     ],
-                    //   ),
-                    // ),
-
+                    const SizedBox(height: 80),
+                    Center(
+                      child: Column(
+                        children: [
+                          Text('كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.', style: GoogleFonts.cairo(fontSize: 14, color: Colors.brown[800]), textAlign: TextAlign.center),    
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 18),
                     // Cards grid / list (7 cards total)
                     Wrap(
                       spacing: 12,
@@ -208,7 +206,7 @@ class _HomeState extends State<Home> {
                               ? (constraints.maxWidth / 2 - 26)
                               : constraints.maxWidth,
                           child: _buildCard(
-                            title: 'حياة قديس',
+                            title: 'مذبح عائلى',
                             subtitle:
                                 'حياة قديس تكون لك مثال حي للتثبيت والنمو في الايمان',
                             leading: Container(
@@ -218,12 +216,14 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Icon(
-                                Icons.person,
+                                Icons.family_restroom,
                                 color: Colors.orange,
                               ),
                             ),
                             color: Colors.orange.shade100.withOpacity(0.95),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(context, '/masba7_3a2ly');
+                            },
                           ),
                         ),
 

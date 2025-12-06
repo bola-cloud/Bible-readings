@@ -35,6 +35,7 @@ class _StatisticsState extends State<Statistics> {
 
   Future _calculateStatistics() async {
     final now = DateTime(2026, 5, 6);
+    await _databaseService.feedMonthData();
 
     // 1️⃣ Opened days
     int openedDays = await _databaseService.getOpenedDaysUntil(now);
