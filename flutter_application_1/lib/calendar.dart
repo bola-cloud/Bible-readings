@@ -15,7 +15,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   Map<String, Data>? data = {};
   Map<String, String>? notes;
-  DateTime endDay = DateTime.utc(2026, 5, 6);
+  DateTime endDay =  DateTime(2026,DateTime.now().month,DateTime.now().day);
   final DatabaseService _databaseService = DatabaseService.instance;
   bool _isLoading = true;
 

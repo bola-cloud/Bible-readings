@@ -27,7 +27,7 @@ class DatabaseService {
   final String _attendanceSaintStagesColumnName = "saint_stages";
   final String _attendanceFadilaImagePathColumnName = "fadila_img";
   final String _attendanceSaintImagePathColumnName = "saint_img";
-  final DateTime endDate = DateTime(2026,5,6);
+  final DateTime endDate = DateTime(2026,DateTime.now().month,DateTime.now().day);
 
   DatabaseService._constructor();
 

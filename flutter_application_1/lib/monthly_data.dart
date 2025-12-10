@@ -16,7 +16,7 @@ class _MonthlyDataState extends State<MonthlyData> {
   TextEditingController? _notesController;
 
   DateTime displayedMonth = DateTime.utc(2026, 1, 1);
-  DateTime endMonth = DateTime.utc(2026, 5, 6);
+  DateTime endMonth =  DateTime(2026,DateTime.now().month,DateTime.now().day);
 
   List<bool>? toggles;
   bool _isLoading = true;
