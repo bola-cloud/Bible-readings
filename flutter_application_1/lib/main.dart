@@ -5,6 +5,7 @@ import 'package:flutter_application_1/calendar.dart';
 import 'package:flutter_application_1/daily_meditation.dart';
 import 'package:flutter_application_1/f7s_al_damer.dart';
 import 'package:flutter_application_1/home.dart';
+import 'package:flutter_application_1/howTo.dart';
 import 'package:flutter_application_1/landing_page.dart';
 import 'package:flutter_application_1/manner.dart';
 import 'package:flutter_application_1/masba7_3a2ly.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         '/manner': (context) => const Manner(),
         '/saint': (context) => const Saint(),
         '/masba7_3a2ly': (context) => const Masba73a2ly(),
+        '/howTo': (context) => const HowTo(),
       },
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/modules/data.dart';
-import 'package:flutter_application_1/sujood_hour.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -112,7 +111,7 @@ class _HomeState extends State<Home> {
               style: GoogleFonts.cairo(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF6B2626),
+                color: Colors.brown[900],
               ),
             ),
           ),
@@ -121,265 +120,198 @@ class _HomeState extends State<Home> {
           centerTitle: true,
         ),
         extendBodyBehindAppBar: true,
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/img/background.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.7),
-                BlendMode.dstATop,
-              ),
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide = constraints.maxWidth > 600;
-              return SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Header image / title
-                    const SizedBox(height: 80),
-                    Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.',
-                            style: GoogleFonts.cairo(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF6B2626),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+        body: 
+        // Container(
+          // decoration: BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage('assets/img/background.jpg'),
+          //     fit: BoxFit.cover,
+          //     colorFilter: ColorFilter.mode(
+          //       Colors.white.withOpacity(0.7),
+          //       BlendMode.dstATop,
+          //     ),
+          //   ),
+          // ),
+          // padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          // child: 
+          Stack(
+            
+            children: [
+              Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/img/background.jpg'),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.90),
+                        BlendMode.dstATop,
                       ),
                     ),
-                    const SizedBox(height: 18),
-                    // Cards grid / list (7 cards total)
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      alignment: WrapAlignment.center,
+                  ),
+                ),
+
+                // Pale overlay for readability
+                Container(color: Colors.white.withOpacity(0.30)),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final isWide = constraints.maxWidth > 600;
+                  return SingleChildScrollView(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(
-                          width: isWide
-                              ? (constraints.maxWidth / 2 - 26)
-                              : constraints.maxWidth,
-                          child: _buildCard(
-                            title: 'تأملاتى',
-                            subtitle:
-                                'تأملات من الكتاب المقدس تساعدك ان تفهم كلام الرب تعيشها في حياتك اليومية',
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.book,
-                                color: Colors.orange,
-                              ),
-                            ),
-                            color: Colors.orange.shade200.withOpacity(0.9),
-                            onTap: () async {
-                              Navigator.pushNamed(context, '/calendar');
-                            },
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: isWide
-                              ? (constraints.maxWidth / 2 - 26)
-                              : constraints.maxWidth,
-                          child: _buildCard(
-                            title: 'جدول متابعة شهرى',
-                            subtitle:
-                                'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المصالحة و عملك للمذبح العائلى فى بيتك',
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.calendar_month,
-                                color: Colors.orange,
-                              ),
-                            ),
-                            color: Colors.yellow.shade100.withOpacity(0.9),
-                            onTap: () async {
-                              Navigator.pushNamed(context, '/monthly_data');
-                            },
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: isWide
-                              ? (constraints.maxWidth / 2 - 26)
-                              : constraints.maxWidth,
-                          child: _buildCard(
-                            title: 'خطوات عمل تأمل',
-                            subtitle:
-                                'خطوات عملية للتأمل اليومي تساعدك تدخل الى كلمة الله وتسمع صوته',
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.menu_book,
-                                color: Colors.orange,
-                              ),
-                            ),
-                            color: Colors.orange.shade50.withOpacity(0.95),
-                            onTap: () {
-                              Navigator.pushNamed(context, '/daily_meditation');
-                            },
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: isWide
-                              ? (constraints.maxWidth / 2 - 26)
-                              : constraints.maxWidth,
-                          child: _buildCard(
-                            title: 'خطوات عمل مذبح عائلى',
-                            subtitle:
-                                // 'حياة قديس تكون لك مثال حي للتثبيت والنمو في الايمان',
-                                '',
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.family_restroom,
-                                color: Colors.orange,
-                              ),
-                            ),
-                            color: Colors.orange.shade100.withOpacity(0.95),
-                            onTap: () {
-                              Navigator.pushNamed(context, '/masba7_3a2ly');
-                            },
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: isWide
-                              ? (constraints.maxWidth / 2 - 26)
-                              : constraints.maxWidth,
-                          child: _buildCard(
-                            title: 'خطوات فحص الضمير',
-                            subtitle:
-                                'خطوات فحص الضمير تساعدك تراجع نفسك بصدق وتستعد للمواجهة مع الله',
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.self_improvement,
-                                color: Colors.orange,
-                              ),
-                            ),
-                            color: Colors.yellow.shade50.withOpacity(0.95),
-                            onTap: () {
-                              // Pass current month to the f7s_al_damer page
-                              Navigator.pushNamed(
-                                context,
-                                '/f7s_al_damer',
-                                arguments: {'month': DateTime.now().month},
-                              );
-                            },
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: isWide
-                              ? (constraints.maxWidth / 2 - 26)
-                              : constraints.maxWidth,
-                          child: _buildCard(
-                            title: 'خطوات ساعة السجود',
-                            subtitle:
-                                'خطوات ساعة السجود امام القربان علشان تعيش لحظة لقاء عميق مع المسيح الحى فى السر الافخارستى',
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.access_time,
-                                color: Colors.orange,
-                              ),
-                            ),
-                            color: Colors.orange.shade200.withOpacity(0.95),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const SujoodHour(),
+                        // Header image / title
+                        const SizedBox(height: 80),
+                        Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                'كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.',
+                                style: GoogleFonts.cairo(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.brown[900],
                                 ),
-                              );
-                            },
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         ),
-
-                        SizedBox(
-                          width: isWide
-                              ? (constraints.maxWidth / 2 - 26)
-                              : constraints.maxWidth,
-                          child: _buildCard(
-                            title: 'أنجازاتى',
-                            subtitle: 'شوف بطاريتك الروحية وصلت لفين',
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.star,
-                                color: Colors.orange,
+                        const SizedBox(height: 18),
+                        // Cards grid / list (7 cards total)
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: isWide
+                                  ? (constraints.maxWidth / 2 - 26)
+                                  : constraints.maxWidth,
+                              child: _buildCard(
+                                title: 'تأملاتى',
+                                subtitle:
+                                    'تأملات من الكتاب المقدس تساعدك ان تفهم كلام الرب تعيشها في حياتك اليومية',
+                                leading: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.book,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                color: Colors.orange.shade200.withOpacity(0.9),
+                                onTap: () async {
+                                  Navigator.pushNamed(context, '/calendar');
+                                },
                               ),
                             ),
-                            color: Colors.orange.shade300.withOpacity(0.95),
-                            onTap: () {
-                              Navigator.pushNamed(context, '/statistics');
-                            },
-                          ),
+              
+                            SizedBox(
+                              width: isWide
+                                  ? (constraints.maxWidth / 2 - 26)
+                                  : constraints.maxWidth,
+                              child: _buildCard(
+                                title: 'جدول متابعة شهرى',
+                                subtitle:
+                                    'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المصالحة و عملك للمذبح العائلى فى بيتك',
+                                leading: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.calendar_month,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                color: Colors.yellow.shade100.withOpacity(0.9),
+                                onTap: () async {
+                                  Navigator.pushNamed(context, '/monthly_data');
+                                },
+                              ),
+                            ),
+              
+                            SizedBox(
+                              width: isWide
+                                  ? (constraints.maxWidth / 2 - 26)
+                                  : constraints.maxWidth,
+                              child: _buildCard(
+                                title: 'خطواتى',
+                                subtitle: 'كل الخطوات اللى انت محتاجها علشان تعرف تعيش افضل تجربة معانا',
+                                leading: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.web_stories_sharp,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                color: Colors.orange.shade200.withOpacity(0.9),
+                                onTap: () async {
+                                  Navigator.pushNamed(context, '/howTo');
+                                },
+                              ),
+                            ),
+              
+                            SizedBox(
+                              width: isWide
+                                  ? (constraints.maxWidth / 2 - 26)
+                                  : constraints.maxWidth,
+                              child: _buildCard(
+                                title: 'أنجازاتى',
+                                subtitle: 'شوف بطاريتك الروحية وصلت لفين',
+                                leading: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                color: Colors.orange.shade300.withOpacity(0.95),
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/statistics');
+                                },
+                              ),
+                            ),
+                          ],
                         ),
+              
+                        const SizedBox(height: 20),
+              
+                        // Footer / note
+                        Text(
+                          'الفكرة مش إنك تملأ الحاجات وخلاص... لكن إنك تنمو روحياً وتكتشف جمال الحياة مع ربنا بخطوات بسيطة لكن ثابتة. ابدأ انهردا المشوار...خطوة بخطوة و ربنا هو اللى هيكمل معاك المشوار.',
+                          style: GoogleFonts.cairo(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.brown[900],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+              
+                        const SizedBox(height: 30),
                       ],
                     ),
-
-                    const SizedBox(height: 20),
-
-                    // Footer / note
-                    Text(
-                      'الفكرة مش إنك تملأ كراسة... لكن إنك تنمو روحياً وتكتشف جمال الحياة مع ربنا بخطوات بسيطة لكن ثابتة. ابدأ انهردا المشوار...خطوة بخطوة و ربنا هو اللى هيكمل معاك المشوار.',
-                      style: GoogleFonts.cairo(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF6B2626),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ],
           ),
         ),
-      ),
+      // ),
     );
   }
 }
