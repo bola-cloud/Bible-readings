@@ -232,7 +232,7 @@ class _LandingPageState extends State<LandingPage>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Bola Eshak\n<email@example.com>",
+                    "Bola Eshak\nbola.ishak41@gmail.com",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.cairo(fontSize: 13),
                   ),
