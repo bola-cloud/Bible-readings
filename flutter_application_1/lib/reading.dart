@@ -1,4 +1,3 @@
-// ...existing code...
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
@@ -22,6 +21,7 @@ class _ReadingState extends State<Reading> {
   bool opened = false;
   bool _isLoaded = false; // prevent multiple loads
   bool _isLoading = true;
+  bool _noteEdited = false;
 
   @override
   void initState() {
@@ -110,31 +110,21 @@ class _ReadingState extends State<Reading> {
                 },
               ),
               actions: [
-                // IconButton(
-                //   onPressed: () async {
-                //     setState(() {
-                //       opened = !opened;
-                //     });
-                //     _databaseService.updateDataOpened(date!, opened ? 1 : 0);
-                //   },
-                //   icon: Icon(
-                //     opened
-                //         ? Icons.radio_button_checked
-                //         : Icons.radio_button_unchecked,
-                //   ),
-                //   color: opened ? Colors.green : Colors.red,
-                //   iconSize: 50,
-                // ),
                 ElevatedButton.icon(
                   onPressed: () async {
                     setState(() {
                       opened = !opened;
                     });
 
-                    await _databaseService.updateDataOpened(date!, opened ? 1 : 0);
+                    await _databaseService.updateDataOpened(
+                      date!,
+                      opened ? 1 : 0,
+                    );
                   },
                   icon: Icon(
-                    opened ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                    opened
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
                     size: 20,
                     color: Colors.white,
                   ),
@@ -148,7 +138,10 @@ class _ReadingState extends State<Reading> {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: opened ? Colors.green : Colors.red,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -262,19 +255,97 @@ class _ReadingState extends State<Reading> {
                                 padding: const EdgeInsets.all(12.0),
                                 child: Column(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                      ),
-                                      child: Text(
-                                        "ملاحظات",
-                                        style: GoogleFonts.cairo(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                    // Padding(
+                                    //   padding: const EdgeInsets.symmetric(
+                                    //     horizontal: 8.0,
+                                    //   ),
+                                    //   child: Text(
+                                    //     "ملاحظات",
+                                    //     style: GoogleFonts.cairo(
+                                    //       fontSize: 16,
+                                    //       fontWeight: FontWeight.bold,
+                                    //     ),
+                                    //     textAlign: TextAlign.center,
+                                    //   ),
+                                    // ),
+                                    Row(
+                                      children: [
+                                        // Invisible placeholder to balance the layout
+                                        Opacity(
+                                          opacity: 0,
+                                          child: _noteEdited
+                                              ? ElevatedButton.icon(
+                                                  onPressed: () {},
+                                                  icon: Icon(Icons.save),
+                                                  label: Text("حفظ"),
+                                                )
+                                              : SizedBox(width: 0, height: 0),
                                         ),
-                                        textAlign: TextAlign.center,
-                                      ),
+
+                                        // Centered title
+                                        Expanded(
+                                          child: Text(
+                                            "ملاحظات",
+                                            style: GoogleFonts.cairo(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+
+                                        // Actual save button (visible)
+                                        _noteEdited
+                                            ? ElevatedButton.icon(
+                                                onPressed: () async {
+                                                  await _databaseService
+                                                      .updateNoteContent(
+                                                        date!,
+                                                        _notesController!.text,
+                                                      );
+                                                  setState(() {
+                                                    _noteEdited = false;
+                                                  });
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        "تم الحفظ",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style:
+                                                            GoogleFonts.cairo(),
+                                                      ),
+                                                      duration: Duration(
+                                                        seconds: 1,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  Icons.save,
+                                                  size: 18,
+                                                ),
+                                                label: Text(
+                                                  "حفظ",
+                                                  style: GoogleFonts.cairo(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.green,
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8,
+                                                      ),
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
+                                      ],
                                     ),
+
                                     const SizedBox(height: 8),
 
                                     ConstrainedBox(
@@ -292,14 +363,19 @@ class _ReadingState extends State<Reading> {
                                         ),
                                         keyboardType: TextInputType.multiline,
                                         controller: _notesController,
-                                        onChanged: (value) async {
-                                          if (date != null) {
-                                            await _databaseService
-                                                .updateNoteContent(
-                                                  date!,
-                                                  value,
-                                                );
-                                          }
+                                        // onChanged: (value) async {
+                                        //   if (date != null) {
+                                        //     await _databaseService
+                                        //         .updateNoteContent(
+                                        //           date!,
+                                        //           value,
+                                        //         );
+                                        //   }
+                                        // },
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _noteEdited = true;
+                                          });
                                         },
                                       ),
                                     ),

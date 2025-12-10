@@ -21,6 +21,7 @@ class _MonthlyDataState extends State<MonthlyData> {
   List<bool>? toggles;
   bool _isLoading = true;
   bool _isFirstLoad = true;
+  bool _noteEdited = false;
 
   @override
   void initState() {
@@ -95,6 +96,7 @@ class _MonthlyDataState extends State<MonthlyData> {
       await _loadData(displayedMonth.month);
       setState(() {
         _isLoading = false;
+        _noteEdited = false;
       });
     }
   }
@@ -112,6 +114,7 @@ class _MonthlyDataState extends State<MonthlyData> {
       await _loadData(displayedMonth.month);
       setState(() {
         _isLoading = false;
+        _noteEdited = false;
       });
     }
   }
@@ -251,112 +254,127 @@ class _MonthlyDataState extends State<MonthlyData> {
                         const SizedBox(height: 80),
 
                         // Grid inside a card to match Home style
-                        Card(
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          color: Colors.white.withOpacity(0.85),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2),
-                            child: SizedBox(
-                              height: 270,
-                              child: GridView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: columns,
-                                      childAspectRatio: 1,
-                                    ),
-                                itemCount: totalCells,
-                                itemBuilder: (context, index) {
-                                  if (index < columns) {
-                                    if (index == columns - 1) {
+                        GestureDetector(
+                          onHorizontalDragEnd: (details) {
+                            if (details.primaryVelocity == null) return;
+
+                            if (details.primaryVelocity! < 0) {
+                              // Swiped LEFT → go to next month
+                              nextMonth();
+                            } else if (details.primaryVelocity! > 0) {
+                              // Swiped RIGHT → go to previous month
+                              previousMonth();
+                            }
+                          },
+                          child: Card(
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            color: Colors.white.withOpacity(0.85),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: SizedBox(
+                                height: 270,
+                                child: GridView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: columns,
+                                        childAspectRatio: 1,
+                                      ),
+                                  itemCount: totalCells,
+                                  itemBuilder: (context, index) {
+                                    if (index < columns) {
+                                      if (index == columns - 1) {
+                                        return Center(
+                                          child: Text(
+                                            "",
+                                            style: GoogleFonts.cairo(),
+                                          ),
+                                        );
+                                      }
+
+                                      return Center(
+                                        child: Column(
+                                          children: [
+                                            const Icon(
+                                              Icons.calendar_today,
+                                              size: 20,
+                                            ),
+                                            Text(
+                                              getWeekName(index),
+                                              style: GoogleFonts.cairo(
+                                                fontSize: 10,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              textDirection: TextDirection.rtl,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+
+                                    if (index == columns * 2 - 1) {
                                       return Center(
                                         child: Text(
-                                          "",
+                                          "حضور القداس",
+                                          textDirection: TextDirection.rtl,
                                           style: GoogleFonts.cairo(),
                                         ),
                                       );
                                     }
 
+                                    if (index == columns * 3 - 1) {
+                                      return Center(
+                                        child: Text(
+                                          "حضور الاجتماع",
+                                          textDirection: TextDirection.rtl,
+                                          style: GoogleFonts.cairo(),
+                                        ),
+                                      );
+                                    }
+
+                                    if (index == columns * 4 - 1) {
+                                      return Center(
+                                        child: Text(
+                                          "المذبح العائلى",
+                                          textDirection: TextDirection.rtl,
+                                          style: GoogleFonts.cairo(),
+                                        ),
+                                      );
+                                    }
+
+                                    int toggleIndex = index - columns;
+                                    bool isOn = toggles?[toggleIndex] ?? false;
+
                                     return Center(
-                                      child: Column(
-                                        children: [
-                                          const Icon(
-                                            Icons.calendar_today,
-                                            size: 20,
-                                          ),
-                                          Text(
-                                            getWeekName(index),
-                                            style: GoogleFonts.cairo(
-                                              fontSize: 10,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                        ],
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            toggles?[toggleIndex] =
+                                                !(toggles?[toggleIndex] ??
+                                                    true);
+                                          });
+                                          await _databaseService
+                                              .updateMonthIndex(
+                                                displayedMonth.month,
+                                                toggleIndex,
+                                                toggles?[toggleIndex] ?? false,
+                                              );
+                                        },
+                                        icon: Icon(
+                                          isOn
+                                              ? Icons.radio_button_checked
+                                              : Icons.radio_button_unchecked,
+                                        ),
+                                        color: isOn ? Colors.green : Colors.red,
                                       ),
                                     );
-                                  }
-
-                                  if (index == columns * 2 - 1) {
-                                    return Center(
-                                      child: Text(
-                                        "حضور القداس",
-                                        textDirection: TextDirection.rtl,
-                                        style: GoogleFonts.cairo(),
-                                      ),
-                                    );
-                                  }
-
-                                  if (index == columns * 3 - 1) {
-                                    return Center(
-                                      child: Text(
-                                        "حضور الاجتماع",
-                                        textDirection: TextDirection.rtl,
-                                        style: GoogleFonts.cairo(),
-                                      ),
-                                    );
-                                  }
-
-                                  if (index == columns * 4 - 1) {
-                                    return Center(
-                                      child: Text(
-                                        "المذبح العائلى",
-                                        textDirection: TextDirection.rtl,
-                                        style: GoogleFonts.cairo(),
-                                      ),
-                                    );
-                                  }
-
-                                  int toggleIndex = index - columns;
-                                  bool isOn = toggles?[toggleIndex] ?? false;
-
-                                  return Center(
-                                    child: IconButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          toggles?[toggleIndex] =
-                                              !(toggles?[toggleIndex] ?? true);
-                                        });
-                                        await _databaseService.updateMonthIndex(
-                                          displayedMonth.month,
-                                          toggleIndex,
-                                          toggles?[toggleIndex] ?? false,
-                                        );
-                                      },
-                                      icon: Icon(
-                                        isOn
-                                            ? Icons.radio_button_checked
-                                            : Icons.radio_button_unchecked,
-                                      ),
-                                      color: isOn ? Colors.green : Colors.red,
-                                    ),
-                                  );
-                                },
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -428,15 +446,87 @@ class _MonthlyDataState extends State<MonthlyData> {
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: Text(
-                                    "سر المصالحة",
-                                    style: GoogleFonts.cairo(fontSize: 16),
-                                    textAlign: TextAlign.center,
-                                  ),
+                                // Padding(
+                                //   padding: const EdgeInsets.symmetric(
+                                //     horizontal: 8.0,
+                                //   ),
+                                //   child: Text(
+                                //     "سر المصالحة",
+                                //     style: GoogleFonts.cairo(fontSize: 16),
+                                //     textAlign: TextAlign.center,
+                                //   ),
+                                // ),
+                                Row(
+                                  children: [
+                                    // Invisible placeholder to balance the layout
+                                    Opacity(
+                                      opacity: 0,
+                                      child: _noteEdited
+                                          ? ElevatedButton.icon(
+                                              onPressed: () {},
+                                              icon: Icon(Icons.save),
+                                              label: Text("حفظ"),
+                                            )
+                                          : SizedBox(width: 0, height: 0),
+                                    ),
+
+                                    // Centered title
+                                    Expanded(
+                                      child: Text(
+                                        "سر المصالحة",
+                                        style: GoogleFonts.cairo(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+
+                                    // Actual save button (visible)
+                                    _noteEdited
+                                        ? ElevatedButton.icon(
+                                            onPressed: () async {
+                                              await _databaseService
+                                                  .updateMonthNote(
+                                                    displayedMonth.month,
+                                                    _notesController!.text,
+                                                  );
+                                              setState(() {
+                                                _noteEdited = false;
+                                              });
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    "تم الحفظ",
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts.cairo(),
+                                                  ),
+                                                  duration: Duration(
+                                                    seconds: 1,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            icon: Icon(Icons.save, size: 18),
+                                            label: Text(
+                                              "حفظ",
+                                              style: GoogleFonts.cairo(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.green,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 8,
+                                                  ),
+                                            ),
+                                          )
+                                        : SizedBox.shrink(),
+                                  ],
                                 ),
 
                                 const SizedBox(height: 8),
@@ -456,11 +546,16 @@ class _MonthlyDataState extends State<MonthlyData> {
                                       hintStyle: GoogleFonts.cairo(),
                                     ),
                                     controller: _notesController,
-                                    onChanged: (value) async {
-                                      await _databaseService.updateMonthNote(
-                                        displayedMonth.month,
-                                        value,
-                                      );
+                                    // onChanged: (value) async {
+                                    //   await _databaseService.updateMonthNote(
+                                    //     displayedMonth.month,
+                                    //     value,
+                                    //   );
+                                    // },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _noteEdited = true;
+                                      });
                                     },
                                   ),
                                 ),

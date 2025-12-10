@@ -1,4 +1,3 @@
-// ...existing code...
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
@@ -55,7 +54,7 @@ class _CalendarState extends State<Calendar> {
     final navigator = Navigator.of(context);
 
     // mark opened immediately
-    await _databaseService.updateDataOpened(day, 1);
+    // await _databaseService.updateDataOpened(day, 1);
 
     if (!mounted) return;
 
@@ -81,7 +80,10 @@ class _CalendarState extends State<Calendar> {
         : Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
-              title: Text('تأملاتى', style: GoogleFonts.cairo(fontWeight: FontWeight.bold)),
+              title: Text(
+                'تأملاتى',
+                style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+              ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {

@@ -146,8 +146,8 @@ class _StatisticsState extends State<Statistics> {
                     bool confirm = await showDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: Text("تأكيد الحذف"),
-                        content: Text("هل تريد حذف كل البيانات؟"),
+                        title: Text("تأكيد الحذف", textDirection: TextDirection.rtl,),
+                        content: Text("هل تريد حذف كل البيانات؟", textDirection: TextDirection.rtl),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, false),

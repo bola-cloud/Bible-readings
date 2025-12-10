@@ -94,7 +94,6 @@ class DatabaseService {
         int totalCells = (weeks.length + 1) * 4; // 4 rows total
         List<bool> togglesList = List.generate(totalCells - (weeks.length + 1), (_) => false);
         await addAttendance(i, togglesList);
-        toggles = await getMonthAttendance(i);
       }
     }
   }

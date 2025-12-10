@@ -1,3 +1,4 @@
+// ...existing code...
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -63,9 +64,200 @@ class _LandingPageState extends State<LandingPage>
     super.dispose();
   }
 
+  Widget _buildPortraitContent() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 6),
+
+        // Animated Cross Icon
+        ScaleTransition(
+          scale: _crossAnimation,
+          child: const Icon(
+            Icons.church,
+            size: 90,
+            color: Colors.black,
+          ),
+        ),
+
+        const SizedBox(height: 18),
+
+        // Spinner
+        const SizedBox(
+          height: 36,
+          width: 36,
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+          ),
+        ),
+
+        const SizedBox(height: 18),
+
+        // Title / Credits
+        Text(
+          "تطبيق تأملاتى",
+          style: GoogleFonts.cairo(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+
+        const SizedBox(height: 14),
+
+        // Short description
+        Text(
+          "ابدأ رحلتك اليومية مع كلمة الرب — تأمل، صلِ، وسجل ما يحرك قلبك.",
+          style: GoogleFonts.cairo(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+          textAlign: TextAlign.center,
+        ),
+
+        const SizedBox(height: 18),
+
+        // Credits block
+        Column(
+          children: [
+            Text(
+              "Developed by:",
+              style: GoogleFonts.cairo(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Samer Walaa\nsamer.walaa18@gmail.com",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.cairo(fontSize: 13),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Bola Eshak\n<email@example.com>",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.cairo(fontSize: 13),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Footer note
+        Text(
+          "Made with ❤️ for God’s glory",
+          style: GoogleFonts.cairo(fontSize: 13),
+        ),
+
+        const SizedBox(height: 6),
+      ],
+    );
+  }
+
+  Widget _buildLandscapeContent(double cardHeight) {
+    // Left: icon + spinner (centered), Right: texts and credits (scrollable if needed)
+    return SizedBox(
+      height: cardHeight,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ScaleTransition(
+                  scale: _crossAnimation,
+                  child: const Icon(
+                    Icons.church,
+                    size: 80,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                const SizedBox(
+                  height: 36,
+                  width: 36,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 18),
+          Expanded(
+            flex: 8,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "تطبيق تأملاتى",
+                    style: GoogleFonts.cairo(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    "ابدأ رحلتك اليومية مع كلمة الرب — تأمل، صلِ، وسجل ما يحرك قلبك.",
+                    style: GoogleFonts.cairo(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    "Developed by:",
+                    style: GoogleFonts.cairo(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Samer Walaa\nsamer.walaa18@gmail.com",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.cairo(fontSize: 13),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Bola Eshak\n<email@example.com>",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.cairo(fontSize: 13),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    "Made with ❤️ for God’s glory",
+                    style: GoogleFonts.cairo(fontSize: 13),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final maxWidth = 720.0;
+    final media = MediaQuery.of(context);
+    final isLandscape = media.orientation == Orientation.landscape;
+    // For landscape card height (so content is centered and not too tall)
+    final cardHeight = isLandscape ? (media.size.height * 0.6).clamp(220.0, 420.0) : null;
 
     return Scaffold(
       body: Stack(
@@ -103,97 +295,9 @@ class _LandingPageState extends State<LandingPage>
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24.0, vertical: 28.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const SizedBox(height: 6),
-
-                            // Animated Cross Icon
-                            ScaleTransition(
-                              scale: _crossAnimation,
-                              child: const Icon(
-                                Icons.church,
-                                size: 90,
-                                color: Colors.black,
-                              ),
-                            ),
-
-                            const SizedBox(height: 18),
-
-                            // Spinner
-                            const SizedBox(
-                              height: 36,
-                              width: 36,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.black),
-                              ),
-                            ),
-
-                            const SizedBox(height: 18),
-
-                            // Title / Credits
-                            Text(
-                              "تطبيق تأملاتى",
-                              style: GoogleFonts.cairo(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-
-                            const SizedBox(height: 14),
-
-                            // Short description
-                            Text(
-                              "ابدأ رحلتك اليومية مع كلمة الرب — تأمل، صلِ، وسجل ما يحرك قلبك.",
-                              style: GoogleFonts.cairo(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-
-                            const SizedBox(height: 18),
-
-                            // Credits block
-                            Column(
-                              children: [
-                                Text(
-                                  "Developed by:",
-                                  style: GoogleFonts.cairo(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Samer Walaa\nsamer.walaa18@gmail.com",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.cairo(fontSize: 13),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Bola Eshak\n<email@example.com>",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.cairo(fontSize: 13),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            // Footer note
-                            Text(
-                              "Made with ❤️ for God’s glory",
-                              style: GoogleFonts.cairo(fontSize: 13),
-                            ),
-
-                            const SizedBox(height: 6),
-                          ],
-                        ),
+                        child: isLandscape
+                            ? _buildLandscapeContent(cardHeight!)
+                            : _buildPortraitContent(),
                       ),
                     ),
                   ),
@@ -206,3 +310,4 @@ class _LandingPageState extends State<LandingPage>
     );
   }
 }
+// ...existing code...

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/modules/data.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,15 @@ class _HomeState extends State<Home> {
   Set<String> openedDays = {};
   Map<int, List<bool>> toggles = {};
   List<Data>? dataItems;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
 
   Widget _buildCard({
     required String title,

@@ -99,3 +99,5 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icons/app_icon.jpg"
+
+app_name: "خطوة بخطوة"

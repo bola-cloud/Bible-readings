@@ -1,9 +1,7 @@
-// Add imports for desktop sqflite ffi initialization
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/calendar.dart';
-import 'package:flutter_application_1/carlo.dart';
 import 'package:flutter_application_1/daily_meditation.dart';
 import 'package:flutter_application_1/f7s_al_damer.dart';
 import 'package:flutter_application_1/home.dart';
@@ -50,7 +48,6 @@ class MyApp extends StatelessWidget {
         '/statistics': (context) => const Statistics(),
         '/f7s_al_damer': (context) => const F7sAlDamer(),
         '/sujood_hour': (context) => const SujoodHour(),
-        '/carlo': (context) => const FloatingCardsPage(),
         '/daily_meditation': (context) => const DailyMeditation(),
         '/manner': (context) => const Manner(),
         '/saint': (context) => const Saint(),

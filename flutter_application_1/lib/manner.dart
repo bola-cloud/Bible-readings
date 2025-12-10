@@ -17,12 +17,14 @@ class _MannerState extends State<Manner> {
   int? month;
   bool _isLoaded = false; // prevent multiple loads
   bool _isLoading = true;
+  bool _noteEdited = false;
   String img = "";
   String title = "";
 
   // Page view state
   late PageController _pageController;
-  late VoidCallback _pageListener; // store listener so it can be removed correctly
+  late VoidCallback
+  _pageListener; // store listener so it can be removed correctly
   double _page = 0.0; // track page position for hovering effect
 
   // Example stages content (you can replace texts with exact content)
@@ -80,9 +82,9 @@ class _MannerState extends State<Manner> {
 
     if (!mounted) return;
     setState(() {
-      this.img = img?? "";
-      this.title = title?? "";
-      this.note = note?? "";
+      this.img = img ?? "";
+      this.title = title ?? "";
+      this.note = note ?? "";
       _stages = stages;
       // set controller to the current page's note (index 0 by default)
       _mannerController?.text = this.note;
@@ -97,9 +99,22 @@ class _MannerState extends State<Manner> {
     const Color titleColor = Color(0xFF6B2626); // maroon for titles
     const Color bodyColor = Color(0xFF6B2626);
 
-    final titleTextStyle = GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.w700, color: titleColor);
-    final bodyTextStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6);
-    final noteTitleStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w700, color: bodyColor);
+    final titleTextStyle = GoogleFonts.cairo(
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      color: titleColor,
+    );
+    final bodyTextStyle = GoogleFonts.cairo(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: bodyColor,
+      height: 1.6,
+    );
+    final noteTitleStyle = GoogleFonts.cairo(
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+      color: bodyColor,
+    );
 
     return _isLoading
         ? Loading()
@@ -108,7 +123,14 @@ class _MannerState extends State<Manner> {
             child: Scaffold(
               extendBodyBehindAppBar: true,
               appBar: AppBar(
-                title: Text(title, style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
+                title: Text(
+                  title,
+                  style: GoogleFonts.cairo(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF6B2626),
+                  ),
+                ),
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () async {
@@ -138,7 +160,10 @@ class _MannerState extends State<Manner> {
                   // Content
                   SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
                       child: Column(
                         children: [
                           const SizedBox(height: 16),
@@ -157,21 +182,28 @@ class _MannerState extends State<Manner> {
                                 final stage = _stages[index];
                                 // compute scale based on distance from current page
                                 final double distance = (_page - index).abs();
-                                final double scale = (1 - (distance * 0.12)).clamp(0.88, 1.0);
+                                final double scale = (1 - (distance * 0.12))
+                                    .clamp(0.88, 1.0);
 
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12.0,
+                                    horizontal: 10.0,
+                                  ),
                                   child: Transform.scale(
                                     scale: scale,
                                     alignment: Alignment.center,
                                     child: Card(
                                       elevation: 6,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
                                       color: cardBackground,
                                       child: Padding(
                                         padding: const EdgeInsets.all(18.0),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
                                           children: [
                                             Align(
                                               alignment: Alignment.topCenter,
@@ -181,22 +213,30 @@ class _MannerState extends State<Manner> {
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   shape: BoxShape.circle,
-                                                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withOpacity(0.05),
+                                                      blurRadius: 4,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
                                                 ),
                                                 child: Center(
                                                   child: Icon(
-                                                    index == 0 ? Icons.church : (index == 1 ? Icons.self_improvement : Icons.auto_awesome),
+                                                    index == 0
+                                                        ? Icons.church
+                                                        : (index == 1
+                                                              ? Icons
+                                                                    .self_improvement
+                                                              : Icons
+                                                                    .auto_awesome),
                                                     color: titleColor,
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             const SizedBox(height: 8),
-                                            Text(
-                                              stage['title'] ?? '',
-                                              style: titleTextStyle,
-                                              textAlign: TextAlign.center,
-                                            ),
                                             const SizedBox(height: 12),
                                             Expanded(
                                               child: SingleChildScrollView(
@@ -204,6 +244,7 @@ class _MannerState extends State<Manner> {
                                                   stage['body'] ?? '',
                                                   style: bodyTextStyle,
                                                   textAlign: TextAlign.center,
+                                                  textDirection: TextDirection.rtl,
                                                 ),
                                               ),
                                             ),
@@ -226,7 +267,9 @@ class _MannerState extends State<Manner> {
                               final Color active = titleColor;
                               final bool isActive = (_page.round() == i);
                               return Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                ),
                                 width: (isActive ? 16.0 : 8.0),
                                 height: 8,
                                 decoration: BoxDecoration(
@@ -242,34 +285,134 @@ class _MannerState extends State<Manner> {
                           // Notes card (styled to match SujoodHour aesthetic)
                           Card(
                             elevation: 4,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             color: Colors.white.withOpacity(0.95),
                             child: Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text('ممارسة عمليه', style: noteTitleStyle, textAlign: TextAlign.center),
+                                  Row(
+                                    children: [
+                                      // Invisible placeholder to balance the layout
+                                      Opacity(
+                                        opacity: 0,
+                                        child: _noteEdited
+                                            ? ElevatedButton.icon(
+                                                onPressed: () {},
+                                                icon: Icon(Icons.save),
+                                                label: Text("حفظ"),
+                                              )
+                                            : SizedBox(width: 0, height: 0),
+                                      ),
+
+                                      // Centered title
+                                      Expanded(
+                                        child: Text(
+                                          "ممارسة عملية",
+                                          style: GoogleFonts.cairo(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+
+                                      // Actual save button (visible)
+                                      _noteEdited
+                                          ? ElevatedButton.icon(
+                                              onPressed: () async {
+                                                if (month != null) {
+                                                  // save per-step note
+                                                  await _database_service
+                                                      .updateMonthManner(
+                                                        month!,
+                                                        _mannerController!.text,
+                                                      );
+                                                  // update local cache
+                                                  note =
+                                                      _mannerController!.text;
+                                                }
+                                                setState(() {
+                                                  _noteEdited = false;
+                                                });
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      "تم الحفظ",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          GoogleFonts.cairo(),
+                                                    ),
+                                                    duration: Duration(
+                                                      seconds: 1,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              icon: Icon(Icons.save, size: 18),
+                                              label: Text(
+                                                "حفظ",
+                                                style: GoogleFonts.cairo(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 8,
+                                                    ),
+                                              ),
+                                            )
+                                          : SizedBox.shrink(),
+                                    ],
+                                  ),
+                                  // Text(
+                                  //   'ممارسة عمليه',
+                                  //   style: noteTitleStyle,
+                                  //   textAlign: TextAlign.center,
+                                  // ),
                                   const SizedBox(height: 8),
                                   ConstrainedBox(
-                                    constraints: const BoxConstraints(minHeight: 120, maxHeight: 200),
+                                    constraints: const BoxConstraints(
+                                      minHeight: 120,
+                                      maxHeight: 200,
+                                    ),
                                     child: TextField(
                                       controller: _mannerController,
                                       maxLines: null,
                                       expands: false,
-                                      style: GoogleFonts.cairo(fontSize: 15, color: bodyColor),
+                                      style: GoogleFonts.cairo(
+                                        fontSize: 15,
+                                        color: bodyColor,
+                                      ),
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(),
-                                        hintText: 'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
-                                        hintStyle: GoogleFonts.cairo(color: Colors.black45),
+                                        hintText:
+                                            'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
+                                        hintStyle: GoogleFonts.cairo(
+                                          color: Colors.black45,
+                                        ),
                                       ),
-                                      onChanged: (value) async {
-                                        if (month != null) {
-                                          // save per-step note
-                                          await _database_service.updateMonthManner(month!, value);
-                                          // update local cache
-                                          note = value;
-                                        }
+                                      // onChanged: (value) async {
+                                      //   if (month != null) {
+                                      //     // save per-step note
+                                      //     await _database_service.updateMonthManner(month!, value);
+                                      //     // update local cache
+                                      //     note = value;
+                                      //   }
+                                      // },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _noteEdited = true;
+                                        });
                                       },
                                     ),
                                   ),
