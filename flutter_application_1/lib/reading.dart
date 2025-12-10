@@ -23,10 +23,24 @@ class _ReadingState extends State<Reading> {
   bool _isLoading = true;
   bool _noteEdited = false;
 
+  final ScrollController _scrollController = ScrollController();
+  double _scrollOffset = 0.0;
+
   @override
   void initState() {
     super.initState();
     _notesController = TextEditingController();
+    _scrollController.addListener(() {
+      setState(() {
+        _scrollOffset = _scrollController.offset;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -94,14 +108,19 @@ class _ReadingState extends State<Reading> {
 
   @override
   Widget build(BuildContext context) {
+    final double opacity = (_scrollOffset / 50).clamp(0.0, 1.0);
+
     return _isLoading
         ? Loading()
         : Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
-              title: Text(
-                intToArabic(convertToDDMMYYYY(date ?? "")),
-                style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+              title: Opacity(
+                opacity: 1 - opacity,
+                child: Text(
+                  intToArabic(convertToDDMMYYYY(date ?? "")),
+                  style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+                ),
               ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
@@ -182,6 +201,7 @@ class _ReadingState extends State<Reading> {
                     final notesMaxHeight = availableHeight * 0.30;
 
                     return SingleChildScrollView(
+                      controller: _scrollController,
                       padding: const EdgeInsets.only(bottom: 24),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -363,15 +383,6 @@ class _ReadingState extends State<Reading> {
                                         ),
                                         keyboardType: TextInputType.multiline,
                                         controller: _notesController,
-                                        // onChanged: (value) async {
-                                        //   if (date != null) {
-                                        //     await _databaseService
-                                        //         .updateNoteContent(
-                                        //           date!,
-                                        //           value,
-                                        //         );
-                                        //   }
-                                        // },
                                         onChanged: (value) {
                                           setState(() {
                                             _noteEdited = true;

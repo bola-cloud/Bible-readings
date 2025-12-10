@@ -17,6 +17,9 @@ class _HomeState extends State<Home> {
   Map<int, List<bool>> toggles = {};
   List<Data>? dataItems;
 
+  final ScrollController _scrollController = ScrollController();
+  double _scrollOffset = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -24,6 +27,17 @@ class _HomeState extends State<Home> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    _scrollController.addListener(() {
+      setState(() {
+        _scrollOffset = _scrollController.offset;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Widget _buildCard({
@@ -85,16 +99,21 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'خطوة بخطوة',
-            style: GoogleFonts.cairo(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF6B2626),
+          title: Opacity(
+            opacity: 1 - opacity,
+            child: Text(
+              'خطوة بخطوة',
+              style: GoogleFonts.cairo(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF6B2626),
+              ),
             ),
           ),
           backgroundColor: Colors.transparent,
@@ -118,6 +137,7 @@ class _HomeState extends State<Home> {
             builder: (context, constraints) {
               final isWide = constraints.maxWidth > 600;
               return SingleChildScrollView(
+                controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -152,7 +172,7 @@ class _HomeState extends State<Home> {
                           child: _buildCard(
                             title: 'تأملاتى',
                             subtitle:
-                                'تأملات من الكتاب المقدس تساعدك ان تفهم كلام الرب وتزوجها في حياتك اليومية',
+                                'تأملات من الكتاب المقدس تساعدك ان تفهم كلام الرب تعيشها في حياتك اليومية',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -178,7 +198,7 @@ class _HomeState extends State<Home> {
                           child: _buildCard(
                             title: 'جدول متابعة شهرى',
                             subtitle:
-                                'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المعالجة',
+                                'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المصالحة و عملك للمذبح العائلى فى بيتك',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -202,7 +222,7 @@ class _HomeState extends State<Home> {
                               ? (constraints.maxWidth / 2 - 26)
                               : constraints.maxWidth,
                           child: _buildCard(
-                            title: 'تأمل عملي يومي',
+                            title: 'خطوات عمل تأمل',
                             subtitle:
                                 'خطوات عملية للتأمل اليومي تساعدك تدخل الى كلمة الله وتسمع صوته',
                             leading: Container(
@@ -228,9 +248,10 @@ class _HomeState extends State<Home> {
                               ? (constraints.maxWidth / 2 - 26)
                               : constraints.maxWidth,
                           child: _buildCard(
-                            title: 'مذبح عائلى',
+                            title: 'خطوات عمل مذبح عائلى',
                             subtitle:
-                                'حياة قديس تكون لك مثال حي للتثبيت والنمو في الايمان',
+                                // 'حياة قديس تكون لك مثال حي للتثبيت والنمو في الايمان',
+                                '',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -287,7 +308,7 @@ class _HomeState extends State<Home> {
                           child: _buildCard(
                             title: 'خطوات ساعة السجود',
                             subtitle:
-                                'خطوات ساعة السجود امام ذاكرك الرب لتعيش لحظة لقاء عميق مع المسيح',
+                                'خطوات ساعة السجود امام القربان علشان تعيش لحظة لقاء عميق مع المسيح الحى فى السر الافخارستى',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -317,8 +338,7 @@ class _HomeState extends State<Home> {
                               : constraints.maxWidth,
                           child: _buildCard(
                             title: 'أنجازاتى',
-                            subtitle:
-                                'فضيلة لكل شهر علشان تتعلمها وتعيشها عمليًا',
+                            subtitle: 'شوف بطاريتك الروحية وصلت لفين',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -343,7 +363,7 @@ class _HomeState extends State<Home> {
 
                     // Footer / note
                     Text(
-                      'الفكرة مش إنك تملأ كراسة... لكن إنك تنمو روحياً وتكتشف جمال الحياة مع ربنا.',
+                      'الفكرة مش إنك تملأ كراسة... لكن إنك تنمو روحياً وتكتشف جمال الحياة مع ربنا بخطوات بسيطة لكن ثابتة. ابدأ انهردا المشوار...خطوة بخطوة و ربنا هو اللى هيكمل معاك المشوار.',
                       style: GoogleFonts.cairo(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
