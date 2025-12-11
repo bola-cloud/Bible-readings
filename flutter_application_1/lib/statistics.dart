@@ -196,7 +196,6 @@ class _StatisticsState extends State<Statistics> {
                       ),
                       color: Colors.white.withOpacity(0.85),
                       child: SizedBox(
-                        height: 500, // <-- Force the card height
                         child: Center(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -211,9 +210,9 @@ class _StatisticsState extends State<Statistics> {
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                SizedBox(height: 32),
+                                SizedBox(height: 8),
                                 BatteryWidget(percentage: _percentage),
-                                SizedBox(height: 32),
+                                SizedBox(height: 8),
                                 Column(
                                   children: List.generate(4, (index) {
                                     String label = [

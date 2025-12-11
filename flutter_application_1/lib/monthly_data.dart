@@ -672,7 +672,16 @@ final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
                             child: Column(
                               children: [
                                 Text(
-                                  "نسبة حضور القداس فى الشهر",
+                                  "بطارياتك الشهر دة",
+                                  style: GoogleFonts.cairo(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "نسبة حضور القداس",
                                   style: GoogleFonts.cairo(),
                                 ),
                                 const SizedBox(height: 8),
@@ -683,7 +692,7 @@ final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  "نسبة حضور الاجتماع فى الشهر",
+                                  "نسبة حضور الاجتماع",
                                   style: GoogleFonts.cairo(),
                                 ),
                                 const SizedBox(height: 8),
@@ -694,7 +703,7 @@ final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  "نسبة المذبح العائلى فى الشهر",
+                                  "نسبة ممارسة المذبح العائلى",
                                   style: GoogleFonts.cairo(),
                                 ),
                                 const SizedBox(height: 8),
@@ -705,7 +714,7 @@ final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  "نسبة ساعة السجود فى الشهر",
+                                  "نسبة ممارسة ساعة السجود",
                                   style: GoogleFonts.cairo(),
                                 ),
                                 const SizedBox(height: 8),
