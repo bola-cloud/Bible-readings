@@ -247,10 +247,9 @@ class _MonthlyDataState extends State<MonthlyData> {
   @override
   Widget build(BuildContext context) {
     final weeks = getWeeksInMonth(displayedMonth);
-    int totalCells = (weeks.length + 1) * 4; // 4 rows total
+    int totalCells = (weeks.length + 1) * 5; // 4 rows total
 
     int columns = weeks.length + 1;
-    final isWide = MediaQuery.of(context).size.width > 600;
 
     return _isLoading
         ? Loading()
@@ -400,7 +399,7 @@ class _MonthlyDataState extends State<MonthlyData> {
                             child: Padding(
                               padding: const EdgeInsets.all(2),
                               child: SizedBox(
-                                height: 270,
+                                height: 380,
                                 child: GridView.builder(
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
@@ -445,7 +444,7 @@ class _MonthlyDataState extends State<MonthlyData> {
                                     if (index == columns * 2 - 1) {
                                       return Center(
                                         child: Text(
-                                          "حضور القداس",
+                                          "حضور\nالقداس",
                                           textDirection: TextDirection.rtl,
                                           style: GoogleFonts.cairo(),
                                         ),
@@ -455,7 +454,7 @@ class _MonthlyDataState extends State<MonthlyData> {
                                     if (index == columns * 3 - 1) {
                                       return Center(
                                         child: Text(
-                                          "حضور الاجتماع",
+                                          "حضور\nالاجتماع",
                                           textDirection: TextDirection.rtl,
                                           style: GoogleFonts.cairo(),
                                         ),
@@ -465,7 +464,17 @@ class _MonthlyDataState extends State<MonthlyData> {
                                     if (index == columns * 4 - 1) {
                                       return Center(
                                         child: Text(
-                                          "المذبح العائلى",
+                                          "المذبح\nالعائلى",
+                                          textDirection: TextDirection.rtl,
+                                          style: GoogleFonts.cairo(),
+                                        ),
+                                      );
+                                    }
+
+                                    if (index == columns * 5 - 1) {
+                                      return Center(
+                                        child: Text(
+                                          "ساعة\nالسجود",
                                           textDirection: TextDirection.rtl,
                                           style: GoogleFonts.cairo(),
                                         ),
@@ -506,59 +515,6 @@ class _MonthlyDataState extends State<MonthlyData> {
                         ),
 
                         // Battery bars inside card
-                        const SizedBox(height: 16),
-
-                        Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          color: Colors.white.withOpacity(0.85),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 12.0,
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "نسبة حضور القداس فى الشهر",
-                                  style: GoogleFonts.cairo(),
-                                ),
-                                const SizedBox(height: 8),
-                                BatteryWidget(
-                                  percentage: _calculateRowPercentage(0),
-                                  width: 200,
-                                  height: 20,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  "نسبة حضور الاجتماع فى الشهر",
-                                  style: GoogleFonts.cairo(),
-                                ),
-                                const SizedBox(height: 8),
-                                BatteryWidget(
-                                  percentage: _calculateRowPercentage(1),
-                                  width: 200,
-                                  height: 20,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  "نسبة المذبح العائلى فى الشهر",
-                                  style: GoogleFonts.cairo(),
-                                ),
-                                const SizedBox(height: 8),
-                                BatteryWidget(
-                                  percentage: _calculateRowPercentage(2),
-                                  width: 200,
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        // Notes section in a card
                         const SizedBox(height: 16),
 
                         Card(
@@ -667,6 +623,70 @@ class _MonthlyDataState extends State<MonthlyData> {
                                       });
                                     },
                                   ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        // Notes section in a card
+                        const SizedBox(height: 16),
+
+                        Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          color: Colors.white.withOpacity(0.85),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 12.0,
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  "نسبة حضور القداس فى الشهر",
+                                  style: GoogleFonts.cairo(),
+                                ),
+                                const SizedBox(height: 8),
+                                BatteryWidget(
+                                  percentage: _calculateRowPercentage(0),
+                                  width: 200,
+                                  height: 20,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  "نسبة حضور الاجتماع فى الشهر",
+                                  style: GoogleFonts.cairo(),
+                                ),
+                                const SizedBox(height: 8),
+                                BatteryWidget(
+                                  percentage: _calculateRowPercentage(1),
+                                  width: 200,
+                                  height: 20,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  "نسبة المذبح العائلى فى الشهر",
+                                  style: GoogleFonts.cairo(),
+                                ),
+                                const SizedBox(height: 8),
+                                BatteryWidget(
+                                  percentage: _calculateRowPercentage(2),
+                                  width: 200,
+                                  height: 20,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  "نسبة ساعة السجود فى الشهر",
+                                  style: GoogleFonts.cairo(),
+                                ),
+                                const SizedBox(height: 8),
+                                BatteryWidget(
+                                  percentage: _calculateRowPercentage(3),
+                                  width: 200,
+                                  height: 20,
                                 ),
                               ],
                             ),

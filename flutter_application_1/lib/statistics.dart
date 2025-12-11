@@ -19,7 +19,7 @@ class _StatisticsState extends State<Statistics> {
   bool _isLoading = true;
   double _percentage = 0.0;
 
-  List _rowPercentages = [0.0, 0.0, 0.0]; // القداس, الاجتماع, المذبح العائلى
+  List _rowPercentages = [0.0, 0.0, 0.0, 0.0]; // القداس, الاجتماع, المذبح العائلى
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _StatisticsState extends State<Statistics> {
 
     // 4️⃣ Calculate row percentages
     List<double> rowPercentages = List.generate(
-      3,
+      4,
       (index) => calculateRowPercentageAllMonths(togglesMap, index, now.month),
     );
 
@@ -215,11 +215,12 @@ class _StatisticsState extends State<Statistics> {
                                 BatteryWidget(percentage: _percentage),
                                 SizedBox(height: 32),
                                 Column(
-                                  children: List.generate(3, (index) {
+                                  children: List.generate(4, (index) {
                                     String label = [
                                       "نسبة حضور القداس حتى اليوم",
                                       "نسبة حضور الاجتماع حتى اليوم",
                                       "نسبة ممارسة المذبح العائلى حتى اليوم",
+                                      "نسبة ممارسة ساعة السجود حتى اليوم",
                                     ][index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
