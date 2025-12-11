@@ -23,11 +23,25 @@ class _MonthlyDataState extends State<MonthlyData> {
   bool _isFirstLoad = true;
   bool _noteEdited = false;
 
+  final ScrollController _scrollController = ScrollController();
+  double _scrollOffset = 0.0;
+
   @override
   void initState() {
     super.initState();
     _notesController = TextEditingController();
+    _scrollController.addListener(() {
+      setState(() {
+        _scrollOffset = _scrollController.offset;
+      });
+    });
     _loadData(displayedMonth.month);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -246,6 +260,8 @@ class _MonthlyDataState extends State<MonthlyData> {
 
   @override
   Widget build(BuildContext context) {
+final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
+
     final weeks = getWeeksInMonth(displayedMonth);
     int totalCells = (weeks.length + 1) * 5; // 4 rows total
 
@@ -256,9 +272,12 @@ class _MonthlyDataState extends State<MonthlyData> {
         : Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
-              title: Text(
-                "${getArabicMonthName(displayedMonth.month)} ",
-                style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+              title: Opacity(
+                opacity: 1 - opacity,
+                child: Text(
+                  "${getArabicMonthName(displayedMonth.month)} ",
+                  style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+                ),
               ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
@@ -270,13 +289,19 @@ class _MonthlyDataState extends State<MonthlyData> {
               elevation: 0,
               centerTitle: true,
               actions: [
-                IconButton(
-                  onPressed: previousMonth,
-                  icon: const Icon(Icons.arrow_back),
+                Opacity(
+                  opacity: 1 - opacity,
+                  child: IconButton(
+                    onPressed: previousMonth,
+                    icon: const Icon(Icons.arrow_back),
+                  ),
                 ),
-                IconButton(
-                  onPressed: nextMonth,
-                  icon: const Icon(Icons.arrow_forward),
+                Opacity(
+                  opacity: 1 - opacity,
+                  child: IconButton(
+                    onPressed: nextMonth,
+                    icon: const Icon(Icons.arrow_forward),
+                  ),
                 ),
               ],
             ),
@@ -301,6 +326,7 @@ class _MonthlyDataState extends State<MonthlyData> {
 
                 // Main content
                 SingleChildScrollView(
+                  controller: _scrollController,
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
