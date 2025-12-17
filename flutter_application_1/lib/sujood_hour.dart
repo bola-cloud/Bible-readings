@@ -13,48 +13,60 @@ class _SujoodHourState extends State<SujoodHour> {
     {
       'title': '١ - حضر وقتك ومكانك',
       'body':
-          'ادخل الكنيسة إلى بيت القربان في صمت. خلِ بالك إنك داخل لحضور يسوع الحقيقي في سر الإفخارستيا.',
+          'ادخل الكنيسة إلى بيت القربان في صمت.\n خلِ بالك إنك داخل لحضور يسوع الحقيقي في سر الإفخارستيا.',
     },
     {
       'title': '٢ - الدخول بسجود الجسد',
       'body':
-          'عند دخولك، أعمل انحناءة عميقة أو ركوع على الركبتين تكريمًا للمسيح الحاضر.',
+          'عند دخولك، أعمل انحناءة عميقة أو ركوع على الركبتين علامه اكرام للمسيح الحاضر.',
     },
     {
       'title': '٣ - اطلب حضور الروح القدس',
       'body':
-          'اجلس بهدوء أو اسجد على ركبتيك، اطلب من الروح القدس ينقي قلبك ويملأك بالسلام.',
+          'اجلس بهدوء على ركبتيك.\nاطلب من الروح القدس ينقي قلبك ويملأك بالسلام.',
     },
     {
-      'title': '٤ - من الصمت',
+      'title': '٤ - زمن الصمت',
       'body':
-          'اقعد في صمت أمام يسوع، زي صديق يقعد مع صديقه. مش ضروري تتكلم كثير، الأهم هو حضورك القلبي.',
+          'اقعد في صمت أمام يسوع، زي صديق يقعد مع صديقه.\nمش ضروري تتكلم كثير، الأهم هو الحضور.',
     },
     {
       'title': '٥ - قراءة أو تأمل قصير',
       'body':
-          'ممكن تقرأ آية من الكتاب المقدس أو تتأمل كلمة قصيرة تربطك بالمسيح الحاضر.',
+          'ممكن تقرأ آية من الكتاب المقدس.\n ركز عليها وخليها تربطك بيسوع الحاضر قدامك.',
     },
     {
       'title': '٦ - صلِ من قلبك',
       'body':
-          'كلم يسوع بحرية؛ اشكره على حضوره، احكي له همومك وطلباتك وقدم له حياتك وأحبابك.',
+          'كلم يسوع بحرية؛\n اشكره على حضوره،\n احكي له همومك وطلباتك\nقدم له حياتك وأحبابك.',
     },
     {
-      'title': '٧ - زمن التأمل العملي',
+      'title': '٧ - زمن التأمل الصامت',
       'body':
-          'بعد الصلاة اقعد ساكت وخلي قلبك مفتوح. انظر ليسوع الموجود في سر القربان، ودعه يتكلم.',
+          'بعد الصلاة اقعد ساكت وخلي قلبك مفتوح.\nالسجود مش بس كلام، هو تذوق لحضور الله في الهدوء.',
     },
     {
       'title': '٨ - التقدمة والقرار',
       'body':
-          'قدم نفسك ليسوع: "خذني يا رب", واختر قرار عملي صغير تعيشه بعد الخروج.',
+          'قدم نفسك ليسوع: "خذني يا رب املك على قلبى."\n اختار قرار عملي صغير تعيشه بعد ما تخرج: محبة, امانه, خدمة ....',
     },
     {
-      'title': '٩ - كتابة الخلاصة',
+      'title': '٩ - كتابة الخبرة',
       'body':
-          'بعد ما تخلص السجود، اكتب: إيه اللي حسيت بيه أو الكلمة اللي لمستك، والقرار اللي أخدته.',
+          'بعد ما تخلص. اكتب:\nإيه اللي حسيت بيه أو الكلمة اللي لمستك،\nالقرار اللي أخدته مع يسوع.',
     },
+  ];
+
+  final List<IconData> adorationIcons = [
+    Icons.place, // 1. حضِّر وقتك ومكانك (Prepare time & place)
+    Icons.downhill_skiing, // 2. الدخول بسجود الجسد (Physical prostration)
+    Icons.person_pin, // 3. اطلب الحضور (Ask for presence)
+    Icons.volume_off, // 4. زمن الصمت (Silent time)
+    Icons.menu_book, // 5. قراءة أو تأمل قصير (Reading/short meditation)
+    Icons.chat, // 6. صلِّ من قلبك (Pray from your heart)
+    Icons.self_improvement, // 7. زمن التأمل الصامت (Silent meditation time)
+    Icons.volunteer_activism, // 8. التقدمة والقرار (Offering & decision)
+    Icons.edit_note, // 9. كتابة الخبرة (Writing experience)
   ];
 
   late final PageController _pageController;
@@ -122,7 +134,7 @@ class _SujoodHourState extends State<SujoodHour> {
                       ),
                     ],
                   ),
-                  child: Center(child: Icon(Icons.church, color: Colors.brown)),
+                  child: Center(child: Icon(adorationIcons[index], color: Colors.brown)),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -169,11 +181,7 @@ class _SujoodHourState extends State<SujoodHour> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/home',
-                (route) => false,
-              );
+              Navigator.pop(context);
             },
           ),
           title: Text(
@@ -264,6 +272,22 @@ class _SujoodHourState extends State<SujoodHour> {
 
                     // footer note area (like design)
                     const SizedBox(height: 12),
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'السجود أمام القربان هو مدرسة حب وصداقة. مش شرط يكون فيه كلام كتير، يكفي إنك تكون حاضر بكل قلبك قدام يسوع الحاضر حقًا.',
+                          style: GoogleFonts.cairo(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF6B2626),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ],
                 ),
               ),

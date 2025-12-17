@@ -22,7 +22,8 @@ class _SaintState extends State<Saint> {
 
   // Page view state
   late PageController _pageController;
-  late VoidCallback _pageListener; // store listener so it can be removed correctly
+  late VoidCallback
+  _pageListener; // store listener so it can be removed correctly
   double _page = 0.0; // track page position for hovering effect
 
   // Example stages content (you can replace texts with exact content)
@@ -30,6 +31,14 @@ class _SaintState extends State<Saint> {
 
   // per-step notes loaded from DB
   String note = "";
+
+  // Icons for the 4 common stage titles across all saints
+  final List<IconData> stageIcons = [
+    Icons.badge, // بطاقته/بطاقتها (Badge/Card)
+    Icons.history_edu, // قصته/قصتها (Story/History)
+    Icons.star, // فضيلته/فضيلتها (Virtue/Star quality)
+    Icons.message, // رسالة لينا (Message to us)
+  ];
 
   @override
   void initState() {
@@ -80,9 +89,9 @@ class _SaintState extends State<Saint> {
 
     if (!mounted) return;
     setState(() {
-      this.img = img?? "";
-      this.title = title?? "";
-      this.note = note?? "";
+      this.img = img ?? "";
+      this.title = title ?? "";
+      this.note = note ?? "";
       _stages = stages;
       // set controller to the current page's note (index 0 by default)
       _mannerController?.text = this.note;
@@ -97,9 +106,18 @@ class _SaintState extends State<Saint> {
     const Color titleColor = Color(0xFF6B2626); // maroon for titles
     const Color bodyColor = Color(0xFF6B2626);
 
-    final titleTextStyle = GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.w700, color: titleColor);
-    final bodyTextStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6);
-  
+    final titleTextStyle = GoogleFonts.cairo(
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      color: titleColor,
+    );
+    final bodyTextStyle = GoogleFonts.cairo(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: bodyColor,
+      height: 1.6,
+    );
+
     final width = MediaQuery.of(context).size.width;
     final isWide = width > 700;
 
@@ -110,7 +128,14 @@ class _SaintState extends State<Saint> {
             child: Scaffold(
               extendBodyBehindAppBar: true,
               appBar: AppBar(
-                title: Text(title, style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
+                title: Text(
+                  title,
+                  style: GoogleFonts.cairo(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF6B2626),
+                  ),
+                ),
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () async {
@@ -140,7 +165,10 @@ class _SaintState extends State<Saint> {
                   // Content
                   SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
                       child: Column(
                         children: [
                           const SizedBox(height: 16),
@@ -160,21 +188,28 @@ class _SaintState extends State<Saint> {
                                 final stage = _stages[index];
                                 // compute scale based on distance from current page
                                 final double distance = (_page - index).abs();
-                                final double scale = (1 - (distance * 0.12)).clamp(0.88, 1.0);
+                                final double scale = (1 - (distance * 0.12))
+                                    .clamp(0.88, 1.0);
 
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12.0,
+                                    horizontal: 10.0,
+                                  ),
                                   child: Transform.scale(
                                     scale: scale,
                                     alignment: Alignment.center,
                                     child: Card(
                                       elevation: 6,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
                                       color: cardBackground,
                                       child: Padding(
                                         padding: const EdgeInsets.all(18.0),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
                                           children: [
                                             Align(
                                               alignment: Alignment.topCenter,
@@ -184,11 +219,18 @@ class _SaintState extends State<Saint> {
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   shape: BoxShape.circle,
-                                                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withOpacity(0.05),
+                                                      blurRadius: 4,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
                                                 ),
                                                 child: Center(
                                                   child: Icon(
-                                                    index == 0 ? Icons.church : (index == 1 ? Icons.self_improvement : Icons.auto_awesome),
+                                                    stageIcons[index],
                                                     color: titleColor,
                                                   ),
                                                 ),
@@ -229,7 +271,9 @@ class _SaintState extends State<Saint> {
                               final Color active = titleColor;
                               final bool isActive = (_page.round() == i);
                               return Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                ),
                                 width: (isActive ? 16.0 : 8.0),
                                 height: 8,
                                 decoration: BoxDecoration(

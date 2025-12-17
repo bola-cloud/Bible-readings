@@ -10,15 +10,55 @@ class DailyMeditation extends StatefulWidget {
 
 class _DailyMeditationState extends State<DailyMeditation> {
   final List<Map<String, String>> _items = const [
-    {'title': '١ - حضّر وقتك ومكانك', 'body': 'اختر وقت ثابت ومكان هادئ'},
-    {'title': '٢ - اطلب حضور الله', 'body': 'اجلس دقيقة صامت واطلب حضور الروح القدس'},
-    {'title': '٣ - اقرأ النص الكتابي', 'body': 'اقرأ ببطء وتأمل في كل كلمة من النص المختار'},
-    {'title': '٤ - توقف عند كلمة أو آية', 'body': 'اسأل نفسك: ماذا تعني هذه الكلمة لي اليوم؟'},
-    {'title': '٥ - صلّ بالكلمة', 'body': 'حوّل الكلمات إلى صلاة شخصية'},
-    {'title': '٦ - اختر خطوة عمليّة', 'body': 'قرار عملي بسيط تطبقه اليوم لتعيش التأمل'},
-    {'title': '٧ - اكتب خلاصة', 'body': 'سجل ما شعرت به والقرار الذي اتخذته'},
-    {'title': '٨ - اختم بالشكر', 'body': 'اشكر الرب على كلمته وحضوره'},
-    {'title': '٩ - طبق وانمُ', 'body': 'طبق القرار وراقب نمو حياتك الروحية'},
+    {
+      'title': '١- حضِّر وقتك ومكانك',
+      'body':
+          'اختار وقت ثابت كل يوم (الصبح بدري أو قبل النوم).\nاختار مكان هادئ بعيد عن الضوضاء، يفضل يكون ليك فيه ركن صلاة.',
+    },
+    {
+      'title': '٢- اطلب حضور الله',
+      'body':
+          'اجلس دقيقة صامت: هدي نفسك وابعد عن الضوضاء الخارجية والداخلية.\nاستدعاء الروح القدس: قل: "يا رب، افتح ذهني علشان أفهم كلامك وأعيشه." أو صلي صلاة من قلبك',
+    },
+    {
+      'title': '٣- اقرأ النص الكتابي',
+      'body':
+          'افتح الكتاب المقدس على النص المحدد من كراسة المتابعة.\nاقرأه ببطء وتأمل في الكلمات.',
+    },
+    {
+      'title': '٤- توقّف عند كلمة أو فكرة',
+      'body': 'اسأل نفسك:\nإيه الكلمة اللي لمست قلبي؟\nليه الكلمة دي شدتني؟',
+    },
+    {
+      'title': '٥- صلِّ بالكلمة',
+      'body':
+          'كلّم ربنا بالكلمة اللي سمعتها.\nخلي النص يتحول لصلاة شخصية: شكر، طلب، توبة أو رجاء.',
+    },
+    {
+      'title': '٦- خُد قرار عملي',
+      'body':
+          'اختار خطوة صغيرة من النص تعيشها النهاردة.\nمثال: "هسامح اللي ضايقني" – "هساعد شخص محتاج" – "هصلي قبل ما أنام".',
+    },
+    {
+      'title': '٧- اكتُب تأملك',
+      'body':
+          'في آخر الوقت، اكتب جملة أو اتنين عن:\nالكلمة اللي لمستك.\nالقرار اللي أخدته.\n\nالكتابة تساعدك تفتكر وتتابع نموك الروحي.',
+    },
+    {
+      'title': '٨- اختم بالشكر',
+      'body': 'قل: "أشكرك يا رب على كلمتك. ساعدني أعيشها."',
+    },
+  ];
+
+  final List<IconData> meditationIcons = [
+    Icons.schedule, // 1. حضِّر وقتك ومكانك (Prepare time & place)
+    Icons.person_search, // 2. اطلب حضور الله (Ask for God's presence)
+    Icons.menu_book, // 3. اقرأ النص الكتابي (Read scripture)
+    Icons.lightbulb, // 4. توقّف عند كلمة أو فكرة (Pause at a word or idea)
+    Icons.self_improvement, // 5. صلِّ بالكلمة (Pray with the word)
+    Icons.directions_run, // 6. خُد قرار عملي (Take practical decision)
+    Icons.edit_note, // 7. اكتُب تأملك (Write your meditation)
+    Icons.emoji_emotions, // 8. اختم بالشكر (Close with thanksgiving)
   ];
 
   late PageController _pageController;
@@ -70,14 +110,26 @@ class _DailyMeditationState extends State<DailyMeditation> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
-                child: Center(child: Icon(Icons.menu_book, color: Colors.brown)),
+                child: Center(
+                  child: Icon(meditationIcons[index], color: Colors.brown),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 item['title'] ?? '',
-                style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
+                style: GoogleFonts.cairo(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: titleColor,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
@@ -85,7 +137,12 @@ class _DailyMeditationState extends State<DailyMeditation> {
                 child: SingleChildScrollView(
                   child: Text(
                     item['body'] ?? '',
-                    style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
+                    style: GoogleFonts.cairo(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: bodyColor,
+                      height: 1.6,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -114,7 +171,14 @@ class _DailyMeditationState extends State<DailyMeditation> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text('خطوات التأمل اليومي', style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
+          title: Text(
+            'خطوات التأمل اليومي',
+            style: GoogleFonts.cairo(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF6B2626),
+            ),
+          ),
         ),
         body: Stack(
           children: [
@@ -130,7 +194,10 @@ class _DailyMeditationState extends State<DailyMeditation> {
 
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 16.0,
+                ),
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
@@ -140,7 +207,11 @@ class _DailyMeditationState extends State<DailyMeditation> {
                       children: [
                         Text(
                           'التأمل ليس مجرد قراءة، لكنه موعد حب بينك وبين يسوع. اختر وقتًا ثابتًا وكل يوم اقرأ وتأمل واكتب.',
-                          style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF6B2626)),
+                          style: GoogleFonts.cairo(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF6B2626),
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
@@ -155,7 +226,9 @@ class _DailyMeditationState extends State<DailyMeditation> {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: isWide ? 12 : 10),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isWide ? 12 : 10,
+                            ),
                             child: _buildCard(context, _items[index], index),
                           );
                         },
@@ -182,6 +255,21 @@ class _DailyMeditationState extends State<DailyMeditation> {
 
                     const SizedBox(height: 12),
 
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'التأمل مش مجرد قراءة، لكنه موعد حبّ بينك وبين يسوع. الوقت والمكان الثابت يخلوه عادة يومية، والكتابة بتخلي الكلمة متجذرة في حياتك.',
+                          style: GoogleFonts.cairo(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF6B2626),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ],
                 ),
               ),

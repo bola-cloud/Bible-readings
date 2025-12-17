@@ -13,32 +13,45 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
 
   // Page view state
   late PageController _pageController;
-  late VoidCallback _pageListener; // store listener so it can be removed correctly
+  late VoidCallback
+  _pageListener; // store listener so it can be removed correctly
   double _page = 0.0; // track page position for hovering effect
 
   // Example stages content (you can replace texts with exact content)
-  final List<Map<String, String>> _stages = [
+  final List<Map<String, String>> _stages = const [
     {
-      'title': '١ - اطلب حضور الله',
-      'body': 'اجلس دقيقة صامت: قل: "يارب، افتح عينى أشوف يومى بنورك."',
+      'title': '١- اطلب حضور الله',
+      'body': 'اجلس دقيقة صامت.\nقل: "يا رب، افتح عيني أشوف يومي بنورك."',
     },
     {
-      'title': '٢ - قل شكراً',
-      'body': 'اكتب أو فكر فى النعم اللى ربنا اعطاهالك النهاردة. مثال: كلمة طيبة، مساعدة من صديق.',
+      'title': '٢- قُل شكرًا',
+      'body':
+          'اكتب أو فكّر في ٣ نعم ربنا أعطاهالك النهاردة.\nمثال: كلمة طيبة، مساعدة من صديق، لحظة فرح.',
     },
     {
-      'title': '٣ - راجع يومك',
-      'body': 'راجع على مواقف يومك: أين كنت قريب من ربنا؟ أين جرحت محبة؟',
+      'title': '٣- راجِع يومك',
+      'body':
+          'مرّ على مواقف يومك من أوله لآخره.\nاسأل نفسك:\nفين كنت قريب من ربنا؟\nفين جرحت محبة ربنا أو الآخر؟',
     },
     {
-      'title': '٤ - اطلب المغفرة',
-      'body': 'صلِ وقل: "سامحنى يا رب" وادرب قلب جديد.',
+      'title': '٤- اطلب الغفران',
+      'body':
+          'اعترف ببساطة قدام ربنا بأخطائك.\nقل: "سامحني يا رب، واديني قلب جديد."',
     },
     {
-      'title': '٥ - خذ قرار صغير للغد',
-      'body': 'اختر خطوة بسيطة: مساعد صديق، كلمة تشجيع، التزام بالصلاة.',
+      'title': '٥- خُد قرار صغير للغد',
+      'body':
+          'اختار خطوة بسيطة:\nهساعد صديق.\nهقول كلمة تشجيع.\nهلتزم بالصلاة.',
     },
   ];
+
+  final List<IconData> examinationIcons = [
+  Icons.person_search,      // ١- اطلب حضور الله (Ask for God's presence)
+  Icons.emoji_emotions,     // ٢- قُل شكرًا (Say thanks)
+  Icons.timeline,           // ٣- راجِع يومك (Review your day)
+  Icons.handshake,          // ٤- اطلب الغفران (Ask for forgiveness)
+  Icons.directions_run,     // ٥- خُد قرار صغير للغد (Take a small decision)
+];
 
   @override
   void initState() {
@@ -70,146 +83,198 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
     const Color titleColor = Color(0xFF6B2626); // maroon for titles
     const Color bodyColor = Color(0xFF6B2626);
 
-    final titleTextStyle = GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.w700, color: titleColor);
-    final bodyTextStyle = GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6);
+    final titleTextStyle = GoogleFonts.cairo(
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      color: titleColor,
+    );
+    final bodyTextStyle = GoogleFonts.cairo(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: bodyColor,
+      height: 1.6,
+    );
     final width = MediaQuery.of(context).size.width;
     final isWide = width > 700;
 
     return Directionality(
-            textDirection: TextDirection.ltr,
-            child: Scaffold(
-              extendBodyBehindAppBar: true,
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                centerTitle: true,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pop(context),
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Text(
+            'خطوات فحص الضمير',
+            style: GoogleFonts.cairo(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF6B2626),
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+            // Background
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/img/background.jpg'),
+                  fit: BoxFit.cover,
                 ),
-                title: Text('خطوات فحص الضمير', style: GoogleFonts.cairo(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF6B2626))),
-              ),
-              body: Stack(
-                children: [
-                  // Background
-                  Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/img/background.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  // Pale overlay
-                  Container(color: Colors.white.withOpacity(0.30)),
-
-                  // Content
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 16),
-
-                          // PageView with stage cards (hovering center card)
-                          SizedBox(
-                            height: isWide ? 360 : 420,
-                            child: PageView.builder(
-                              controller: _pageController,
-                              itemCount: _stages.length,
-                              itemBuilder: (context, index) {
-                                final stage = _stages[index];
-                                // compute scale based on distance from current page
-                                final double distance = (_page - index).abs();
-                                final double scale = (1 - (distance * 0.12)).clamp(0.88, 1.0);
-
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                                  child: Transform.scale(
-                                    scale: scale,
-                                    alignment: Alignment.center,
-                                    child: Card(
-                                      elevation: 6,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                                      color: cardBackground,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(18.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topCenter,
-                                              child: Container(
-                                                width: 56,
-                                                height: 56,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: Offset(0,2))],
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    index == 0 ? Icons.church : (index == 1 ? Icons.self_improvement : Icons.auto_awesome),
-                                                    color: titleColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              stage['title'] ?? '',
-                                              style: titleTextStyle,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            const SizedBox(height: 12),
-                                            Expanded(
-                                              child: SingleChildScrollView(
-                                                child: Text(
-                                                  stage['body'] ?? '',
-                                                  style: bodyTextStyle,
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          // Dots only (no buttons), use _page to pick active
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(_stages.length, (i) {
-                              final Color active = titleColor;
-                              final bool isActive = (_page.round() == i);
-                              return Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                                width: (isActive ? 16.0 : 8.0),
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: isActive ? active : Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              );
-                            }),
-                          ),
-
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
-          );
+
+            // Pale overlay
+            Container(color: Colors.white.withOpacity(0.30)),
+
+            // Content
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+
+                    // PageView with stage cards (hovering center card)
+                    SizedBox(
+                      height: isWide ? 360 : 420,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: _stages.length,
+                        itemBuilder: (context, index) {
+                          final stage = _stages[index];
+                          // compute scale based on distance from current page
+                          final double distance = (_page - index).abs();
+                          final double scale = (1 - (distance * 0.12)).clamp(
+                            0.88,
+                            1.0,
+                          );
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 10.0,
+                            ),
+                            child: Transform.scale(
+                              scale: scale,
+                              alignment: Alignment.center,
+                              child: Card(
+                                elevation: 6,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                color: cardBackground,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Container(
+                                          width: 56,
+                                          height: 56,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.05,
+                                                ),
+                                                blurRadius: 4,
+                                                offset: Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              examinationIcons[index],
+                                              color: titleColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        stage['title'] ?? '',
+                                        style: titleTextStyle,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Expanded(
+                                        child: SingleChildScrollView(
+                                          child: Text(
+                                            stage['body'] ?? '',
+                                            style: bodyTextStyle,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Dots only (no buttons), use _page to pick active
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(_stages.length, (i) {
+                        final Color active = titleColor;
+                        final bool isActive = (_page.round() == i);
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                          width: (isActive ? 16.0 : 8.0),
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: isActive ? active : Colors.grey,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        );
+                      }),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'فحص الضمير مش لحساب قاسي، لكن هو وقت حبّ أتعلم فيه أكون صادق قدام ربنا، شاكر لنِعمه، وطالب قوة جديدة.',
+                          style: GoogleFonts.cairo(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF6B2626),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

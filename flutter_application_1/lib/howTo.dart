@@ -193,8 +193,7 @@ class _HowToState extends State<HowTo> {
                           child: _buildCard(
                             title: 'خطوات عمل مذبح عائلى',
                             subtitle:
-                                // 'حياة قديس تكون لك مثال حي للتثبيت والنمو في الايمان',
-                                '',
+                                'خطوات عمل المذبح العائلي في البيت (الاجتماع الروحي العائلي اليومي أو الأسبوعي)',
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
