@@ -425,7 +425,7 @@ final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
                             child: Padding(
                               padding: const EdgeInsets.all(2),
                               child: SizedBox(
-                                height: 380,
+                                height: 280 + (6-weeks.length)*40,
                                 child: GridView.builder(
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
