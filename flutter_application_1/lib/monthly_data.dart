@@ -15,7 +15,7 @@ class _MonthlyDataState extends State<MonthlyData> {
   final DatabaseService _databaseService = DatabaseService.instance;
   TextEditingController? _notesController;
 
-  DateTime displayedMonth = DateTime.utc(2026, 1, 1);
+  DateTime displayedMonth = DateTime(2026, 1, 1);
   DateTime endMonth = DateTime(2026, DateTime.now().month, DateTime.now().day);
 
   List<bool>? toggles;

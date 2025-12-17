@@ -136,9 +136,9 @@ class _CalendarState extends State<Calendar> {
                             padding: const EdgeInsets.all(0),
                             child: TableCalendar(
                               rowHeight: 100,
-                              firstDay: DateTime.utc(2026, 1, 1),
+                              firstDay: DateTime(2026, 1, 1),
                               lastDay: endDay,
-                              focusedDay: DateTime.utc(2026, 1, 1),
+                              focusedDay: DateTime(2026, 1, 1),
                               onDaySelected: _onDaySelected,
                               headerStyle: HeaderStyle(
                                 formatButtonVisible: false,
