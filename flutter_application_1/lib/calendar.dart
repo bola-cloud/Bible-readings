@@ -44,7 +44,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
-    if (selectedDay.isAfter(endDay)) {
+    if (selectedDay.isAfter(endDay.add(const Duration(days: 1)))) {
       return;
     }
     String day =

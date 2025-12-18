@@ -26,18 +26,20 @@ class _LandingPageState extends State<LandingPage>
     // Fade animation
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
     );
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
     // Cross animation
-    _crossAnimation = Tween<double>(begin: 0.5, end: 1.2)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _crossAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.2,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
 
     // Navigate after 3 seconds
-    Timer(const Duration(seconds: 3), () async {
+    Timer(const Duration(seconds: 5), () async {
       // ensure DB is ready (some platforms need initialization)
       try {
         await _database_service_ready();
@@ -68,15 +70,38 @@ class _LandingPageState extends State<LandingPage>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: 6),
 
-        // Animated Cross Icon
+        // // Animated Cross Icon
+        // ScaleTransition(
+        //   scale: _crossAnimation,
+        //   child: const Icon(
+        //     Icons.church,
+        //     size: 90,
+        //     color: Colors.black,
+        //   ),
+        // ),
         ScaleTransition(
           scale: _crossAnimation,
-          child: const Icon(
-            Icons.church,
-            size: 90,
-            color: Colors.black,
+          child: Container(
+            decoration: BoxDecoration(
+              // Add background blending similar to your styling
+              color: Colors.white.withOpacity(0.3), // Adjust opacity as needed
+              borderRadius: BorderRadius.circular(
+                12,
+              ), // Optional: rounded corners
+            ),
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.transparent, // Changes white parts to this color
+                BlendMode.srcATop,
+              ),
+              child: Image.asset(
+                'assets/icons/al_mktb.jpg', // Your image path
+                width: 150,
+                height: 150,
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
         ),
 
@@ -97,10 +122,7 @@ class _LandingPageState extends State<LandingPage>
         // Title / Credits
         Text(
           "تطبيق تأملاتى",
-          style: GoogleFonts.cairo(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
 
@@ -152,7 +174,6 @@ class _LandingPageState extends State<LandingPage>
           style: GoogleFonts.cairo(fontSize: 13),
         ),
 
-        const SizedBox(height: 6),
       ],
     );
   }
@@ -257,7 +278,9 @@ class _LandingPageState extends State<LandingPage>
     final media = MediaQuery.of(context);
     final isLandscape = media.orientation == Orientation.landscape;
     // For landscape card height (so content is centered and not too tall)
-    final cardHeight = isLandscape ? (media.size.height * 0.6).clamp(220.0, 420.0) : null;
+    final cardHeight = isLandscape
+        ? (media.size.height * 0.6).clamp(220.0, 420.0)
+        : null;
 
     return Scaffold(
       body: Stack(
@@ -283,7 +306,10 @@ class _LandingPageState extends State<LandingPage>
             child: SafeArea(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 20.0,
+                  ),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: Card(
@@ -294,7 +320,9 @@ class _LandingPageState extends State<LandingPage>
                       color: Colors.white.withOpacity(0.95),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24.0, vertical: 28.0),
+                          horizontal: 24.0,
+                          vertical: 28.0,
+                        ),
                         child: isLandscape
                             ? _buildLandscapeContent(cardHeight!)
                             : _buildPortraitContent(),
