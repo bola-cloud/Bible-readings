@@ -141,6 +141,7 @@ class _StatisticsState extends State<Statistics> {
               actions: [
                 IconButton(
                   icon: Icon(Icons.delete),
+                  iconSize: 30,
                   tooltip: "حذف البيانات",
                   onPressed: () async {
                     bool confirm = await showDialog(
