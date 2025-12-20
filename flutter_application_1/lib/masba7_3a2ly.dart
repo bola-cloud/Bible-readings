@@ -199,34 +199,40 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      height: isWide ? 360 : 420,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: _steps.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: isWide ? 12 : 10),
-                            child: _buildCard(context, _steps[index], index),
-                          );
-                        },
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: SizedBox(
+                        height: isWide ? 360 : 420,
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: _steps.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: isWide ? 12 : 10),
+                              child: _buildCard(context, _steps[index], index),
+                            );
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_steps.length, (i) {
-                        final Color active = const Color(0xFF7A2B2B);
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                          width: ((_page.round() == i) ? 16 : 8).toDouble(),
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: (_page.round() == i) ? active : Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        );
-                      }),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_steps.length, (i) {
+                          final Color active = const Color(0xFF7A2B2B);
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                            width: ((_page.round() == i) ? 16 : 8).toDouble(),
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: (_page.round() == i) ? active : Colors.grey,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          );
+                        }),
+                      ),
                     ),
                     const SizedBox(height: 12),
                   ],

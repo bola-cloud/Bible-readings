@@ -145,110 +145,116 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
                     const SizedBox(height: 16),
 
                     // PageView with stage cards (hovering center card)
-                    SizedBox(
-                      height: isWide ? 360 : 420,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: _stages.length,
-                        itemBuilder: (context, index) {
-                          final stage = _stages[index];
-                          // compute scale based on distance from current page
-                          final double distance = (_page - index).abs();
-                          final double scale = (1 - (distance * 0.12)).clamp(
-                            0.88,
-                            1.0,
-                          );
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 10.0,
-                            ),
-                            child: Transform.scale(
-                              scale: scale,
-                              alignment: Alignment.center,
-                              child: Card(
-                                elevation: 6,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                color: cardBackground,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topCenter,
-                                        child: Container(
-                                          width: 56,
-                                          height: 56,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(
-                                                  0.05,
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: SizedBox(
+                        height: isWide ? 360 : 420,
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: _stages.length,
+                          itemBuilder: (context, index) {
+                            final stage = _stages[index];
+                            // compute scale based on distance from current page
+                            final double distance = (_page - index).abs();
+                            final double scale = (1 - (distance * 0.12)).clamp(
+                              0.88,
+                              1.0,
+                            );
+                      
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12.0,
+                                horizontal: 10.0,
+                              ),
+                              child: Transform.scale(
+                                scale: scale,
+                                alignment: Alignment.center,
+                                child: Card(
+                                  elevation: 6,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                  color: cardBackground,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(18.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Container(
+                                            width: 56,
+                                            height: 56,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(
+                                                    0.05,
+                                                  ),
+                                                  blurRadius: 4,
+                                                  offset: Offset(0, 2),
                                                 ),
-                                                blurRadius: 4,
-                                                offset: Offset(0, 2),
+                                              ],
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                examinationIcons[index],
+                                                color: titleColor,
                                               ),
-                                            ],
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              examinationIcons[index],
-                                              color: titleColor,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        stage['title'] ?? '',
-                                        style: titleTextStyle,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Expanded(
-                                        child: SingleChildScrollView(
-                                          child: Text(
-                                            stage['body'] ?? '',
-                                            style: bodyTextStyle,
-                                            textAlign: TextAlign.center,
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          stage['title'] ?? '',
+                                          style: titleTextStyle,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Expanded(
+                                          child: SingleChildScrollView(
+                                            child: Text(
+                                              stage['body'] ?? '',
+                                              style: bodyTextStyle,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 12),
 
                     // Dots only (no buttons), use _page to pick active
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_stages.length, (i) {
-                        final Color active = titleColor;
-                        final bool isActive = (_page.round() == i);
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                          width: (isActive ? 16.0 : 8.0),
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: isActive ? active : Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        );
-                      }),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_stages.length, (i) {
+                          final Color active = titleColor;
+                          final bool isActive = (_page.round() == i);
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                            width: (isActive ? 16.0 : 8.0),
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: isActive ? active : Colors.grey,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          );
+                        }),
+                      ),
                     ),
 
                     const SizedBox(height: 12),

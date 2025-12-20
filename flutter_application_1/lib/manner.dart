@@ -158,116 +158,122 @@ class _MannerState extends State<Manner> {
                         children: [
                           const SizedBox(height: 16),
 
-                          Expanded(
-                            child: PageView.builder(
-                              controller: _pageController,
-                              itemCount: _stages.length,
-                              onPageChanged: (idx) async {
-                                // update controller to show the note for the newly visible step
-                                if (_mannerController?.text != note) {
-                                  _mannerController?.text = note;
-                                }
-                              },
-                              itemBuilder: (context, index) {
-                                final stage = _stages[index];
-                                // compute scale based on distance from current page
-                                final double distance = (_page - index).abs();
-                                final double scale = (1 - (distance * 0.12))
-                                    .clamp(0.88, 1.0);
-
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12.0,
-                                    horizontal: 10.0,
-                                  ),
-                                  child: Transform.scale(
-                                    scale: scale,
-                                    alignment: Alignment.center,
-                                    child: Card(
-                                      elevation: 6,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(24),
-                                      ),
-                                      color: cardBackground,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(18.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topCenter,
-                                              child: Container(
-                                                width: 56,
-                                                height: 56,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.05),
-                                                      blurRadius: 4,
-                                                      offset: Offset(0, 2),
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Expanded(
+                              child: PageView.builder(
+                                controller: _pageController,
+                                itemCount: _stages.length,
+                                onPageChanged: (idx) async {
+                                  // update controller to show the note for the newly visible step
+                                  if (_mannerController?.text != note) {
+                                    _mannerController?.text = note;
+                                  }
+                                },
+                                itemBuilder: (context, index) {
+                                  final stage = _stages[index];
+                                  // compute scale based on distance from current page
+                                  final double distance = (_page - index).abs();
+                                  final double scale = (1 - (distance * 0.12))
+                                      .clamp(0.88, 1.0);
+                            
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12.0,
+                                      horizontal: 10.0,
+                                    ),
+                                    child: Transform.scale(
+                                      scale: scale,
+                                      alignment: Alignment.center,
+                                      child: Card(
+                                        elevation: 6,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(24),
+                                        ),
+                                        color: cardBackground,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(18.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topCenter,
+                                                child: Container(
+                                                  width: 56,
+                                                  height: 56,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.circle,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.05),
+                                                        blurRadius: 4,
+                                                        offset: Offset(0, 2),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      index == 0
+                                                          ? Icons.church
+                                                          : (index == 1
+                                                                ? Icons
+                                                                      .self_improvement
+                                                                : Icons
+                                                                      .auto_awesome),
+                                                      color: titleColor,
                                                     ),
-                                                  ],
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    index == 0
-                                                        ? Icons.church
-                                                        : (index == 1
-                                                              ? Icons
-                                                                    .self_improvement
-                                                              : Icons
-                                                                    .auto_awesome),
-                                                    color: titleColor,
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            const SizedBox(height: 12),
-                                            Expanded(
-                                              child: SingleChildScrollView(
-                                                child: Text(
-                                                  stage['body'] ?? '',
-                                                  style: bodyTextStyle,
-                                                  textAlign: TextAlign.center,
-                                                  textDirection: TextDirection.rtl,
+                                              const SizedBox(height: 8),
+                                              const SizedBox(height: 12),
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  child: Text(
+                                                    stage['body'] ?? '',
+                                                    style: bodyTextStyle,
+                                                    textAlign: TextAlign.center,
+                                                    textDirection: TextDirection.rtl,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
 
                           const SizedBox(height: 12),
 
                           // Dots only (no buttons), use _page to pick active
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(_stages.length, (i) {
-                              final Color active = titleColor;
-                              final bool isActive = (_page.round() == i);
-                              return Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 4.0,
-                                ),
-                                width: (isActive ? 16.0 : 8.0),
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: isActive ? active : Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              );
-                            }),
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(_stages.length, (i) {
+                                final Color active = titleColor;
+                                final bool isActive = (_page.round() == i);
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 4.0,
+                                  ),
+                                  width: (isActive ? 16.0 : 8.0),
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: isActive ? active : Colors.grey,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                );
+                              }),
+                            ),
                           ),
 
                           const SizedBox(height: 12),

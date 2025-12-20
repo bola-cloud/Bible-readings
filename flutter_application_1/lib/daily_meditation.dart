@@ -218,39 +218,45 @@ class _DailyMeditationState extends State<DailyMeditation> {
                       ],
                     ),
 
-                    SizedBox(
-                      height: isWide ? 360 : 420,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: _items.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: isWide ? 12 : 10,
-                            ),
-                            child: _buildCard(context, _items[index], index),
-                          );
-                        },
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: SizedBox(
+                        height: isWide ? 360 : 420,
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: _items.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isWide ? 12 : 10,
+                              ),
+                              child: _buildCard(context, _items[index], index),
+                            );
+                          },
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 12),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_items.length, (i) {
-                        final Color active = const Color(0xFF6B2626);
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                          width: ((_page.round() == i) ? 16 : 8).toDouble(),
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: (_page.round() == i) ? active : Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        );
-                      }),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_items.length, (i) {
+                          final Color active = const Color(0xFF6B2626);
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                            width: ((_page.round() == i) ? 16 : 8).toDouble(),
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: (_page.round() == i) ? active : Colors.grey,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          );
+                        }),
+                      ),
                     ),
 
                     const SizedBox(height: 12),
