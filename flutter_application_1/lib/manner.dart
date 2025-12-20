@@ -99,21 +99,11 @@ class _MannerState extends State<Manner> {
     const Color titleColor = Color(0xFF6B2626); // maroon for titles
     const Color bodyColor = Color(0xFF6B2626);
 
-    final titleTextStyle = GoogleFonts.cairo(
-      fontSize: 20,
-      fontWeight: FontWeight.w700,
-      color: titleColor,
-    );
     final bodyTextStyle = GoogleFonts.cairo(
       fontSize: 16,
       fontWeight: FontWeight.w600,
       color: bodyColor,
       height: 1.6,
-    );
-    final noteTitleStyle = GoogleFonts.cairo(
-      fontSize: 16,
-      fontWeight: FontWeight.w700,
-      color: bodyColor,
     );
 
     return _isLoading
