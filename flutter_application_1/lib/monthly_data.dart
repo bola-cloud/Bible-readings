@@ -11,7 +11,8 @@ class MonthlyData extends StatefulWidget {
   State<MonthlyData> createState() => _MonthlyDataState();
 }
 
-class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStateMixin{
+class _MonthlyDataState extends State<MonthlyData>
+    with SingleTickerProviderStateMixin {
   final DatabaseService _databaseService = DatabaseService.instance;
   TextEditingController? _notesController;
 
@@ -64,7 +65,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
     super.didChangeDependencies();
 
     if (_isFirstLoad) {
-      // Read month from arguments if available
       final args = ModalRoute.of(context)?.settings.arguments as Map?;
       int month = args?['month'] as int? ?? 1;
       setState(() {
@@ -78,6 +78,11 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
   }
 
   Future<void> _loadData(int month) async {
+    if (_isFirstLoad) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
     await _databaseService.feedMonthData();
     List<bool>? toggles = await _databaseService.getMonthAttendance(month);
     final noteContent = await _databaseService.getMonthNote(month);
@@ -89,7 +94,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
     });
   }
 
-  // Get the first day of each week in the month
   List<DateTime> getWeeksInMonth(
     DateTime month, {
     int weekStart = DateTime.sunday,
@@ -99,7 +103,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
     DateTime firstOfMonth = DateTime(month.year, month.month, 1);
     DateTime lastOfMonth = DateTime(month.year, month.month + 1, 0);
 
-    // Start from the weekStart before or equal to the first day of the month
     DateTime currentWeekStart = firstOfMonth.subtract(
       Duration(days: (firstOfMonth.weekday - weekStart + 7) % 7),
     );
@@ -119,8 +122,7 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
         _isAnimating = true;
       });
 
-      // Start slide animation
-      await _animationController!.forward(from: 0.0);
+      await _animationController!.reverse(from: MediaQuery.of(context).size.width);
 
       setState(() {
         displayedMonth = DateTime(
@@ -130,12 +132,9 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
         );
       });
       await _loadData(displayedMonth.month);
-      // Reset animation
       _animationController!.reset();
       setState(() {
         _isAnimating = false;
-      });
-      setState(() {
         _noteEdited = false;
       });
     }
@@ -149,8 +148,7 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
         _isAnimating = true;
       });
 
-      // Start slide animation
-      await _animationController!.reverse(from: 1.0);
+      await _animationController!.forward(from: 0.0);
 
       setState(() {
         displayedMonth = DateTime(
@@ -160,12 +158,9 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
         );
       });
       await _loadData(displayedMonth.month);
-      // Reset animation
       _animationController!.reset();
       setState(() {
         _isAnimating = false;
-      });
-      setState(() {
         _noteEdited = false;
       });
     }
@@ -190,7 +185,7 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
     final weeks = getWeeksInMonth(displayedMonth);
     int columns = weeks.length + 1;
 
-    int startIndex = rowIndex * columns; // row start in toggles
+    int startIndex = rowIndex * columns;
     int endIndex = startIndex + columns - 1;
 
     int rowCount = 0;
@@ -220,7 +215,7 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
       "شهر ديسمبر",
     ];
 
-    if (month < 1 || month > 12) return "شهر غير معروف"; // fallback
+    if (month < 1 || month > 12) return "شهر غير معروف";
     return arabicMonths[month - 1];
   }
 
@@ -301,8 +296,7 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
     final double opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
 
     final weeks = getWeeksInMonth(displayedMonth);
-    int totalCells = (weeks.length + 1) * 5; // 4 rows total
-
+    int totalCells = (weeks.length + 1) * 5;
     int columns = weeks.length + 1;
 
     return _isLoading
@@ -328,171 +322,154 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
               centerTitle: true,
               actions: [
                 Opacity(
-                  opacity: 1 - opacity,
+                  opacity: _isAnimating ? 0 : 1,
                   child: IconButton(
-                    onPressed: _isAnimating
-                        ? null
-                        : previousMonth, // Add disable condition
+                    onPressed: _isAnimating ? null : previousMonth,
                     icon: const Icon(Icons.arrow_back),
                   ),
                 ),
                 Opacity(
-                  opacity: 1 - opacity,
+                  opacity: _isAnimating ? 0 : 1,
                   child: IconButton(
-                    onPressed: _isAnimating
-                        ? null
-                        : nextMonth, // Add disable condition
+                    onPressed: _isAnimating ? null : nextMonth,
                     icon: const Icon(Icons.arrow_forward),
                   ),
                 ),
               ],
             ),
-            body: Stack(
-              children: [
-                // Background image
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/img/background.jpg'),
-                      fit: BoxFit.cover,
-                      colorFilter: ColorFilter.mode(
-                        Colors.white.withOpacity(0.90),
-                        BlendMode.dstATop,
+            body: GestureDetector(
+              onHorizontalDragEnd: (details) {
+                if (details.primaryVelocity == null || _isAnimating) return;
+
+                if (details.primaryVelocity! < 0) {
+                  nextMonth();
+                } else if (details.primaryVelocity! > 0) {
+                  previousMonth();
+                }
+              },
+              child: Stack(
+                children: [
+                  // Background stays outside animation
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/img/background.jpg'),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.white.withOpacity(0.90),
+                          BlendMode.dstATop,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  Container(color: Colors.white.withOpacity(0.30)),
 
-                // Pale overlay for readability
-                Container(color: Colors.white.withOpacity(0.30)),
-
-                // Main content
-                SingleChildScrollView(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: AnimatedBuilder(
+                  // AnimatedBuilder wraps only the scrollable content
+                  AnimatedBuilder(
                     animation: _slideAnimation!,
                     builder: (context, child) {
                       return Transform.translate(
-                        offset: Offset(
-                          _slideAnimation!.value * 50,
-                          1,
-                        ), // Adjust 50 for slide distance
+                        offset: Offset(_slideAnimation!.value * -50, 0),
                         child: Opacity(
-                          opacity:
-                              1 - _slideAnimation!.value.abs(), // Fade effect
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 20,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                const SizedBox(height: 80),
-
-                                Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  color: Colors.white.withOpacity(0.85),
-                                  child: Row(
-                                    children: [
-                                      // Card 1: Saint
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2 -
-                                            20,
-                                        child: _buildCard(
-                                          title: 'قديس الشهر',
-                                          subtitle:
-                                              'تعرف على قديس الشهر وتتعلم من حياته',
-                                          leading: Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
+                          opacity: 1 - _slideAnimation!.value.abs(),
+                          child: SingleChildScrollView(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 20,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  const SizedBox(height: 80),
+                                  Card(
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    color: Colors.white.withOpacity(0.85),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.width /
+                                                  2 -
+                                              20,
+                                          child: _buildCard(
+                                            title: 'قديس الشهر',
+                                            subtitle:
+                                                'تعرف على قديس الشهر وتتعلم من حياته',
+                                            leading: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.orange,
+                                              ),
                                             ),
-                                            child: Icon(
-                                              Icons.person,
-                                              color: Colors.orange,
-                                            ),
+                                            color: Colors.orange.shade50
+                                                .withOpacity(0.95),
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                '/saint',
+                                                arguments: {
+                                                  "month": displayedMonth.month,
+                                                },
+                                              );
+                                            },
                                           ),
-                                          color: Colors.orange.shade50
-                                              .withOpacity(0.95),
-                                          onTap: () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              '/saint',
-                                              arguments: {
-                                                "month": displayedMonth.month,
-                                              },
-                                            );
-                                          },
                                         ),
-                                      ),
-
-                                      SizedBox(height: 12),
-
-                                      // Card 2: Manner
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2 -
-                                            20,
-                                        child: _buildCard(
-                                          title: 'فضيلة الشهر',
-                                          subtitle:
-                                              'تعرف على فضيلة الشهر اللى ممكن تتدرب عليها',
-                                          leading: Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
+                                        SizedBox(height: 12),
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.width /
+                                                  2 -
+                                              20,
+                                          child: _buildCard(
+                                            title: 'فضيلة الشهر',
+                                            subtitle:
+                                                'تعرف على فضيلة الشهر اللى ممكن تتدرب عليها',
+                                            leading: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Icon(
+                                                Icons.star,
+                                                color: Colors.orange,
+                                              ),
                                             ),
-                                            child: Icon(
-                                              Icons.star,
-                                              color: Colors.orange,
-                                            ),
+                                            color: Colors.orange.shade100
+                                                .withOpacity(0.95),
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                '/manner',
+                                                arguments: {
+                                                  "month": displayedMonth.month,
+                                                },
+                                              );
+                                            },
                                           ),
-                                          color: Colors.orange.shade100
-                                              .withOpacity(0.95),
-                                          onTap: () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              '/manner',
-                                              arguments: {
-                                                "month": displayedMonth.month,
-                                              },
-                                            );
-                                          },
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                GestureDetector(
-                                  onHorizontalDragEnd: (details) {
-                                    if (details.primaryVelocity == null ||
-                                        _isAnimating)
-                                      return;
-
-                                    if (details.primaryVelocity! < 0) {
-                                      // Swiped LEFT → go to next month
-                                      nextMonth();
-                                    } else if (details.primaryVelocity! > 0) {
-                                      // Swiped RIGHT → go to previous month
-                                      previousMonth();
-                                    }
-                                  },
-                                  child: Card(
+                                  const SizedBox(height: 20),
+                                  Card(
                                     elevation: 6,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
@@ -523,7 +500,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
                                                   ),
                                                 );
                                               }
-
                                               return Center(
                                                 child: Column(
                                                   children: [
@@ -547,7 +523,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
                                                 ),
                                               );
                                             }
-
                                             if (index == columns * 2 - 1) {
                                               return Center(
                                                 child: Text(
@@ -558,7 +533,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
                                                 ),
                                               );
                                             }
-
                                             if (index == columns * 3 - 1) {
                                               return Center(
                                                 child: Text(
@@ -569,7 +543,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
                                                 ),
                                               );
                                             }
-
                                             if (index == columns * 4 - 1) {
                                               return Center(
                                                 child: Text(
@@ -580,7 +553,6 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
                                                 ),
                                               );
                                             }
-
                                             if (index == columns * 5 - 1) {
                                               return Center(
                                                 child: Text(
@@ -591,11 +563,9 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
                                                 ),
                                               );
                                             }
-
                                             int toggleIndex = index - columns;
                                             bool isOn =
                                                 toggles?[toggleIndex] ?? false;
-
                                             return Center(
                                               child: IconButton(
                                                 onPressed: () async {
@@ -629,226 +599,215 @@ class _MonthlyDataState extends State<MonthlyData> with SingleTickerProviderStat
                                       ),
                                     ),
                                   ),
-                                ),
-
-                                // Battery bars inside card
-                                const SizedBox(height: 16),
-
-                                Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  color: Colors.white.withOpacity(0.85),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            // Invisible placeholder to balance the layout
-                                            Opacity(
-                                              opacity: 0,
-                                              child: _noteEdited
-                                                  ? ElevatedButton.icon(
-                                                      onPressed: () {},
-                                                      icon: Icon(Icons.save),
-                                                      label: Text("حفظ"),
-                                                    )
-                                                  : SizedBox(
-                                                      width: 0,
-                                                      height: 0,
-                                                    ),
-                                            ),
-
-                                            // Centered title
-                                            Expanded(
-                                              child: Text(
-                                                "سر المصالحة",
-                                                style: GoogleFonts.cairo(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-
-                                            // Actual save button (visible)
-                                            _noteEdited
-                                                ? ElevatedButton.icon(
-                                                    onPressed: () async {
-                                                      await _databaseService
-                                                          .updateMonthNote(
-                                                            displayedMonth
-                                                                .month,
-                                                            _notesController!
-                                                                .text,
-                                                          );
-                                                      setState(() {
-                                                        _noteEdited = false;
-                                                      });
-                                                      ScaffoldMessenger.of(
-                                                        context,
-                                                      ).showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            "تم الحفظ",
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style:
-                                                                GoogleFonts.cairo(),
-                                                          ),
-                                                          duration: Duration(
-                                                            seconds: 1,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.save,
-                                                      size: 18,
-                                                    ),
-                                                    label: Text(
-                                                      "حفظ",
-                                                      style: GoogleFonts.cairo(
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                  const SizedBox(height: 16),
+                                  Card(
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    color: Colors.white.withOpacity(0.85),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Opacity(
+                                                opacity: 0,
+                                                child: _noteEdited
+                                                    ? ElevatedButton.icon(
+                                                        onPressed: () {},
+                                                        icon: Icon(Icons.save),
+                                                        label: Text("حفظ"),
+                                                      )
+                                                    : SizedBox(
+                                                        width: 0,
+                                                        height: 0,
                                                       ),
-                                                    ),
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 10,
-                                                            vertical: 8,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  "سر المصالحة",
+                                                  style: GoogleFonts.cairo(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              _noteEdited
+                                                  ? ElevatedButton.icon(
+                                                      onPressed: () async {
+                                                        await _databaseService
+                                                            .updateMonthNote(
+                                                              displayedMonth
+                                                                  .month,
+                                                              _notesController!
+                                                                  .text,
+                                                            );
+                                                        setState(() {
+                                                          _noteEdited = false;
+                                                        });
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              "تم الحفظ",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style:
+                                                                  GoogleFonts.cairo(),
+                                                            ),
+                                                            duration: Duration(
+                                                              seconds: 1,
+                                                            ),
                                                           ),
-                                                    ),
-                                                  )
-                                                : SizedBox.shrink(),
-                                          ],
-                                        ),
-
-                                        const SizedBox(height: 8),
-
-                                        ConstrainedBox(
-                                          constraints: const BoxConstraints(
-                                            minHeight: 120,
-                                            maxHeight: 200,
+                                                        );
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.save,
+                                                        size: 18,
+                                                      ),
+                                                      label: Text(
+                                                        "حفظ",
+                                                        style:
+                                                            GoogleFonts.cairo(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                      ),
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 10,
+                                                              vertical: 8,
+                                                            ),
+                                                      ),
+                                                    )
+                                                  : SizedBox.shrink(),
+                                            ],
                                           ),
-                                          child: TextField(
-                                            maxLines: null,
-                                            expands: false,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              hintText:
-                                                  'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
-                                              hintStyle: GoogleFonts.cairo(),
+                                          const SizedBox(height: 8),
+                                          ConstrainedBox(
+                                            constraints: const BoxConstraints(
+                                              minHeight: 120,
+                                              maxHeight: 200,
                                             ),
-                                            controller: _notesController,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _noteEdited = true;
-                                              });
-                                            },
+                                            child: TextField(
+                                              maxLines: null,
+                                              expands: false,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText:
+                                                    'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
+                                                hintStyle: GoogleFonts.cairo(),
+                                              ),
+                                              controller: _notesController,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _noteEdited = true;
+                                                });
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-
-                                // Notes section in a card
-                                const SizedBox(height: 16),
-
-                                Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  color: Colors.white.withOpacity(0.85),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0,
-                                      vertical: 12.0,
+                                  const SizedBox(height: 16),
+                                  Card(
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "بطارياتك الشهر دة",
-                                          style: GoogleFonts.cairo(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                    color: Colors.white.withOpacity(0.85),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0,
+                                        vertical: 12.0,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "بطارياتك الشهر دة",
+                                            style: GoogleFonts.cairo(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          "نسبة حضور القداس",
-                                          style: GoogleFonts.cairo(),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        BatteryWidget(
-                                          percentage: _calculateRowPercentage(
-                                            0,
+                                          SizedBox(height: 10),
+                                          Text(
+                                            "نسبة حضور القداس",
+                                            style: GoogleFonts.cairo(),
                                           ),
-                                          width: 200,
-                                          height: 20,
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          "نسبة حضور الاجتماع",
-                                          style: GoogleFonts.cairo(),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        BatteryWidget(
-                                          percentage: _calculateRowPercentage(
-                                            1,
+                                          const SizedBox(height: 8),
+                                          BatteryWidget(
+                                            percentage: _calculateRowPercentage(
+                                              0,
+                                            ),
+                                            width: 200,
+                                            height: 20,
                                           ),
-                                          width: 200,
-                                          height: 20,
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          "نسبة ممارسة المذبح العائلى",
-                                          style: GoogleFonts.cairo(),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        BatteryWidget(
-                                          percentage: _calculateRowPercentage(
-                                            2,
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            "نسبة حضور الاجتماع",
+                                            style: GoogleFonts.cairo(),
                                           ),
-                                          width: 200,
-                                          height: 20,
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          "نسبة ممارسة ساعة السجود",
-                                          style: GoogleFonts.cairo(),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        BatteryWidget(
-                                          percentage: _calculateRowPercentage(
-                                            3,
+                                          const SizedBox(height: 8),
+                                          BatteryWidget(
+                                            percentage: _calculateRowPercentage(
+                                              1,
+                                            ),
+                                            width: 200,
+                                            height: 20,
                                           ),
-                                          width: 200,
-                                          height: 20,
-                                        ),
-                                      ],
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            "نسبة ممارسة المذبح العائلى",
+                                            style: GoogleFonts.cairo(),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          BatteryWidget(
+                                            percentage: _calculateRowPercentage(
+                                              2,
+                                            ),
+                                            width: 200,
+                                            height: 20,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            "نسبة ممارسة ساعة السجود",
+                                            style: GoogleFonts.cairo(),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          BatteryWidget(
+                                            percentage: _calculateRowPercentage(
+                                              3,
+                                            ),
+                                            width: 200,
+                                            height: 20,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-
-                                const SizedBox(height: 16),
-                              ],
+                                  const SizedBox(height: 16),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       );
                     },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
   }
