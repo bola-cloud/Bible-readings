@@ -93,7 +93,7 @@ class _SujoodHourState extends State<SujoodHour> {
 
   Widget _buildCard(BuildContext context, Map<String, String> step, int index) {
     const Color cardColor = Color(0xFFF8EDE0); // soft peach
-    const Color titleColor = Color(0xFF6B2626); // maroon for titles
+    Color titleColor = Colors.brown[700]!; // maroon for titles
     const Color bodyColor = Color(0xFF6B2626);
 
     // compute scale based on distance from current page
@@ -189,7 +189,7 @@ class _SujoodHourState extends State<SujoodHour> {
             style: GoogleFonts.cairo(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF6B2626),
+              color: Colors.brown[900],
             ),
           ),
         ),
@@ -226,7 +226,7 @@ class _SujoodHourState extends State<SujoodHour> {
                           style: GoogleFonts.cairo(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF6B2626),
+                            color: Colors.brown[700],
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -262,7 +262,7 @@ class _SujoodHourState extends State<SujoodHour> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(_steps.length, (i) {
-                          final Color active = const Color(0xFF6B2626);
+                          final Color active = Colors.brown[700]!;
                           return Container(
                             margin: const EdgeInsets.symmetric(horizontal: 4.0),
                             width: ((_page.round() == i) ? 16 : 8).toDouble(),
@@ -287,7 +287,7 @@ class _SujoodHourState extends State<SujoodHour> {
                           style: GoogleFonts.cairo(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF6B2626),
+                            color: Colors.brown[700],
                           ),
                           textAlign: TextAlign.center,
                         ),

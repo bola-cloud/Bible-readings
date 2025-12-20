@@ -80,7 +80,7 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
   Widget build(BuildContext context) {
     // Design colors matched to SujoodHour: soft peach card, maroon titles/body
     const Color cardBackground = Color(0xFFF8EDE0); // soft peach
-    const Color titleColor = Color(0xFF6B2626); // maroon for titles
+    Color titleColor = Colors.brown[700]!; // maroon for titles
     const Color bodyColor = Color(0xFF6B2626);
 
     final titleTextStyle = GoogleFonts.cairo(
@@ -114,7 +114,7 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
             style: GoogleFonts.cairo(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF6B2626),
+              color: Colors.brown[900],
             ),
           ),
         ),
@@ -267,7 +267,7 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
                           style: GoogleFonts.cairo(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF6B2626),
+                            color: Colors.brown[700],
                           ),
                           textAlign: TextAlign.center,
                         ),

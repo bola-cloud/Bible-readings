@@ -159,7 +159,7 @@ class _HomeState extends State<Home> {
                               style: GoogleFonts.cairo(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.brown[900],
+                                color: Colors.brown[700],
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -286,7 +286,7 @@ class _HomeState extends State<Home> {
                         style: GoogleFonts.cairo(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
-                          color: Colors.brown[900],
+                          color: Colors.brown[700],
                         ),
                         textAlign: TextAlign.center,
                       ),

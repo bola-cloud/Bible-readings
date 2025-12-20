@@ -86,7 +86,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
 
   Widget _buildCard(BuildContext context, Map<String, String> item, int index) {
     const Color cardColor = Color(0xFFF8EDE0); // soft peach
-    const Color titleColor = Color(0xFF6B2626);
+    Color titleColor = Colors.brown[700]!;
     const Color bodyColor = Color(0xFF6B2626);
 
     final double distance = (_page - index).abs();
@@ -176,7 +176,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
             style: GoogleFonts.cairo(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF6B2626),
+              color: Colors.brown[900],
             ),
           ),
         ),
@@ -210,7 +210,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
                           style: GoogleFonts.cairo(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF6B2626),
+                            color: Colors.brown[700],
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -245,7 +245,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(_items.length, (i) {
-                          final Color active = const Color(0xFF6B2626);
+                          final Color active = Colors.brown[700]!;
                           return Container(
                             margin: const EdgeInsets.symmetric(horizontal: 4.0),
                             width: ((_page.round() == i) ? 16 : 8).toDouble(),
@@ -269,7 +269,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
                           style: GoogleFonts.cairo(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF6B2626),
+                            color: Colors.brown[700],
                           ),
                           textAlign: TextAlign.center,
                         ),

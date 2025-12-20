@@ -96,13 +96,13 @@ class _MannerState extends State<Manner> {
   Widget build(BuildContext context) {
     // Design colors matched to SujoodHour: soft peach card, maroon titles/body
     const Color cardBackground = Color(0xFFF8EDE0); // soft peach
-    const Color titleColor = Color(0xFF6B2626); // maroon for titles
-    const Color bodyColor = Color(0xFF6B2626);
+    Color titleColor = Colors.brown[700]!;
+    const Color bodyColor = Colors.black;
 
     final bodyTextStyle = GoogleFonts.cairo(
       fontSize: 16,
       fontWeight: FontWeight.w600,
-      color: bodyColor,
+      color: Colors.brown[700],
       height: 1.6,
     );
 
@@ -118,7 +118,7 @@ class _MannerState extends State<Manner> {
                   style: GoogleFonts.cairo(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF6B2626),
+                    color: Colors.brown[900],
                   ),
                 ),
                 leading: IconButton(
@@ -394,17 +394,9 @@ class _MannerState extends State<Manner> {
                                         hintText:
                                             'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
                                         hintStyle: GoogleFonts.cairo(
-                                          color: Colors.black45,
+                                          color: Colors.black,
                                         ),
                                       ),
-                                      // onChanged: (value) async {
-                                      //   if (month != null) {
-                                      //     // save per-step note
-                                      //     await _database_service.updateMonthManner(month!, value);
-                                      //     // update local cache
-                                      //     note = value;
-                                      //   }
-                                      // },
                                       onChanged: (value) {
                                         setState(() {
                                           _noteEdited = true;

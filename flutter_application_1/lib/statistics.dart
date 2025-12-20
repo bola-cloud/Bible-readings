@@ -128,7 +128,7 @@ class _StatisticsState extends State<Statistics> {
             appBar: AppBar(
               title: Text(
                 "أنجازاتى",
-                style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+                style: GoogleFonts.cairo(fontWeight: FontWeight.bold, color: Colors.brown[900]),
               ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
@@ -195,7 +195,7 @@ class _StatisticsState extends State<Statistics> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      color: Colors.white.withOpacity(0.85),
+                      color: Color(0xFFF8EDE0),
                       child: SizedBox(
                         child: Center(
                           child: Padding(

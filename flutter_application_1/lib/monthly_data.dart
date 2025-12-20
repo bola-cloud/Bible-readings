@@ -308,7 +308,7 @@ class _MonthlyDataState extends State<MonthlyData>
                 opacity: 1 - opacity,
                 child: Text(
                   "${getArabicMonthName(displayedMonth.month)} ",
-                  style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+                  style: GoogleFonts.cairo(fontWeight: FontWeight.bold, color: Colors.brown[900]),
                 ),
               ),
               leading: IconButton(
@@ -389,7 +389,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    color: Colors.white.withOpacity(0.85),
+                                    color: Color(0xFFF8EDE0),
                                     child: Row(
                                       children: [
                                         SizedBox(
@@ -474,7 +474,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
-                                    color: Colors.white.withOpacity(0.85),
+                                    color: Color(0xFFF8EDE0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(2),
                                       child: SizedBox(
@@ -605,7 +605,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    color: Colors.white.withOpacity(0.85),
+                                    color: Color(0xFFF8EDE0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
@@ -725,7 +725,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    color: Colors.white.withOpacity(0.85),
+                                    color: Color(0xFFF8EDE0),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 12.0,

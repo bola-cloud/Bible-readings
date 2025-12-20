@@ -69,8 +69,8 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
   }
 
   Widget _buildCard(BuildContext context, Map<String, String> step, int index) {
-    const Color cardColor = Color(0xFFF7ECE6);
-    const Color titleColor = Color(0xFF7A2B2B);
+    const Color cardColor = Color(0xFFF8EDE0);
+    Color titleColor = Colors.brown[700]!;
     const Color bodyColor = Color(0xFF7A2B2B);
 
     final double distance = (_page - index).abs();
@@ -173,7 +173,7 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
           ),
           title: Text(
             'خطوات صلاة المذبح العائلي',
-            style: GoogleFonts.cairo(fontSize: 22, fontWeight: FontWeight.w800, color: Color(0xFF7A2B2B)),
+            style: GoogleFonts.cairo(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.brown[900]),
           ),
         ),
         body: Stack(
@@ -195,7 +195,7 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                     const SizedBox(height: 8),
                     Text(
                       'صلّوا معًا كأسرة بطريقة بسيطة ومنظمة — اجعلوها عادة محبة.',
-                      style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF7A2B2B)),
+                      style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.brown[700]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
@@ -221,7 +221,7 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(_steps.length, (i) {
-                          final Color active = const Color(0xFF7A2B2B);
+                          final Color active = Colors.brown[700]!;
                           return Container(
                             margin: const EdgeInsets.symmetric(horizontal: 4.0),
                             width: ((_page.round() == i) ? 16 : 8).toDouble(),

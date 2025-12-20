@@ -145,7 +145,7 @@ class _CalendarState extends State<Calendar> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          color: Colors.white.withOpacity(0.85),
+                          color: Color(0xFFF8EDE0),
                           child: Padding(
                             padding: const EdgeInsets.all(0),
                             child: TableCalendar(

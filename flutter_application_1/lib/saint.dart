@@ -103,8 +103,7 @@ class _SaintState extends State<Saint> {
   Widget build(BuildContext context) {
     // Design colors matched to SujoodHour: soft peach card, maroon titles/body
     const Color cardBackground = Color(0xFFF8EDE0); // soft peach
-    const Color titleColor = Color(0xFF6B2626); // maroon for titles
-    const Color bodyColor = Color(0xFF6B2626);
+    Color titleColor = Colors.brown[700]!;
 
     final titleTextStyle = GoogleFonts.cairo(
       fontSize: 20,
@@ -114,7 +113,7 @@ class _SaintState extends State<Saint> {
     final bodyTextStyle = GoogleFonts.cairo(
       fontSize: 16,
       fontWeight: FontWeight.w600,
-      color: bodyColor,
+      color: titleColor,
       height: 1.6,
     );
 
@@ -133,7 +132,7 @@ class _SaintState extends State<Saint> {
                   style: GoogleFonts.cairo(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF6B2626),
+                    color: Colors.brown[900],
                   ),
                 ),
                 leading: IconButton(
