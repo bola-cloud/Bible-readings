@@ -105,11 +105,9 @@ class _MonthlyDataState extends State<MonthlyData> {
           displayedMonth.month - 1,
           1,
         );
-        _isLoading = true;
       });
       await _loadData(displayedMonth.month);
       setState(() {
-        _isLoading = false;
         _noteEdited = false;
       });
     }
@@ -123,11 +121,9 @@ class _MonthlyDataState extends State<MonthlyData> {
           displayedMonth.month + 1,
           1,
         );
-        _isLoading = true;
       });
       await _loadData(displayedMonth.month);
       setState(() {
-        _isLoading = false;
         _noteEdited = false;
       });
     }
