@@ -265,6 +265,7 @@ class _MonthlyDataState extends State<MonthlyData>
                     children: [
                       Text(
                         title,
+                        textDirection: TextDirection.rtl,
                         style: GoogleFonts.cairo(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
