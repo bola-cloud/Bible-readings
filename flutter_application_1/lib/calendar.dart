@@ -18,6 +18,7 @@ class _CalendarState extends State<Calendar> {
   DateTime endDay =  DateTime(2026,DateTime.now().month,DateTime.now().day);
   final DatabaseService _databaseService = DatabaseService.instance;
   bool _isLoading = true;
+  int month = 1;
 
   @override
   void initState() {
@@ -138,8 +139,13 @@ class _CalendarState extends State<Calendar> {
                               rowHeight: 100,
                               firstDay: DateTime(2026, 1, 1),
                               lastDay: endDay,
-                              focusedDay: DateTime(2026, 1, 1),
+                              focusedDay: DateTime(2026, month, 1),
                               onDaySelected: _onDaySelected,
+                              onPageChanged: (focusedDay) {
+                                setState(() {
+                                  month = focusedDay.month;
+                                });
+                              },
                               headerStyle: HeaderStyle(
                                 formatButtonVisible: false,
                                 titleCentered: true,
