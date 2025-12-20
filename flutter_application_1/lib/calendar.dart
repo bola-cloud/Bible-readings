@@ -15,7 +15,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   Map<String, Data>? data = {};
   Map<String, String>? notes;
-  DateTime endDay =  DateTime(2026,DateTime.now().month,DateTime.now().day);
+  DateTime endDay = DateTime(2026, DateTime.now().month, DateTime.now().day);
   final DatabaseService _databaseService = DatabaseService.instance;
   bool _isLoading = true;
   int month = 1;
@@ -72,6 +72,19 @@ class _CalendarState extends State<Calendar> {
             ?.title;
 
     return title;
+  }
+
+  String intToArabic(dynamic n) {
+    const english = "0123456789";
+    const arabic = "٠١٢٣٤٥٦٧٨٩";
+
+    String s = n.toString();
+
+    for (int i = 0; i < 10; i++) {
+      s = s.replaceAll(english[i], arabic[i]);
+    }
+
+    return s;
   }
 
   @override
@@ -162,7 +175,40 @@ class _CalendarState extends State<Calendar> {
                                   size: 24,
                                 ),
                               ),
+                              daysOfWeekStyle: DaysOfWeekStyle(
+                                weekdayStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                weekendStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               calendarBuilders: CalendarBuilders(
+                                headerTitleBuilder: (context, day) {
+                                  final arabicMonths = [
+                                    'يناير', // January
+                                    'فبراير', // February
+                                    'مارس', // March
+                                    'أبريل', // April
+                                    'مايو', // May
+                                    'يونيو', // June
+                                    'يوليو', // July
+                                    'أغسطس', // August
+                                    'سبتمبر', // September
+                                    'أكتوبر', // October
+                                    'نوفمبر', // November
+                                    'ديسمبر', // December
+                                  ];
+
+                                  return Text(
+                                    '${arabicMonths[day.month - 1]} ${intToArabic(day.year)}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  );
+                                },
                                 defaultBuilder: (context, day, focusedDay) {
                                   String dayKey =
                                       "${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}-${day.year}";
