@@ -1,9 +1,9 @@
-// ...existing code...
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_application_1/register.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -323,19 +323,62 @@ class _LandingPageState extends State<LandingPage>
                           horizontal: 24.0,
                           vertical: 28.0,
                         ),
-                        child: isLandscape
-                            ? _buildLandscapeContent(cardHeight!)
-                            : _buildPortraitContent(),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-// ...existing code...
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Top bar with an optional debug action to clear registration
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  tooltip: 'حذف بيانات التسجيل',
+                                  icon: Icon(Icons.delete_forever, color: Colors.brown[700]),
+                                  onPressed: () async {
+                                    final confirm = await showDialog<bool>(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                        title: Text('تأكيد', style: GoogleFonts.cairo()),
+                                        content: Text('هل تريد حذف بيانات التسجيل حتى تتمكن من الاختبار مرة أخرى؟', style: GoogleFonts.cairo()),
+                                        actions: [
+                                          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('إلغاء', style: GoogleFonts.cairo())),
+                                          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('حذف', style: GoogleFonts.cairo(color: Colors.red))),
+                                        ],
+                                      ),
+                                    );
+
+                                    if (confirm == true) {
+                                      try {
+                                        final db = await DatabaseService.instance.database;
+                                        await db.delete('user_profile', where: 'id = ?', whereArgs: [1]);
+                                      } catch (e) {
+                                        // ignore or show error
+                                      }
+
+                                      // Navigate to register page to allow re-testing
+                                      if (mounted) {
+                                        Navigator.of(context).pushReplacementNamed('/register');
+                                      }
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            // Then the original page content
+                            (isLandscape
+                             ? _buildLandscapeContent(cardHeight!)
+                            : _buildPortraitContent()),
+                          ],
+                        ),
+                       ),
+                     ),
+                   ),
+                 ),
+               ),
+             ),
+           ),
+         ],
+       ),
+     );
+   }
+ }

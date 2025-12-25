@@ -14,6 +14,8 @@ import 'package:flutter_application_1/reading.dart';
 import 'package:flutter_application_1/saint.dart';
 import 'package:flutter_application_1/statistics.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
+import 'package:flutter_application_1/register.dart';
+import 'package:flutter_application_1/database_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
@@ -26,11 +28,21 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
 
-  runApp(const MyApp());
+  // Decide initial route depending on local DB registration
+  bool registered = false;
+  try {
+    // ensure DB is initialized and check if a profile exists
+    registered = await DatabaseService.instance.isUserRegistered();
+  } catch (_) {
+    registered = false;
+  }
+
+  runApp(MyApp(registered: registered));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool registered;
+  const MyApp({super.key, required this.registered});
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +51,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      initialRoute: '/',
+      // Use `home` so we render the correct initial screen directly.
+      home: registered ? const LandingPage() : const RegisterPage(),
       routes: {
-        '/': (context) => const LandingPage(),
+        // '/' must not be present when `home` is non-null (see Flutter docs)
+        // Landing page is provided via `home` above.
+        '/register': (context) => const RegisterPage(),
         '/home': (context) => const Home(),
         '/calendar': (context) => const Calendar(),
         '/reading': (context) => const Reading(),

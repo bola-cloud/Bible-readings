@@ -125,7 +125,72 @@ class DatabaseService {
         await _onCreate(db, version);
       },
     );
+
+    // Ensure user_profile table exists for registration storage
+    await database.execute('''
+      CREATE TABLE IF NOT EXISTS user_profile (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        email TEXT,
+        phone TEXT,
+        church TEXT,
+        school_year TEXT,
+        sponsor TEXT,
+        favorite_color TEXT,
+        favorite_program TEXT,
+        favorite_game TEXT,
+        favorite_hymn TEXT,
+        hobby TEXT,
+        created_at TEXT
+      )
+    ''');
+
     return database;
+  }
+
+  // Save or update the user profile locally (use id = 1 to keep single row)
+  Future<void> saveUserProfile(Map<String, dynamic> profile) async {
+    final db = await database;
+    final now = DateTime.now().toIso8601String();
+
+    await db.rawInsert('''
+      INSERT OR REPLACE INTO user_profile (
+        id, name, email, phone, church, school_year, sponsor,
+        favorite_color, favorite_program, favorite_game, favorite_hymn, hobby, created_at
+      ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      )
+    ''', [
+      1,
+      profile['name'] ?? '',
+      profile['email'] ?? '',
+      profile['phone'] ?? '',
+      profile['church'] ?? '',
+      profile['school_year'] ?? '',
+      profile['sponsor'] ?? '',
+      profile['favorite_color'] ?? '',
+      profile['favorite_program'] ?? '',
+      profile['favorite_game'] ?? '',
+      profile['favorite_hymn'] ?? '',
+      profile['hobby'] ?? '',
+      now,
+    ]);
+  }
+
+  // Return the saved user profile (or null)
+  Future<Map<String, dynamic>?> getUserProfile() async {
+    final db = await database;
+    final result = await db.query('user_profile', where: 'id = ?', whereArgs: [1]);
+    if (result.isEmpty) return null;
+    return result.first.map((k, v) => MapEntry(k as String, v));
+  }
+
+  // Check if a user profile exists locally
+  Future<bool> isUserRegistered() async {
+    final db = await database;
+    final countRes = await db.rawQuery('SELECT COUNT(*) as c FROM user_profile');
+    final count = Sqflite.firstIntValue(countRes) ?? 0;
+    return count > 0;
   }
 
   Future<String?> getNoteContentByDate(String date) async {
