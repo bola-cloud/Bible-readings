@@ -118,6 +118,14 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.person, color: Colors.brown[900], size: 30,),
+              onPressed: () {
+                //العب يا بوليكا
+              },
+            ),
+          ],
         ),
         extendBodyBehindAppBar: true,
         body: Stack(
@@ -178,58 +186,6 @@ class _HomeState extends State<Home> {
                                 ? (constraints.maxWidth / 2 - 26)
                                 : constraints.maxWidth,
                             child: _buildCard(
-                              title: 'تأملاتى',
-                              subtitle:
-                                  'تأملات من الكتاب المقدس تساعدك ان تفهم كلام الرب تعيشها في حياتك اليومية',
-                              leading: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.book,
-                                  color: Colors.orange,
-                                ),
-                              ),
-                              color: Colors.orange.shade200.withOpacity(0.9),
-                              onTap: () async {
-                                Navigator.pushNamed(context, '/calendar');
-                              },
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: isWide
-                                ? (constraints.maxWidth / 2 - 26)
-                                : constraints.maxWidth,
-                            child: _buildCard(
-                              title: 'جدول متابعة شهرى',
-                              subtitle:
-                                  'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المصالحة و عملك للمذبح العائلى فى بيتك',
-                              leading: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.calendar_month,
-                                  color: Colors.orange,
-                                ),
-                              ),
-                              color: Colors.yellow.shade100.withOpacity(0.9),
-                              onTap: () async {
-                                Navigator.pushNamed(context, '/monthly_data');
-                              },
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: isWide
-                                ? (constraints.maxWidth / 2 - 26)
-                                : constraints.maxWidth,
-                            child: _buildCard(
                               title: 'خطواتى',
                               subtitle:
                                   'كل الخطوات اللى انت محتاجها علشان تعرف تعيش افضل تجربة معانا',
@@ -256,6 +212,58 @@ class _HomeState extends State<Home> {
                                 ? (constraints.maxWidth / 2 - 26)
                                 : constraints.maxWidth,
                             child: _buildCard(
+                              title: 'تأملاتى',
+                              subtitle:
+                                  'تأملات من الكتاب المقدس تساعدك ان تفهم كلام الرب تعيشها في حياتك اليومية',
+                              leading: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.book,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                              color: Colors.yellow.shade100.withOpacity(0.9),
+                              onTap: () async {
+                                Navigator.pushNamed(context, '/calendar');
+                              },
+                            ),
+                          ),
+
+                          SizedBox(
+                            width: isWide
+                                ? (constraints.maxWidth / 2 - 26)
+                                : constraints.maxWidth,
+                            child: _buildCard(
+                              title: 'جدول متابعة شهرى',
+                              subtitle:
+                                  'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المصالحة و عملك للمذبح العائلى فى بيتك',
+                              leading: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.calendar_month,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                              color: Colors.orange.shade200.withOpacity(0.9),
+                              onTap: () async {
+                                Navigator.pushNamed(context, '/monthly_data');
+                              },
+                            ),
+                          ),
+
+                          SizedBox(
+                            width: isWide
+                                ? (constraints.maxWidth / 2 - 26)
+                                : constraints.maxWidth,
+                            child: _buildCard(
                               title: 'أنجازاتى',
                               subtitle: 'شوف بطاريتك الروحية وصلت لفين',
                               leading: Container(
@@ -269,7 +277,7 @@ class _HomeState extends State<Home> {
                                   color: Colors.orange,
                                 ),
                               ),
-                              color: Colors.orange.shade300.withOpacity(0.95),
+                              color: Colors.yellow.shade100.withOpacity(0.9),
                               onTap: () {
                                 Navigator.pushNamed(context, '/statistics');
                               },

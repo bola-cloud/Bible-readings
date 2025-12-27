@@ -182,7 +182,7 @@ class DatabaseService {
     final db = await database;
     final result = await db.query('user_profile', where: 'id = ?', whereArgs: [1]);
     if (result.isEmpty) return null;
-    return result.first.map((k, v) => MapEntry(k as String, v));
+    return result.first.map((k, v) => MapEntry(k, v));
   }
 
   // Check if a user profile exists locally

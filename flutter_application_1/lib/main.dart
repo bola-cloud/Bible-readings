@@ -11,11 +11,10 @@ import 'package:flutter_application_1/manner.dart';
 import 'package:flutter_application_1/masba7_3a2ly.dart';
 import 'package:flutter_application_1/monthly_data.dart';
 import 'package:flutter_application_1/reading.dart';
+import 'package:flutter_application_1/register.dart';
 import 'package:flutter_application_1/saint.dart';
 import 'package:flutter_application_1/statistics.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
-import 'package:flutter_application_1/register.dart';
-import 'package:flutter_application_1/database_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
@@ -28,21 +27,11 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
 
-  // Decide initial route depending on local DB registration
-  bool registered = false;
-  try {
-    // ensure DB is initialized and check if a profile exists
-    registered = await DatabaseService.instance.isUserRegistered();
-  } catch (_) {
-    registered = false;
-  }
-
-  runApp(MyApp(registered: registered));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool registered;
-  const MyApp({super.key, required this.registered});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +41,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
       ),
       // Use `home` so we render the correct initial screen directly.
-      home: registered ? const LandingPage() : const RegisterPage(),
+      home: const LandingPage(),
       routes: {
         // '/' must not be present when `home` is non-null (see Flutter docs)
         // Landing page is provided via `home` above.

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_application_1/register.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -47,8 +46,24 @@ class _LandingPageState extends State<LandingPage>
 
       if (!mounted) return;
 
-      // Use pushReplacementNamed to replace the landing page with home
-      Navigator.pushReplacementNamed(context, '/home');
+      // Decide initial route depending on local DB registration
+      bool registered = false;
+      try {
+        // ensure DB is initialized and check if a profile exists
+        registered = await DatabaseService.instance.isUserRegistered();
+      } catch (_) {
+        registered = false;
+      }
+      if (!registered) {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil('/register', (route) => false);
+        return;
+      } else {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil('/home', (route) => false);
+      }
     });
   }
 
@@ -70,7 +85,6 @@ class _LandingPageState extends State<LandingPage>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-
         // // Animated Cross Icon
         // ScaleTransition(
         //   scale: _crossAnimation,
@@ -173,7 +187,6 @@ class _LandingPageState extends State<LandingPage>
           "Made with ❤️ for God’s glory",
           style: GoogleFonts.cairo(fontSize: 13),
         ),
-
       ],
     );
   }
@@ -326,59 +339,59 @@ class _LandingPageState extends State<LandingPage>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Top bar with an optional debug action to clear registration
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  tooltip: 'حذف بيانات التسجيل',
-                                  icon: Icon(Icons.delete_forever, color: Colors.brown[700]),
-                                  onPressed: () async {
-                                    final confirm = await showDialog<bool>(
-                                      context: context,
-                                      builder: (ctx) => AlertDialog(
-                                        title: Text('تأكيد', style: GoogleFonts.cairo()),
-                                        content: Text('هل تريد حذف بيانات التسجيل حتى تتمكن من الاختبار مرة أخرى؟', style: GoogleFonts.cairo()),
-                                        actions: [
-                                          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('إلغاء', style: GoogleFonts.cairo())),
-                                          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('حذف', style: GoogleFonts.cairo(color: Colors.red))),
-                                        ],
-                                      ),
-                                    );
+                            // // Top bar with an optional debug action to clear registration
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.end,
+                            //   children: [
+                            //     IconButton(
+                            //       tooltip: 'حذف بيانات التسجيل',
+                            //       icon: Icon(Icons.delete_forever, color: Colors.brown[700]),
+                            //       onPressed: () async {
+                            //         final confirm = await showDialog<bool>(
+                            //           context: context,
+                            //           builder: (ctx) => AlertDialog(
+                            //             title: Text('تأكيد', style: GoogleFonts.cairo()),
+                            //             content: Text('هل تريد حذف بيانات التسجيل حتى تتمكن من الاختبار مرة أخرى؟', style: GoogleFonts.cairo()),
+                            //             actions: [
+                            //               TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('إلغاء', style: GoogleFonts.cairo())),
+                            //               TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('حذف', style: GoogleFonts.cairo(color: Colors.red))),
+                            //             ],
+                            //           ),
+                            //         );
 
-                                    if (confirm == true) {
-                                      try {
-                                        final db = await DatabaseService.instance.database;
-                                        await db.delete('user_profile', where: 'id = ?', whereArgs: [1]);
-                                      } catch (e) {
-                                        // ignore or show error
-                                      }
+                            //         if (confirm == true) {
+                            //           try {
+                            //             final db = await DatabaseService.instance.database;
+                            //             await db.delete('user_profile', where: 'id = ?', whereArgs: [1]);
+                            //           } catch (e) {
+                            //             // ignore or show error
+                            //           }
 
-                                      // Navigate to register page to allow re-testing
-                                      if (mounted) {
-                                        Navigator.of(context).pushReplacementNamed('/register');
-                                      }
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
+                            //           // Navigate to register page to allow re-testing
+                            //           if (mounted) {
+                            //             Navigator.of(context).pushReplacementNamed('/register');
+                            //           }
+                            //         }
+                            //       },
+                            //     ),
+                            //   ],
+                            // ),
                             const SizedBox(height: 8),
                             // Then the original page content
                             (isLandscape
-                             ? _buildLandscapeContent(cardHeight!)
-                            : _buildPortraitContent()),
+                                ? _buildLandscapeContent(cardHeight!)
+                                : _buildPortraitContent()),
                           ],
                         ),
-                       ),
-                     ),
-                   ),
-                 ),
-               ),
-             ),
-           ),
-         ],
-       ),
-     );
-   }
- }
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -134,7 +134,7 @@ class _HowToState extends State<HowTo> {
               ),
             ),
           ),
-    
+
           // Pale overlay for readability
           Container(color: Colors.white.withOpacity(0.30)),
           LayoutBuilder(
@@ -176,16 +176,13 @@ class _HowToState extends State<HowTo> {
                                 color: Colors.orange,
                               ),
                             ),
-                            color: Colors.orange.shade50.withOpacity(0.95),
+                            color: Colors.orange.shade200.withOpacity(0.9),
                             onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/daily_meditation',
-                              );
+                              Navigator.pushNamed(context, '/daily_meditation');
                             },
                           ),
                         ),
-    
+
                         SizedBox(
                           width: isWide
                               ? (constraints.maxWidth / 2 - 26)
@@ -205,13 +202,13 @@ class _HowToState extends State<HowTo> {
                                 color: Colors.orange,
                               ),
                             ),
-                            color: Colors.orange.shade100.withOpacity(0.95),
+                            color: Colors.yellow.shade100.withOpacity(0.9),
                             onTap: () {
                               Navigator.pushNamed(context, '/masba7_3a2ly');
                             },
                           ),
                         ),
-    
+
                         SizedBox(
                           width: isWide
                               ? (constraints.maxWidth / 2 - 26)
@@ -231,7 +228,7 @@ class _HowToState extends State<HowTo> {
                                 color: Colors.orange,
                               ),
                             ),
-                            color: Colors.yellow.shade50.withOpacity(0.95),
+                            color: Colors.orange.shade200.withOpacity(0.9),
                             onTap: () {
                               // Pass current month to the f7s_al_damer page
                               Navigator.pushNamed(
@@ -242,7 +239,7 @@ class _HowToState extends State<HowTo> {
                             },
                           ),
                         ),
-    
+
                         SizedBox(
                           width: isWide
                               ? (constraints.maxWidth / 2 - 26)
@@ -262,7 +259,7 @@ class _HowToState extends State<HowTo> {
                                 color: Colors.orange,
                               ),
                             ),
-                            color: Colors.orange.shade200.withOpacity(0.95),
+                            color: Colors.yellow.shade100.withOpacity(0.9),
                             onTap: () {
                               Navigator.pushNamed(context, "/sujood_hour");
                             },
