@@ -240,7 +240,7 @@ class _HomeState extends State<Home> {
                             child: _buildCard(
                               title: 'جدول متابعة شهرى',
                               subtitle:
-                                  'تقدر من خلاله نتائج حضورك للقداس والاجتماع وممارسة سر المصالحة و عملك للمذبح العائلى فى بيتك',
+                                  'تقدر من خلاله نتائج ممارساتك الروحية',
                               leading: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
