@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_application_1/services/auth_storage.dart';
+import 'package:flutter_application_1/services/api_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,7 +15,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _name = TextEditingController();
-  final TextEditingController _email = TextEditingController();
   final TextEditingController _phone = TextEditingController();
   final TextEditingController _church = TextEditingController();
   final TextEditingController _schoolYear = TextEditingController();
@@ -47,7 +45,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final payload = {
       "name": _name.text.trim(),
-      "email": _email.text.trim(),
       "phone": _phone.text.trim(),
       "church": _church.text.trim(),
       "school_year": _schoolYear.text.trim(),
@@ -67,57 +64,34 @@ class _RegisterPageState extends State<RegisterPage> {
         _showError('رقم التليفون غير صالح');
         return;
       }
-      final resp = await http.post(
-        Uri.parse('https://stepbystep.wasl-x.com/api/register'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(payload),
+      // Call API register and expect token in response. Use ApiService.register if available.
+      final resp = await ApiService.register(payload);
+
+      // Save profile locally in the app database
+      await DatabaseService.instance.saveUserProfile(payload);
+
+      // Save token if provided
+      if (resp.token != null && resp.token!.isNotEmpty) {
+        await AuthStorage.saveToken(resp.token!);
+      }
+
+      // Show success message
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'تم التسجيل بنجاح — جاري التحويل...',
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.green[700],
+          duration: const Duration(milliseconds: 900),
+        ),
       );
 
-      if (resp.statusCode == 200 || resp.statusCode == 201) {
-        // Save profile locally in the app database
-        await DatabaseService.instance.saveUserProfile(payload);
-
-        // Show success message
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'تم التسجيل بنجاح — جاري التحويل...',
-              textAlign: TextAlign.center,
-            ),
-            backgroundColor: Colors.green[700],
-            duration: Duration(milliseconds: 900),
-          ),
-        );
-
-        // Small delay for the user to see the message, then replace with LandingPage
-        await Future.delayed(const Duration(milliseconds: 900));
-        if (!mounted) return;
-        Navigator.of(
-          context,
-        ).pushNamedAndRemoveUntil('/home', (route) => false);
-      } else {
-        String msg = resp.body.isNotEmpty ? resp.body : 'خطأ فى التسجيل';
-        if (msg != 'خطأ فى التسجيل') {
-          try {
-            final data = jsonDecode(resp.body);
-            if (data is Map &&
-                data.containsKey('data') &&
-                data['data'] is Map &&
-                data['data'].containsKey('email')) {
-              final emailErrors = data['data']['email'];
-              if (emailErrors is List && emailErrors.isNotEmpty) {
-                if (emailErrors.contains('The email has already been taken.')) {
-                  msg = 'البريد الالكترونى مستخدم بالفعل';
-                } else {
-                  msg = 'البريد الالكترونى غير صالح';
-                }
-              }
-            }
-          } catch (_) {}
-        }
-        _showError(msg);
-      }
+      // Small delay for the user to see the message, then replace with LandingPage
+      await Future.delayed(const Duration(milliseconds: 900));
+      if (!mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil('/landing', (route) => false);
     } catch (e) {
       _showError('تعذّر الإتصال. حاول مرة أخرى');
     } finally {
@@ -222,7 +196,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                     _field(_favoriteHymn, 'ترنيمة بتحبها'),
                                     _field(_hobby, 'هوايتك'),
                                     _field(_phone, 'التليفون'),
-                                    _field(_email, 'البريد الالكترونى'),
 
                                     const SizedBox(height: 18),
                                     SizedBox(

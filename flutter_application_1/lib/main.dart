@@ -15,6 +15,7 @@ import 'package:flutter_application_1/register.dart';
 import 'package:flutter_application_1/saint.dart';
 import 'package:flutter_application_1/statistics.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
+import 'package:flutter_application_1/profile_page.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       // Use `home` so we render the correct initial screen directly.
       home: const LandingPage(),
       routes: {
+        '/landing': (context) => const LandingPage(),
         // '/' must not be present when `home` is non-null (see Flutter docs)
         // Landing page is provided via `home` above.
         '/register': (context) => const RegisterPage(),
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
         '/saint': (context) => const Saint(),
         '/masba7_3a2ly': (context) => const Masba73a2ly(),
         '/howTo': (context) => const HowTo(),
+        '/profile': (context) => const ProfilePage(),
       },
     );
   }

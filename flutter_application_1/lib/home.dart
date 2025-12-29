@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/modules/data.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_application_1/services/auth_storage.dart';
+import 'package:flutter_application_1/database_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -121,8 +123,27 @@ class _HomeState extends State<Home> {
           actions: [
             IconButton(
               icon: Icon(Icons.person, color: Colors.brown[900], size: 30,),
-              onPressed: () {
-                //العب يا بوليكا
+              onPressed: () async {
+                // Open profile if token exists, otherwise redirect to register
+                try {
+                  final token = await AuthStorage.getToken();
+                  if (token != null && token.isNotEmpty) {
+                    Navigator.pushNamed(context, '/profile');
+                    return;
+                  }
+
+                  // fallback: if local DB has registered profile, still try to open profile
+                  final registered = await DatabaseService.instance.isUserRegistered();
+                  if (registered) {
+                    Navigator.pushNamed(context, '/profile');
+                    return;
+                  }
+
+                  // otherwise, send user to register
+                  Navigator.pushNamed(context, '/register');
+                } catch (e) {
+                  Navigator.pushNamed(context, '/register');
+                }
               },
             ),
           ],
