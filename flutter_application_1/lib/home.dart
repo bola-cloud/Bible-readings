@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/modules/data.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_application_1/services/auth_storage.dart';
 import 'package:flutter_application_1/database_service.dart';
+import 'package:flutter_application_1/modules/data.dart';
+import 'package:flutter_application_1/services/auth_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -121,30 +121,34 @@ class _HomeState extends State<Home> {
           elevation: 0,
           centerTitle: true,
           actions: [
-            IconButton(
-              icon: Icon(Icons.person, color: Colors.brown[900], size: 30,),
-              onPressed: () async {
-                // Open profile if token exists, otherwise redirect to register
-                try {
-                  final token = await AuthStorage.getToken();
-                  if (token != null && token.isNotEmpty) {
-                    Navigator.pushNamed(context, '/profile');
-                    return;
-                  }
+            Opacity(
+              opacity: 1 - opacity,
+              child: IconButton(
+                icon: Icon(Icons.person, color: Colors.brown[900], size: 30),
+                onPressed: () async {
+                  // Open profile if token exists, otherwise redirect to register
+                  try {
+                    final token = await AuthStorage.getToken();
+                    if (token != null && token.isNotEmpty) {
+                      Navigator.pushNamed(context, '/profile');
+                      return;
+                    }
 
-                  // fallback: if local DB has registered profile, still try to open profile
-                  final registered = await DatabaseService.instance.isUserRegistered();
-                  if (registered) {
-                    Navigator.pushNamed(context, '/profile');
-                    return;
-                  }
+                    // fallback: if local DB has registered profile, still try to open profile
+                    final registered = await DatabaseService.instance
+                        .isUserRegistered();
+                    if (registered) {
+                      Navigator.pushNamed(context, '/profile');
+                      return;
+                    }
 
-                  // otherwise, send user to register
-                  Navigator.pushNamed(context, '/register');
-                } catch (e) {
-                  Navigator.pushNamed(context, '/register');
-                }
-              },
+                    // otherwise, send user to register
+                    Navigator.pushNamed(context, '/register');
+                  } catch (e) {
+                    Navigator.pushNamed(context, '/register');
+                  }
+                },
+              ),
             ),
           ],
         ),
@@ -260,8 +264,7 @@ class _HomeState extends State<Home> {
                                 : constraints.maxWidth,
                             child: _buildCard(
                               title: 'جدول متابعة شهرى',
-                              subtitle:
-                                  'تقدر من خلاله نتائج ممارساتك الروحية',
+                              subtitle: 'تقدر من خلاله نتائج ممارساتك الروحية',
                               leading: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(

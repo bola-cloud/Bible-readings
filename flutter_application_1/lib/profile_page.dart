@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/models/profile.dart';
 import 'package:flutter_application_1/services/api_service.dart';
-import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/services/auth_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -80,7 +80,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // If we reach here nothing loaded
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('لا توجد بيانات للعرض')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('لا توجد بيانات للعرض')));
       setState(() => _loading = false);
     }
   }
@@ -96,6 +98,28 @@ class _ProfilePageState extends State<ProfilePage> {
     _favoriteGameCtl.text = p.favoriteGame ?? '';
     _favoriteHymnCtl.text = p.favoriteHymn ?? '';
     _hobbyCtl.text = p.hobby ?? '';
+  }
+
+  bool isNumeric(String str) {
+    try {
+      int.parse(str);
+    } on FormatException {
+      return false;
+    }
+    return true;
+  }
+
+  String intToEnglish(dynamic n) {
+    const english = "0123456789";
+    const arabic = "٠١٢٣٤٥٦٧٨٩";
+
+    String s = n.toString();
+
+    for (int i = 0; i < 10; i++) {
+      s = s.replaceAll(arabic[i], english[i]);
+    }
+
+    return s;
   }
 
   Future<void> _update() async {
@@ -115,6 +139,17 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     Exception? lastErr;
+
+    String phone = intToEnglish(_phoneCtl.text.trim());
+
+    if (!isNumeric(phone) ||
+        phone.length != 11 ||
+        phone[0] != '0' ||
+        phone[1] != '1') {
+      _showStyledMessage('رقم التليفون غير صالح', success: false);
+      setState(() => _saving = false);
+      return;
+    }
 
     // Try update remote if token present
     try {
@@ -157,7 +192,13 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
-          title: Text('الملف الشخصي', style: GoogleFonts.cairo(fontWeight: FontWeight.bold, color: Colors.brown[900])),
+          title: Text(
+            'الملف الشخصي',
+            style: GoogleFonts.cairo(
+              fontWeight: FontWeight.bold,
+              color: Colors.brown[900],
+            ),
+          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.brown[900]),
             onPressed: () => Navigator.of(context).maybePop(),
@@ -171,7 +212,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 image: DecorationImage(
                   image: AssetImage('assets/img/background.jpg'),
                   fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.90), BlendMode.dstATop),
+                  colorFilter: ColorFilter.mode(
+                    Colors.white.withOpacity(0.90),
+                    BlendMode.dstATop,
+                  ),
                 ),
               ),
             ),
@@ -181,32 +225,69 @@ class _ProfilePageState extends State<ProfilePage> {
             SafeArea(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 20.0,
+                  ),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: Card(
                       elevation: 6,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       color: Color(0xFFF8EDE0),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                          vertical: 24.0,
+                        ),
                         child: _loading
-                            ? SizedBox(height: 300, child: Center(child: CircularProgressIndicator()))
+                            ? SizedBox(
+                                height: 300,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
                             : SingleChildScrollView(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
-                                    Text('تعديل الملف الشخصى', style: GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.brown[900]), textAlign: TextAlign.center),
+                                    Text(
+                                      'تعديل الملف الشخصى',
+                                      style: GoogleFonts.cairo(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.brown[900],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                     const SizedBox(height: 18),
                                     _styledField(_nameCtl, 'الاسم'),
                                     _styledField(_phoneCtl, 'التليفون'),
                                     _styledField(_churchCtl, 'الكنيسة'),
-                                    _styledField(_schoolYearCtl, 'السنة الدراسية'),
+                                    _styledField(
+                                      _schoolYearCtl,
+                                      'السنة الدراسية',
+                                    ),
                                     _styledField(_sponsorCtl, 'شفيعك'),
-                                    _styledField(_favoriteColorCtl, 'لونك المفضل'),
-                                    _styledField(_favoriteProgramCtl, 'برنامج بتحبه'),
-                                    _styledField(_favoriteGameCtl, 'لعبة بتحبها'),
-                                    _styledField(_favoriteHymnCtl, 'ترنيمة بتحبها'),
+                                    _styledField(
+                                      _favoriteColorCtl,
+                                      'لونك المفضل',
+                                    ),
+                                    _styledField(
+                                      _favoriteProgramCtl,
+                                      'برنامج بتحبه',
+                                    ),
+                                    _styledField(
+                                      _favoriteGameCtl,
+                                      'لعبة بتحبها',
+                                    ),
+                                    _styledField(
+                                      _favoriteHymnCtl,
+                                      'ترنيمة بتحبها',
+                                    ),
                                     _styledField(_hobbyCtl, 'هوايتك'),
                                     const SizedBox(height: 18),
                                     SizedBox(
@@ -215,12 +296,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                         onPressed: _saving ? null : _update,
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.brown[700],
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 14,
+                                          ),
                                         ),
                                         child: _saving
-                                            ? SizedBox(height: 18, width: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                                            : Text('حفظ', style: GoogleFonts.cairo(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)),
+                                            ? SizedBox(
+                                                height: 18,
+                                                width: 18,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 2,
+                                                    ),
+                                              )
+                                            : Text(
+                                                'حفظ',
+                                                style: GoogleFonts.cairo(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
                                       ),
                                     ),
                                   ],
@@ -247,7 +350,10 @@ class _ProfilePageState extends State<ProfilePage> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.brown.shade200, width: 1.8),
             borderRadius: BorderRadius.circular(28),
@@ -273,7 +379,13 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Icon(success ? Icons.check_circle : Icons.error, color: Colors.white),
           const SizedBox(width: 12),
-          Expanded(child: Text(message, style: GoogleFonts.cairo(color: Colors.white), textAlign: TextAlign.right)),
+          Expanded(
+            child: Text(
+              message,
+              style: GoogleFonts.cairo(color: Colors.white),
+              textAlign: TextAlign.right,
+            ),
+          ),
         ],
       ),
       duration: const Duration(seconds: 2),
@@ -293,17 +405,32 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Icon(Icons.check_circle, size: 64, color: Colors.green[700]),
             const SizedBox(height: 12),
-            Text('تم التحديث بنجاح', style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.brown[900])),
+            Text(
+              'تم التحديث بنجاح',
+              style: GoogleFonts.cairo(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: Colors.brown[900],
+              ),
+            ),
             const SizedBox(height: 8),
-            Text('تم حفظ التغييرات محليًا، وتمت محاولة التزامن مع الخادم.', style: GoogleFonts.cairo(color: Colors.brown[700]), textAlign: TextAlign.center),
+            Text(
+              'تم حفظ التغييرات محليًا، وتمت محاولة التزامن مع الخادم.',
+              style: GoogleFonts.cairo(color: Colors.brown[700]),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
+              Navigator.of(ctx).pop();
             },
-            child: Text('حسناً', style: GoogleFonts.cairo(color: Colors.brown[900])),
+            child: Text(
+              'حسناً',
+              style: GoogleFonts.cairo(color: Colors.brown[900]),
+            ),
           ),
         ],
       ),

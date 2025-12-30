@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_application_1/services/auth_storage.dart';
 import 'package:flutter_application_1/services/api_service.dart';
+import 'package:flutter_application_1/services/auth_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -36,6 +36,19 @@ class _RegisterPageState extends State<RegisterPage> {
     return true;
   }
 
+  String intToEnglish(dynamic n) {
+    const english = "0123456789";
+    const arabic = "٠١٢٣٤٥٦٧٨٩";
+
+    String s = n.toString();
+
+    for (int i = 0; i < 10; i++) {
+      s = s.replaceAll(arabic[i], english[i]);
+    }
+
+    return s;
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -43,9 +56,11 @@ class _RegisterPageState extends State<RegisterPage> {
       _isSubmitting = true;
     });
 
+    String phone = intToEnglish(_phone.text.trim());
+
     final payload = {
       "name": _name.text.trim(),
-      "phone": _phone.text.trim(),
+      "phone": phone,
       "church": _church.text.trim(),
       "school_year": _schoolYear.text.trim(),
       "sponsor": _sponsor.text.trim(),
@@ -57,10 +72,10 @@ class _RegisterPageState extends State<RegisterPage> {
     };
 
     try {
-      if (!isNumeric(_phone.text.trim()) ||
-          _phone.text.trim().length != 11 ||
-          _phone.text.trim()[0] != '0' ||
-          _phone.text.trim()[1] != '1') {
+      if (!isNumeric(phone) ||
+          phone.length != 11 ||
+          phone[0] != '0' ||
+          phone[1] != '1') {
         _showError('رقم التليفون غير صالح');
         return;
       }
@@ -91,7 +106,9 @@ class _RegisterPageState extends State<RegisterPage> {
       // Small delay for the user to see the message, then replace with LandingPage
       await Future.delayed(const Duration(milliseconds: 900));
       if (!mounted) return;
-      Navigator.of(context).pushNamedAndRemoveUntil('/landing', (route) => false);
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/home', (route) => false);
     } catch (e) {
       _showError('تعذّر الإتصال. حاول مرة أخرى');
     } finally {
@@ -187,6 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: Column(
                                   children: [
                                     _field(_name, 'الاسم'),
+                                    _field(_phone, 'التليفون'),
                                     _field(_church, 'الكنيسة'),
                                     _field(_schoolYear, 'السنة الدراسية'),
                                     _field(_sponsor, 'شفيعك'),
@@ -195,7 +213,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                     _field(_favoriteGame, 'لعبة بتحبها'),
                                     _field(_favoriteHymn, 'ترنيمة بتحبها'),
                                     _field(_hobby, 'هوايتك'),
-                                    _field(_phone, 'التليفون'),
 
                                     const SizedBox(height: 18),
                                     SizedBox(
