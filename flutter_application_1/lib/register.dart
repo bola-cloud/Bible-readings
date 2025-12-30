@@ -58,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       if (!isNumeric(_phone.text.trim()) ||
-          _phone.text.trim().length < 11 ||
+          _phone.text.trim().length != 11 ||
           _phone.text.trim()[0] != '0' ||
           _phone.text.trim()[1] != '1') {
         _showError('رقم التليفون غير صالح');
