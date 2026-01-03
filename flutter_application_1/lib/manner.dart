@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Manner extends StatefulWidget {
   const Manner({super.key});
@@ -99,7 +98,7 @@ class _MannerState extends State<Manner> {
     Color titleColor = Colors.brown[700]!;
     const Color bodyColor = Colors.black;
 
-    final bodyTextStyle = GoogleFonts.cairo(
+    final bodyTextStyle = TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w600,
       color: Colors.brown[700],
@@ -115,7 +114,7 @@ class _MannerState extends State<Manner> {
               appBar: AppBar(
                 title: Text(
                   title,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
                     color: Colors.brown[900],
@@ -308,7 +307,7 @@ class _MannerState extends State<Manner> {
                                       Expanded(
                                         child: Text(
                                           "ممارسة عملية",
-                                          style: GoogleFonts.cairo(
+                                          style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -343,7 +342,7 @@ class _MannerState extends State<Manner> {
                                                       textAlign:
                                                           TextAlign.center,
                                                       style:
-                                                          GoogleFonts.cairo(),
+                                                          TextStyle(),
                                                     ),
                                                     duration: Duration(
                                                       seconds: 1,
@@ -354,7 +353,7 @@ class _MannerState extends State<Manner> {
                                               icon: Icon(Icons.save, size: 18),
                                               label: Text(
                                                 "حفظ",
-                                                style: GoogleFonts.cairo(
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -385,7 +384,7 @@ class _MannerState extends State<Manner> {
                                       controller: _mannerController,
                                       maxLines: null,
                                       expands: false,
-                                      style: GoogleFonts.cairo(
+                                      style: TextStyle(
                                         fontSize: 15,
                                         color: bodyColor,
                                       ),
@@ -393,7 +392,7 @@ class _MannerState extends State<Manner> {
                                         border: OutlineInputBorder(),
                                         hintText:
                                             'ازاى طبقت الفضيله دى فى حياتك الشهر دة',
-                                        hintStyle: GoogleFonts.cairo(
+                                        hintStyle: TextStyle(
                                           color: Colors.black,
                                         ),
                                       ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/battery_widget.dart'; // import the battery widget
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -128,7 +127,7 @@ class _StatisticsState extends State<Statistics> {
             appBar: AppBar(
               title: Text(
                 "أنجازاتى",
-                style: GoogleFonts.cairo(fontWeight: FontWeight.bold, color: Colors.brown[900]),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.brown[900]),
               ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
@@ -205,7 +204,7 @@ class _StatisticsState extends State<Statistics> {
                               children: [
                                 Text(
                                   "نسبة التأملات المفتوحة حتى اليوم",
-                                  style: GoogleFonts.cairo(
+                                  style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -230,7 +229,7 @@ class _StatisticsState extends State<Statistics> {
                                         children: [
                                           Text(
                                             label,
-                                            style: GoogleFonts.cairo(
+                                            style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
                                             ),

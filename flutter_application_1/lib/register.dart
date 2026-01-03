@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/services/api_service.dart';
 import 'package:flutter_application_1/services/auth_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -106,11 +105,23 @@ class _RegisterPageState extends State<RegisterPage> {
       // Small delay for the user to see the message, then replace with LandingPage
       await Future.delayed(const Duration(milliseconds: 900));
       if (!mounted) return;
-      Navigator.of(
-        context,
-      ).pushNamedAndRemoveUntil('/home', (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     } catch (e) {
-      _showError('تعذّر الإتصال. حاول مرة أخرى');
+      String msg = e.toString().isNotEmpty ? e.toString() : 'خطأ فى التسجيل';
+      if (msg.contains('"phone":["')) {
+        // Extract just the phone error message
+        int startIndex = msg.indexOf('"phone":["') + 10;
+        int endIndex = msg.indexOf('"]', startIndex);
+        String phoneError = msg.substring(startIndex, endIndex);
+        if (phoneError.contains('The phone has already been taken.')) {
+          msg = 'هذا التليفون مسجل بالفعل';
+        } else {
+          msg = 'اختر تليفون آخر';
+        }
+      } else {
+        msg = 'تعذّر الإتصال. حاول مرة أخرى';
+      }
+      _showError(msg);
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -139,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
           centerTitle: true,
           title: Text(
             'تسجيل',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.brown[900],
             ),
@@ -190,7 +201,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               const SizedBox(height: 8),
                               Text(
                                 'أنا مين؟ وبحب إيه؟',
-                                style: GoogleFonts.cairo(
+                                style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.brown[900],
@@ -245,7 +256,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                               )
                                             : Text(
                                                 'ابدأ المشوار',
-                                                style: GoogleFonts.cairo(
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
                                                   color: Colors.white,

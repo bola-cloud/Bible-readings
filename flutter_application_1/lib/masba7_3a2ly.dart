@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Masba73a2ly extends StatefulWidget {
   const Masba73a2ly({super.key});
@@ -135,13 +134,13 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                 const SizedBox(height: 10),
                 Text(
                   step['title'] ?? '',
-                  style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   step['body'] ?? '',
-                  style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -173,7 +172,7 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
           ),
           title: Text(
             'خطوات صلاة المذبح العائلي',
-            style: GoogleFonts.cairo(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.brown[900]),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.brown[900]),
           ),
         ),
         body: Stack(
@@ -195,7 +194,7 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                     const SizedBox(height: 8),
                     Text(
                       'صلّوا معًا كأسرة بطريقة بسيطة ومنظمة — اجعلوها عادة محبة.',
-                      style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.brown[700]),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.brown[700]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),

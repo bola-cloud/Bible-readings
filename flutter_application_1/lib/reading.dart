@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Reading extends StatefulWidget {
   const Reading({super.key});
@@ -138,7 +137,7 @@ class _ReadingState extends State<Reading> {
                 opacity: 1 - opacity,
                 child: Text(
                   intToArabic(convertToDDMMYYYY(date ?? "")),
-                  style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               leading: IconButton(
@@ -170,7 +169,7 @@ class _ReadingState extends State<Reading> {
                     ),
                     label: Text(
                       opened ? "قرأته" : "لم أقرأه",
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -295,7 +294,7 @@ class _ReadingState extends State<Reading> {
                                                 // Font Size Display
                                                 Text(
                                                   '${_readingFontSize.toInt()}',
-                                                  style: GoogleFonts.cairo(
+                                                  style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.blue[800],
@@ -333,7 +332,7 @@ class _ReadingState extends State<Reading> {
                                             child: Text(
                                               intToArabic(title),
                                               textAlign: TextAlign.center,
-                                              style: GoogleFonts.cairo(
+                                              style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -405,7 +404,7 @@ class _ReadingState extends State<Reading> {
                                         Expanded(
                                           child: Text(
                                             "ملاحظات",
-                                            style: GoogleFonts.cairo(
+                                            style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -434,7 +433,7 @@ class _ReadingState extends State<Reading> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         style:
-                                                            GoogleFonts.cairo(),
+                                                            TextStyle(),
                                                       ),
                                                       duration: Duration(
                                                         seconds: 1,
@@ -448,7 +447,7 @@ class _ReadingState extends State<Reading> {
                                                 ),
                                                 label: Text(
                                                   "حفظ",
-                                                  style: GoogleFonts.cairo(
+                                                  style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
@@ -478,7 +477,7 @@ class _ReadingState extends State<Reading> {
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(),
                                           hintText: 'اية لمستك و قرار اخدته',
-                                          hintStyle: GoogleFonts.cairo(),
+                                          hintStyle: TextStyle(),
                                         ),
                                         keyboardType: TextInputType.multiline,
                                         controller: _notesController,

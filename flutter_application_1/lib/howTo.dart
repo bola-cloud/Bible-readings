@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/modules/data.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HowTo extends StatefulWidget {
   const HowTo({super.key});
@@ -72,7 +71,7 @@ class _HowToState extends State<HowTo> {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.brown[900],
@@ -82,7 +81,7 @@ class _HowToState extends State<HowTo> {
                       Text(
                         textDirection: TextDirection.rtl,
                         subtitle,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 14,
                           color: Colors.brown[700],
                         ),
@@ -108,7 +107,7 @@ class _HowToState extends State<HowTo> {
           opacity: 1 - opacity,
           child: Text(
             'خطواتى',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
               color: Colors.brown[900],

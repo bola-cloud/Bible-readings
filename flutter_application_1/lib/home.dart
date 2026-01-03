@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/modules/data.dart';
 import 'package:flutter_application_1/services/auth_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -73,7 +72,7 @@ class _HomeState extends State<Home> {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.brown[900],
@@ -82,7 +81,7 @@ class _HomeState extends State<Home> {
                       const SizedBox(height: 8),
                       Text(
                         subtitle,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 14,
                           color: Colors.brown[700],
                         ),
@@ -110,7 +109,7 @@ class _HomeState extends State<Home> {
             opacity: 1 - opacity,
             child: Text(
               'خطوة بخطوة',
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
                 color: Colors.brown[900],
@@ -189,7 +188,7 @@ class _HomeState extends State<Home> {
                           children: [
                             Text(
                               'كل طريق روحي حقيقي يبدأ بخطوة صغيرة... خطوة صادقة نحو ربنا يسوع.',
-                              style: GoogleFonts.cairo(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.brown[700],
@@ -315,7 +314,7 @@ class _HomeState extends State<Home> {
                       // Footer / note
                       Text(
                         'الفكرة مش إنك تملأ الحاجات وخلاص... لكن إنك تنمو روحياً وتكتشف جمال الحياة مع ربنا بخطوات بسيطة لكن ثابتة. ابدأ انهردا المشوار...خطوة بخطوة و ربنا هو اللى هيكمل معاك المشوار.',
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: Colors.brown[700],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SujoodHour extends StatefulWidget {
   const SujoodHour({super.key});
@@ -139,7 +138,7 @@ class _SujoodHourState extends State<SujoodHour> {
                 const SizedBox(height: 8),
                 Text(
                   step['title'] ?? '',
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: titleColor,
@@ -149,7 +148,7 @@ class _SujoodHourState extends State<SujoodHour> {
                 const SizedBox(height: 8),
                 Text(
                   step['body'] ?? '',
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: bodyColor,
@@ -186,7 +185,7 @@ class _SujoodHourState extends State<SujoodHour> {
           ),
           title: Text(
             'خطوات ساعة السجود',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
               color: Colors.brown[900],
@@ -223,7 +222,7 @@ class _SujoodHourState extends State<SujoodHour> {
                       children: [
                         Text(
                           'السجود أمام القربان هو مدرسة حب وصدق... كن حاضرًا بكل قلبك',
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.brown[700],
@@ -284,7 +283,7 @@ class _SujoodHourState extends State<SujoodHour> {
                       children: [
                         Text(
                           'السجود أمام القربان هو مدرسة حب وصداقة. مش شرط يكون فيه كلام كتير، يكفي إنك تكون حاضر بكل قلبك قدام يسوع الحاضر حقًا.',
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.brown[700],

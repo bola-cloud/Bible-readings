@@ -3,7 +3,6 @@ import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/models/profile.dart';
 import 'package:flutter_application_1/services/api_service.dart';
 import 'package:flutter_application_1/services/auth_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -194,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
           centerTitle: true,
           title: Text(
             'الملف الشخصي',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.brown[900],
             ),
@@ -256,7 +255,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   children: [
                                     Text(
                                       'تعديل الملف الشخصى',
-                                      style: GoogleFonts.cairo(
+                                      style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.brown[900],
@@ -318,7 +317,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               )
                                             : Text(
                                                 'حفظ',
-                                                style: GoogleFonts.cairo(
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                   fontSize: 16,
@@ -382,7 +381,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Expanded(
             child: Text(
               message,
-              style: GoogleFonts.cairo(color: Colors.white),
+              style: TextStyle(color: Colors.white),
               textAlign: TextAlign.right,
             ),
           ),
@@ -407,7 +406,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 12),
             Text(
               'تم التحديث بنجاح',
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
                 color: Colors.brown[900],
@@ -416,7 +415,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 8),
             Text(
               'تم حفظ التغييرات محليًا، وتمت محاولة التزامن مع الخادم.',
-              style: GoogleFonts.cairo(color: Colors.brown[700]),
+              style: TextStyle(color: Colors.brown[700]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -429,7 +428,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             child: Text(
               'حسناً',
-              style: GoogleFonts.cairo(color: Colors.brown[900]),
+              style: TextStyle(color: Colors.brown[900]),
             ),
           ),
         ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class F7sAlDamer extends StatefulWidget {
   const F7sAlDamer({super.key});
@@ -83,12 +82,12 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
     Color titleColor = Colors.brown[700]!; // maroon for titles
     const Color bodyColor = Color(0xFF6B2626);
 
-    final titleTextStyle = GoogleFonts.cairo(
+    final titleTextStyle = TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w700,
       color: titleColor,
     );
-    final bodyTextStyle = GoogleFonts.cairo(
+    final bodyTextStyle = TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w600,
       color: bodyColor,
@@ -111,7 +110,7 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
           ),
           title: Text(
             'خطوات فحص الضمير',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
               color: Colors.brown[900],
@@ -264,7 +263,7 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
                       children: [
                         Text(
                           'فحص الضمير مش لحساب قاسي، لكن هو وقت حبّ أتعلم فيه أكون صادق قدام ربنا، شاكر لنِعمه، وطالب قوة جديدة.',
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.brown[700],

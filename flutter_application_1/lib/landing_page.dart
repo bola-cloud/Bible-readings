@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/services/auth_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -137,7 +136,7 @@ class _LandingPageState extends State<LandingPage>
         // Title / Credits
         Text(
           "تطبيق تأملاتى",
-          style: GoogleFonts.cairo(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
 
@@ -146,7 +145,7 @@ class _LandingPageState extends State<LandingPage>
         // Short description
         Text(
           "ابدأ رحلتك اليومية مع كلمة الرب — تأمل، صلِ، وسجل ما يحرك قلبك.",
-          style: GoogleFonts.cairo(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
@@ -161,7 +160,7 @@ class _LandingPageState extends State<LandingPage>
           children: [
             Text(
               "Developed by:",
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
@@ -170,13 +169,13 @@ class _LandingPageState extends State<LandingPage>
             Text(
               "Samer Walaa\nsamer.walaa18@gmail.com",
               textAlign: TextAlign.center,
-              style: GoogleFonts.cairo(fontSize: 13),
+              style: TextStyle(fontSize: 13),
             ),
             const SizedBox(height: 8),
             Text(
               "Bola Eshak\nbola.ishak41@gmail.com",
               textAlign: TextAlign.center,
-              style: GoogleFonts.cairo(fontSize: 13),
+              style: TextStyle(fontSize: 13),
             ),
           ],
         ),
@@ -186,7 +185,7 @@ class _LandingPageState extends State<LandingPage>
         // Footer note
         Text(
           "Made with ❤️ for God’s glory",
-          style: GoogleFonts.cairo(fontSize: 13),
+          style: TextStyle(fontSize: 13),
         ),
       ],
     );
@@ -234,7 +233,7 @@ class _LandingPageState extends State<LandingPage>
                 children: [
                   Text(
                     "تطبيق تأملاتى",
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -243,7 +242,7 @@ class _LandingPageState extends State<LandingPage>
                   const SizedBox(height: 12),
                   Text(
                     "ابدأ رحلتك اليومية مع كلمة الرب — تأمل، صلِ، وسجل ما يحرك قلبك.",
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
@@ -253,7 +252,7 @@ class _LandingPageState extends State<LandingPage>
                   const SizedBox(height: 14),
                   Text(
                     "Developed by:",
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                     ),
@@ -263,18 +262,18 @@ class _LandingPageState extends State<LandingPage>
                   Text(
                     "Samer Walaa\nsamer.walaa18@gmail.com",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.cairo(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     "Bola Eshak\nbola.ishak41@gmail.com",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.cairo(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     "Made with ❤️ for God’s glory",
-                    style: GoogleFonts.cairo(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -351,11 +350,11 @@ class _LandingPageState extends State<LandingPage>
                                     final confirm = await showDialog<bool>(
                                       context: context,
                                       builder: (ctx) => AlertDialog(
-                                        title: Text('تأكيد', style: GoogleFonts.cairo()),
-                                        content: Text('هل تريد حذف بيانات التسجيل حتى تتمكن من الاختبار مرة أخرى؟', style: GoogleFonts.cairo()),
+                                        title: Text('تأكيد', style: TextStyle()),
+                                        content: Text('هل تريد حذف بيانات التسجيل حتى تتمكن من الاختبار مرة أخرى؟', style: TextStyle()),
                                         actions: [
-                                          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('إلغاء', style: GoogleFonts.cairo())),
-                                          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('حذف', style: GoogleFonts.cairo(color: Colors.red))),
+                                          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('إلغاء', style: TextStyle())),
+                                          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('حذف', style: TextStyle(color: Colors.red))),
                                         ],
                                       ),
                                     );

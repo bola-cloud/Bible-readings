@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
 import 'package:flutter_application_1/modules/data.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
@@ -96,7 +95,7 @@ class _CalendarState extends State<Calendar> {
             appBar: AppBar(
               title: Text(
                 'تأملاتى',
-                style: GoogleFonts.cairo(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/battery_widget.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MonthlyData extends StatefulWidget {
   const MonthlyData({super.key});
@@ -266,7 +265,7 @@ class _MonthlyDataState extends State<MonthlyData>
                       Text(
                         title,
                         textDirection: TextDirection.rtl,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Colors.brown[900],
@@ -276,7 +275,7 @@ class _MonthlyDataState extends State<MonthlyData>
                       Text(
                         textDirection: TextDirection.rtl,
                         subtitle,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 12,
                           color: Colors.brown[700],
                         ),
@@ -309,7 +308,7 @@ class _MonthlyDataState extends State<MonthlyData>
                 opacity: 1 - opacity,
                 child: Text(
                   "${getArabicMonthName(displayedMonth.month)} ",
-                  style: GoogleFonts.cairo(fontWeight: FontWeight.bold, color: Colors.brown[900]),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.brown[900]),
                 ),
               ),
               leading: IconButton(
@@ -497,7 +496,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                 return Center(
                                                   child: Text(
                                                     "",
-                                                    style: GoogleFonts.cairo(),
+                                                    style: TextStyle(),
                                                   ),
                                                 );
                                               }
@@ -512,7 +511,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                       getWeekName(
                                                         columns - index - 2,
                                                       ),
-                                                      style: GoogleFonts.cairo(
+                                                      style: TextStyle(
                                                         fontSize: 10,
                                                       ),
                                                       textAlign:
@@ -530,7 +529,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                   "حضور\nالقداس",
                                                   textDirection:
                                                       TextDirection.rtl,
-                                                  style: GoogleFonts.cairo(),
+                                                  style: TextStyle(),
                                                 ),
                                               );
                                             }
@@ -540,7 +539,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                   "حضور\nالاجتماع",
                                                   textDirection:
                                                       TextDirection.rtl,
-                                                  style: GoogleFonts.cairo(),
+                                                  style: TextStyle(),
                                                 ),
                                               );
                                             }
@@ -550,7 +549,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                   "المذبح\nالعائلى",
                                                   textDirection:
                                                       TextDirection.rtl,
-                                                  style: GoogleFonts.cairo(),
+                                                  style: TextStyle(),
                                                 ),
                                               );
                                             }
@@ -560,7 +559,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                   "ساعة\nالسجود",
                                                   textDirection:
                                                       TextDirection.rtl,
-                                                  style: GoogleFonts.cairo(),
+                                                  style: TextStyle(),
                                                 ),
                                               );
                                             }
@@ -629,7 +628,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                               Expanded(
                                                 child: Text(
                                                   "سر المصالحة",
-                                                  style: GoogleFonts.cairo(
+                                                  style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -659,7 +658,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                                   TextAlign
                                                                       .center,
                                                               style:
-                                                                  GoogleFonts.cairo(),
+                                                                  TextStyle(),
                                                             ),
                                                             duration: Duration(
                                                               seconds: 1,
@@ -674,7 +673,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                       label: Text(
                                                         "حفظ",
                                                         style:
-                                                            GoogleFonts.cairo(
+                                                            TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
@@ -706,7 +705,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                                 border: OutlineInputBorder(),
                                                 hintText:
                                                     'لو عايز تعمل فحص ضمير او تكتب لنفسك حاجات عايز تفتكرها',
-                                                hintStyle: GoogleFonts.cairo(),
+                                                hintStyle: TextStyle(),
                                               ),
                                               controller: _notesController,
                                               onChanged: (value) {
@@ -736,7 +735,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                         children: [
                                           Text(
                                             "بطارياتك الشهر دة",
-                                            style: GoogleFonts.cairo(
+                                            style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -745,7 +744,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                           SizedBox(height: 10),
                                           Text(
                                             "نسبة حضور القداس",
-                                            style: GoogleFonts.cairo(),
+                                            style: TextStyle(),
                                           ),
                                           const SizedBox(height: 8),
                                           BatteryWidget(
@@ -758,7 +757,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                           const SizedBox(height: 12),
                                           Text(
                                             "نسبة حضور الاجتماع",
-                                            style: GoogleFonts.cairo(),
+                                            style: TextStyle(),
                                           ),
                                           const SizedBox(height: 8),
                                           BatteryWidget(
@@ -771,7 +770,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                           const SizedBox(height: 12),
                                           Text(
                                             "نسبة ممارسة المذبح العائلى",
-                                            style: GoogleFonts.cairo(),
+                                            style: TextStyle(),
                                           ),
                                           const SizedBox(height: 8),
                                           BatteryWidget(
@@ -784,7 +783,7 @@ class _MonthlyDataState extends State<MonthlyData>
                                           const SizedBox(height: 12),
                                           Text(
                                             "نسبة ممارسة ساعة السجود",
-                                            style: GoogleFonts.cairo(),
+                                            style: TextStyle(),
                                           ),
                                           const SizedBox(height: 8),
                                           BatteryWidget(

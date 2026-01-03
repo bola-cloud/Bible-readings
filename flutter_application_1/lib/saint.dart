@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/loading.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Saint extends StatefulWidget {
   const Saint({super.key});
@@ -105,12 +104,12 @@ class _SaintState extends State<Saint> {
     const Color cardBackground = Color(0xFFF8EDE0); // soft peach
     Color titleColor = Colors.brown[700]!;
 
-    final titleTextStyle = GoogleFonts.cairo(
+    final titleTextStyle = TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w700,
       color: titleColor,
     );
-    final bodyTextStyle = GoogleFonts.cairo(
+    final bodyTextStyle = TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w600,
       color: titleColor,
@@ -129,7 +128,7 @@ class _SaintState extends State<Saint> {
               appBar: AppBar(
                 title: Text(
                   title,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
                     color: Colors.brown[900],

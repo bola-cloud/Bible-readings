@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DailyMeditation extends StatefulWidget {
   const DailyMeditation({super.key});
@@ -125,7 +124,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
               const SizedBox(height: 8),
               Text(
                 item['title'] ?? '',
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: titleColor,
@@ -137,7 +136,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
                 child: SingleChildScrollView(
                   child: Text(
                     item['body'] ?? '',
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: bodyColor,
@@ -173,7 +172,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
           ),
           title: Text(
             'خطوات التأمل اليومي',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
               color: Colors.brown[900],
@@ -207,7 +206,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
                       children: [
                         Text(
                           'التأمل ليس مجرد قراءة، لكنه موعد حب بينك وبين يسوع. اختر وقتًا ثابتًا وكل يوم اقرأ وتأمل واكتب.',
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.brown[700],
@@ -266,7 +265,7 @@ class _DailyMeditationState extends State<DailyMeditation> {
                       children: [
                         Text(
                           'التأمل مش مجرد قراءة، لكنه موعد حبّ بينك وبين يسوع. الوقت والمكان الثابت يخلوه عادة يومية، والكتابة بتخلي الكلمة متجذرة في حياتك.',
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.brown[700],
