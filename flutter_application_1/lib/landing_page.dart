@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/database_service.dart';
-import 'package:flutter_application_1/services/auth_storage.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -346,44 +345,44 @@ class _LandingPageState extends State<LandingPage>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             // // Top bar with an optional debug action to clear registration
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  tooltip: 'حذف بيانات التسجيل',
-                                  icon: Icon(Icons.delete_forever, color: Colors.brown[700]),
-                                  onPressed: () async {
-                                    final confirm = await showDialog<bool>(
-                                      context: context,
-                                      builder: (ctx) => AlertDialog(
-                                        title: Text('تأكيد', style: TextStyle()),
-                                        content: Text('هل تريد حذف بيانات التسجيل حتى تتمكن من الاختبار مرة أخرى؟', style: TextStyle()),
-                                        actions: [
-                                          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('إلغاء', style: TextStyle())),
-                                          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('حذف', style: TextStyle(color: Colors.red))),
-                                        ],
-                                      ),
-                                    );
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.end,
+                            //   children: [
+                            //     IconButton(
+                            //       tooltip: 'حذف بيانات التسجيل',
+                            //       icon: Icon(Icons.delete_forever, color: Colors.brown[700]),
+                            //       onPressed: () async {
+                            //         final confirm = await showDialog<bool>(
+                            //           context: context,
+                            //           builder: (ctx) => AlertDialog(
+                            //             title: Text('تأكيد', style: TextStyle()),
+                            //             content: Text('هل تريد حذف بيانات التسجيل حتى تتمكن من الاختبار مرة أخرى؟', style: TextStyle()),
+                            //             actions: [
+                            //               TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('إلغاء', style: TextStyle())),
+                            //               TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('حذف', style: TextStyle(color: Colors.red))),
+                            //             ],
+                            //           ),
+                            //         );
 
-                                    if (confirm == true) {
-                                      try {
-                                        final db = await DatabaseService.instance.database;
-                                        await db.delete('user_profile', where: 'id = ?', whereArgs: [1]);
-                                        await AuthStorage.deleteToken();
-                                      } catch (e) {
-                                        // ignore or show error
-                                      }
+                            //         if (confirm == true) {
+                            //           try {
+                            //             final db = await DatabaseService.instance.database;
+                            //             await db.delete('user_profile', where: 'id = ?', whereArgs: [1]);
+                            //             await AuthStorage.deleteToken();
+                            //           } catch (e) {
+                            //             // ignore or show error
+                            //           }
 
-                                      // Navigate to register page to allow re-testing
-                                      if (mounted) {
-                                        Navigator.of(context).pushReplacementNamed('/register');
-                                      }
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
+                            //           // Navigate to register page to allow re-testing
+                            //           if (mounted) {
+                            //             Navigator.of(context).pushReplacementNamed('/register');
+                            //           }
+                            //         }
+                            //       },
+                            //     ),
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 8),
                             // Then the original page content
                             (isLandscape
                                 ? _buildLandscapeContent(cardHeight!)

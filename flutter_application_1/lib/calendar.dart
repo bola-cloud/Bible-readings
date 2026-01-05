@@ -152,6 +152,10 @@ class _CalendarState extends State<Calendar> {
                               firstDay: DateTime(2026, 1, 1),
                               lastDay: endDay,
                               focusedDay: DateTime(2026, month, 1),
+                              // Add this property to remove the focus day highlight
+                              calendarStyle: CalendarStyle(
+                                isTodayHighlighted: false,
+                              ),
                               onDaySelected: _onDaySelected,
                               onPageChanged: (focusedDay) {
                                 setState(() {
