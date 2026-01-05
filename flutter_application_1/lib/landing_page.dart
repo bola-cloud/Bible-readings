@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/database_service.dart';
 import 'package:flutter_application_1/services/auth_storage.dart';
 
@@ -21,6 +22,10 @@ class _LandingPageState extends State<LandingPage>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
 
     // Fade animation
     _controller = AnimationController(
