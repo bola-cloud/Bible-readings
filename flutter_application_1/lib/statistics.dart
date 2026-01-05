@@ -18,7 +18,12 @@ class _StatisticsState extends State<Statistics> {
   bool _isLoading = true;
   double _percentage = 0.0;
 
-  List _rowPercentages = [0.0, 0.0, 0.0, 0.0]; // القداس, الاجتماع, المذبح العائلى
+  List _rowPercentages = [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+  ]; // القداس, الاجتماع, المذبح العائلى
 
   @override
   void initState() {
@@ -33,7 +38,7 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Future _calculateStatistics() async {
-    final now = DateTime(2026,DateTime.now().month,DateTime.now().day);
+    final now = DateTime(2026, DateTime.now().month, DateTime.now().day);
     await _databaseService.feedMonthData();
 
     // 1️⃣ Opened days
@@ -127,7 +132,10 @@ class _StatisticsState extends State<Statistics> {
             appBar: AppBar(
               title: Text(
                 "أنجازاتى",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.brown[900]),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.brown[900],
+                ),
               ),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),

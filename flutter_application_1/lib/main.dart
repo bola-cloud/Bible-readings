@@ -10,12 +10,12 @@ import 'package:flutter_application_1/landing_page.dart';
 import 'package:flutter_application_1/manner.dart';
 import 'package:flutter_application_1/masba7_3a2ly.dart';
 import 'package:flutter_application_1/monthly_data.dart';
+import 'package:flutter_application_1/profile_page.dart';
 import 'package:flutter_application_1/reading.dart';
 import 'package:flutter_application_1/register.dart';
 import 'package:flutter_application_1/saint.dart';
 import 'package:flutter_application_1/statistics.dart';
 import 'package:flutter_application_1/sujood_hour.dart';
-import 'package:flutter_application_1/profile_page.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
@@ -38,9 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bible Readings',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
+      theme: ThemeData(primarySwatch: Colors.grey),
       // Use `home` so we render the correct initial screen directly.
       home: const LandingPage(),
       routes: {

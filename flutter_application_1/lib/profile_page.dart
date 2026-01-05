@@ -426,10 +426,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Navigator.of(ctx).pop();
               Navigator.of(ctx).pop();
             },
-            child: Text(
-              'حسناً',
-              style: TextStyle(color: Colors.brown[900]),
-            ),
+            child: Text('حسناً', style: TextStyle(color: Colors.brown[900])),
           ),
         ],
       ),

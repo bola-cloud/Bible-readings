@@ -45,12 +45,12 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
   ];
 
   final List<IconData> examinationIcons = [
-  Icons.person_search,      // ١- اطلب حضور الله (Ask for God's presence)
-  Icons.emoji_emotions,     // ٢- قُل شكرًا (Say thanks)
-  Icons.timeline,           // ٣- راجِع يومك (Review your day)
-  Icons.handshake,          // ٤- اطلب الغفران (Ask for forgiveness)
-  Icons.directions_run,     // ٥- خُد قرار صغير للغد (Take a small decision)
-];
+    Icons.person_search, // ١- اطلب حضور الله (Ask for God's presence)
+    Icons.emoji_emotions, // ٢- قُل شكرًا (Say thanks)
+    Icons.timeline, // ٣- راجِع يومك (Review your day)
+    Icons.handshake, // ٤- اطلب الغفران (Ask for forgiveness)
+    Icons.directions_run, // ٥- خُد قرار صغير للغد (Take a small decision)
+  ];
 
   @override
   void initState() {
@@ -159,7 +159,7 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
                               0.88,
                               1.0,
                             );
-                      
+
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 12.0,
@@ -190,9 +190,8 @@ class _F7sAlDamerState extends State<F7sAlDamer> {
                                               shape: BoxShape.circle,
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.black.withOpacity(
-                                                    0.05,
-                                                  ),
+                                                  color: Colors.black
+                                                      .withOpacity(0.05),
                                                   blurRadius: 4,
                                                   offset: Offset(0, 2),
                                                 ),

@@ -190,7 +190,7 @@ class _SaintState extends State<Saint> {
                                   final double distance = (_page - index).abs();
                                   final double scale = (1 - (distance * 0.12))
                                       .clamp(0.88, 1.0);
-                            
+
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 12.0,
@@ -202,7 +202,9 @@ class _SaintState extends State<Saint> {
                                       child: Card(
                                         elevation: 6,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(24),
+                                          borderRadius: BorderRadius.circular(
+                                            24,
+                                          ),
                                         ),
                                         color: cardBackground,
                                         child: Padding(

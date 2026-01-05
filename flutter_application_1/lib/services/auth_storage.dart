@@ -18,4 +18,3 @@ class AuthStorage {
     await sp.remove(_keyToken);
   }
 }
-

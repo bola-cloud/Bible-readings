@@ -11,39 +11,39 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
   final List<Map<String, String>> _steps = const [
     {
       'title': '١ - اختيار مكان ثابت في البيت',
-      'body': 'اختَر مكانًا هادئًا ونظيفًا — ركن صغير فيه صليب، أيقونة، صورة للرب، شمعة وكتاب مقدس.'
+      'body':
+          'اختَر مكانًا هادئًا ونظيفًا — ركن صغير فيه صليب، أيقونة، صورة للرب، شمعة وكتاب مقدس.',
     },
     {
       'title': '٢ - تحديد وقت ثابت',
-      'body': 'مثل بعد العشاء أو قبل النوم عشان يبقى عادة منتظمة لكل الأسرة.'
+      'body': 'مثل بعد العشاء أو قبل النوم عشان يبقى عادة منتظمة لكل الأسرة.',
     },
     {
       'title': '٣ - تجهيز الأدوات',
-      'body': 'الكتاب المقدس، ترانيم، دفتر صغير لتدوين الطلبات أو التأملات.'
+      'body': 'الكتاب المقدس، ترانيم، دفتر صغير لتدوين الطلبات أو التأملات.',
     },
     {
       'title': '٤ - بداية بالصلاة الافتتاحية',
-      'body': '"باسم الآب والابن والروح القدس، إله واحد آمين."\nصلاة قصيرة يشارك فيها أحد أفراد الأسرة (مثلاً: “يا رب بارك اجتماعنا وافتح أذهاننا لكلمتك”).'
+      'body':
+          '"باسم الآب والابن والروح القدس، إله واحد آمين."\nصلاة قصيرة يشارك فيها أحد أفراد الأسرة (مثلاً: “يا رب بارك اجتماعنا وافتح أذهاننا لكلمتك”).',
     },
     {
       'title': '٥ - قراءة نص كتابي قصير',
-      'body': 'ممكن يكون من إنجيل اليوم أو حسب خطة القراءة المنتظمة.'
+      'body': 'ممكن يكون من إنجيل اليوم أو حسب خطة القراءة المنتظمة.',
     },
     {
       'title': '٦ - فكرة وتأمل بسيط',
-      'body': 'تعليق قصير من الأب أو الأم أو أحد الأولاد عن معنى النص.\nسؤال للتأمل: “إيه اللي ربنا عاوز يقوله لي النهارده؟”'
+      'body':
+          'تعليق قصير من الأب أو الأم أو أحد الأولاد عن معنى النص.\nسؤال للتأمل: “إيه اللي ربنا عاوز يقوله لي النهارده؟”',
     },
     {
       'title': '٧ - ترنيمة أو مزمور',
-      'body': 'ممكن ترنيمة يعرفها الجميع أو مزمور'
+      'body': 'ممكن ترنيمة يعرفها الجميع أو مزمور',
     },
-    {
-      'title': '٨ - وقت صلاة حرة',
-      'body': 'كل فرد يقول طلبة أو شكر بسيط'
-    },
+    {'title': '٨ - وقت صلاة حرة', 'body': 'كل فرد يقول طلبة أو شكر بسيط'},
     {
       'title': '٩ - الصلاة الختامية',
-      'body': 'ممكن تكون “أبانا الذي...” أو أي صلاة محفوظة للأسرة.'
+      'body': 'ممكن تكون “أبانا الذي...” أو أي صلاة محفوظة للأسرة.',
     },
   ];
 
@@ -114,10 +114,15 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
         alignment: Alignment.center,
         child: Card(
           elevation: 6,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           color: cardColor,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 18.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14.0,
+              vertical: 18.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -127,20 +132,35 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 4, offset: Offset(0,2))],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Center(child: Icon(icon, color: Colors.brown)),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   step['title'] ?? '',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: titleColor),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: titleColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   step['body'] ?? '',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: bodyColor, height: 1.6),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: bodyColor,
+                    height: 1.6,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -172,7 +192,11 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
           ),
           title: Text(
             'خطوات صلاة المذبح العائلي',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.brown[900]),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: Colors.brown[900],
+            ),
           ),
         ),
         body: Stack(
@@ -188,13 +212,20 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
             Container(color: Colors.white.withOpacity(0.30)),
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 16.0,
+                ),
                 child: Column(
                   children: [
                     const SizedBox(height: 8),
                     Text(
                       'صلّوا معًا كأسرة بطريقة بسيطة ومنظمة — اجعلوها عادة محبة.',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.brown[700]),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.brown[700],
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
@@ -207,7 +238,9 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                           itemCount: _steps.length,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: isWide ? 12 : 10),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isWide ? 12 : 10,
+                              ),
                               child: _buildCard(context, _steps[index], index),
                             );
                           },
@@ -226,7 +259,9 @@ class _Masba73a2lyState extends State<Masba73a2ly> {
                             width: ((_page.round() == i) ? 16 : 8).toDouble(),
                             height: 8,
                             decoration: BoxDecoration(
-                              color: (_page.round() == i) ? active : Colors.grey,
+                              color: (_page.round() == i)
+                                  ? active
+                                  : Colors.grey,
                               borderRadius: BorderRadius.circular(8),
                             ),
                           );

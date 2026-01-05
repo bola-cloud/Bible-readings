@@ -175,7 +175,7 @@ class _MannerState extends State<Manner> {
                                   final double distance = (_page - index).abs();
                                   final double scale = (1 - (distance * 0.12))
                                       .clamp(0.88, 1.0);
-                            
+
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 12.0,
@@ -187,7 +187,9 @@ class _MannerState extends State<Manner> {
                                       child: Card(
                                         elevation: 6,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(24),
+                                          borderRadius: BorderRadius.circular(
+                                            24,
+                                          ),
                                         ),
                                         color: cardBackground,
                                         child: Padding(
@@ -235,7 +237,8 @@ class _MannerState extends State<Manner> {
                                                     stage['body'] ?? '',
                                                     style: bodyTextStyle,
                                                     textAlign: TextAlign.center,
-                                                    textDirection: TextDirection.rtl,
+                                                    textDirection:
+                                                        TextDirection.rtl,
                                                   ),
                                                 ),
                                               ),
@@ -341,8 +344,7 @@ class _MannerState extends State<Manner> {
                                                       "تم الحفظ",
                                                       textAlign:
                                                           TextAlign.center,
-                                                      style:
-                                                          TextStyle(),
+                                                      style: TextStyle(),
                                                     ),
                                                     duration: Duration(
                                                       seconds: 1,

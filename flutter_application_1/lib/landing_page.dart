@@ -164,10 +164,7 @@ class _LandingPageState extends State<LandingPage>
           children: [
             Text(
               "Developed by:",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             Text(
@@ -187,10 +184,7 @@ class _LandingPageState extends State<LandingPage>
         const SizedBox(height: 12),
 
         // Footer note
-        Text(
-          "Made with ❤️ for God’s glory",
-          style: TextStyle(fontSize: 13),
-        ),
+        Text("Made with ❤️ for God’s glory", style: TextStyle(fontSize: 13)),
       ],
     );
   }
@@ -238,10 +232,7 @@ class _LandingPageState extends State<LandingPage>
                 children: [
                   Text(
                     "تطبيق تأملاتى",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
@@ -257,10 +248,7 @@ class _LandingPageState extends State<LandingPage>
                   const SizedBox(height: 14),
                   Text(
                     "Developed by:",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),

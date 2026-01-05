@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../models/profile.dart';
 import 'auth_storage.dart';
 
@@ -17,7 +19,10 @@ class ApiService {
   static Future<RegisterResponse> register(Map<String, dynamic> payload) async {
     final resp = await http.post(
       Uri.parse('$baseUrl/api/register'),
-      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: jsonEncode(payload),
     );
 
@@ -40,7 +45,7 @@ class ApiService {
           profile = Profile.fromJson(d['user'] as Map<String, dynamic>);
         } else {
           try {
-            profile = Profile.fromJson(d as Map<String, dynamic>);
+            profile = Profile.fromJson(d);
           } catch (_) {
             profile = null;
           }
@@ -77,7 +82,11 @@ class ApiService {
 
     final resp = await http.put(
       Uri.parse('$baseUrl/api/profile'),
-      headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json', 'Accept': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: jsonEncode(profile.toJson()),
     );
 
@@ -90,4 +99,3 @@ class ApiService {
     throw Exception('Update profile failed: ${resp.statusCode}');
   }
 }
-

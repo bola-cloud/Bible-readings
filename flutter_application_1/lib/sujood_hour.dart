@@ -133,7 +133,9 @@ class _SujoodHourState extends State<SujoodHour> {
                       ),
                     ],
                   ),
-                  child: Center(child: Icon(adorationIcons[index], color: Colors.brown)),
+                  child: Center(
+                    child: Icon(adorationIcons[index], color: Colors.brown),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -267,7 +269,9 @@ class _SujoodHourState extends State<SujoodHour> {
                             width: ((_page.round() == i) ? 16 : 8).toDouble(),
                             height: 8,
                             decoration: BoxDecoration(
-                              color: (_page.round() == i) ? active : Colors.grey,
+                              color: (_page.round() == i)
+                                  ? active
+                                  : Colors.grey,
                               borderRadius: BorderRadius.circular(8),
                             ),
                           );

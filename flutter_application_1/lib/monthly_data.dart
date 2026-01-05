@@ -121,7 +121,9 @@ class _MonthlyDataState extends State<MonthlyData>
         _isAnimating = true;
       });
 
-      await _animationController!.reverse(from: MediaQuery.of(context).size.width);
+      await _animationController!.reverse(
+        from: MediaQuery.of(context).size.width,
+      );
 
       setState(() {
         displayedMonth = DateTime(
@@ -308,7 +310,10 @@ class _MonthlyDataState extends State<MonthlyData>
                 opacity: 1 - opacity,
                 child: Text(
                   "${getArabicMonthName(displayedMonth.month)} ",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.brown[900]),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown[900],
+                  ),
                 ),
               ),
               leading: IconButton(
@@ -672,12 +677,10 @@ class _MonthlyDataState extends State<MonthlyData>
                                                       ),
                                                       label: Text(
                                                         "حفظ",
-                                                        style:
-                                                            TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                       style: ElevatedButton.styleFrom(
                                                         backgroundColor:

@@ -432,8 +432,7 @@ class _ReadingState extends State<Reading> {
                                                         "تم الحفظ",
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style:
-                                                            TextStyle(),
+                                                        style: TextStyle(),
                                                       ),
                                                       duration: Duration(
                                                         seconds: 1,

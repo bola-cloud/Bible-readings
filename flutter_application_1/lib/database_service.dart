@@ -27,7 +27,11 @@ class DatabaseService {
   final String _attendanceSaintStagesColumnName = "saint_stages";
   final String _attendanceFadilaImagePathColumnName = "fadila_img";
   final String _attendanceSaintImagePathColumnName = "saint_img";
-  final DateTime endDate = DateTime(2026,DateTime.now().month,DateTime.now().day);
+  final DateTime endDate = DateTime(
+    2026,
+    DateTime.now().month,
+    DateTime.now().day,
+  );
 
   DatabaseService._constructor();
 
@@ -87,27 +91,36 @@ class DatabaseService {
   }
 
   Future<void> feedMonthData() async {
-    for(int i=1; i<=endDate.month; i++){
+    for (int i = 1; i <= endDate.month; i++) {
       List<bool>? toggles = await getMonthAttendance(i);
-      if(toggles == null){
-        final weeks = getWeeksInMonth(DateTime(2026,i));
+      if (toggles == null) {
+        final weeks = getWeeksInMonth(DateTime(2026, i));
         int totalCells = (weeks.length + 1) * 5; // 4 rows total
-        List<bool> togglesList = List.generate(totalCells - (weeks.length + 1), (_) => false);
+        List<bool> togglesList = List.generate(
+          totalCells - (weeks.length + 1),
+          (_) => false,
+        );
         await addAttendance(i, togglesList);
       }
     }
   }
 
-  List<DateTime> getWeeksInMonth(DateTime month, {int weekStart = DateTime.sunday}){
+  List<DateTime> getWeeksInMonth(
+    DateTime month, {
+    int weekStart = DateTime.sunday,
+  }) {
     List<DateTime> weeks = [];
 
     DateTime firstOfMonth = DateTime(month.year, month.month, 1);
     DateTime lastOfMonth = DateTime(month.year, month.month + 1, 0);
 
     // Start from the weekStart before or equal to the first day of the month
-    DateTime currentWeekStart = firstOfMonth.subtract(Duration(days: (firstOfMonth.weekday - weekStart + 7) % 7));
+    DateTime currentWeekStart = firstOfMonth.subtract(
+      Duration(days: (firstOfMonth.weekday - weekStart + 7) % 7),
+    );
 
-    while (currentWeekStart.isBefore(lastOfMonth) || currentWeekStart.isAtSameMomentAs(lastOfMonth)) {
+    while (currentWeekStart.isBefore(lastOfMonth) ||
+        currentWeekStart.isAtSameMomentAs(lastOfMonth)) {
       weeks.add(currentWeekStart);
       currentWeekStart = currentWeekStart.add(Duration(days: 7));
     }
@@ -153,34 +166,41 @@ class DatabaseService {
     final db = await database;
     final now = DateTime.now().toIso8601String();
 
-    await db.rawInsert('''
+    await db.rawInsert(
+      '''
       INSERT OR REPLACE INTO user_profile (
         id, name, email, phone, church, school_year, sponsor,
         favorite_color, favorite_program, favorite_game, favorite_hymn, hobby, created_at
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
-    ''', [
-      1,
-      profile['name'] ?? '',
-      profile['email'] ?? '',
-      profile['phone'] ?? '',
-      profile['church'] ?? '',
-      profile['school_year'] ?? '',
-      profile['sponsor'] ?? '',
-      profile['favorite_color'] ?? '',
-      profile['favorite_program'] ?? '',
-      profile['favorite_game'] ?? '',
-      profile['favorite_hymn'] ?? '',
-      profile['hobby'] ?? '',
-      now,
-    ]);
+    ''',
+      [
+        1,
+        profile['name'] ?? '',
+        profile['email'] ?? '',
+        profile['phone'] ?? '',
+        profile['church'] ?? '',
+        profile['school_year'] ?? '',
+        profile['sponsor'] ?? '',
+        profile['favorite_color'] ?? '',
+        profile['favorite_program'] ?? '',
+        profile['favorite_game'] ?? '',
+        profile['favorite_hymn'] ?? '',
+        profile['hobby'] ?? '',
+        now,
+      ],
+    );
   }
 
   // Return the saved user profile (or null)
   Future<Map<String, dynamic>?> getUserProfile() async {
     final db = await database;
-    final result = await db.query('user_profile', where: 'id = ?', whereArgs: [1]);
+    final result = await db.query(
+      'user_profile',
+      where: 'id = ?',
+      whereArgs: [1],
+    );
     if (result.isEmpty) return null;
     return result.first.map((k, v) => MapEntry(k, v));
   }
@@ -188,7 +208,9 @@ class DatabaseService {
   // Check if a user profile exists locally
   Future<bool> isUserRegistered() async {
     final db = await database;
-    final countRes = await db.rawQuery('SELECT COUNT(*) as c FROM user_profile');
+    final countRes = await db.rawQuery(
+      'SELECT COUNT(*) as c FROM user_profile',
+    );
     final count = Sqflite.firstIntValue(countRes) ?? 0;
     return count > 0;
   }

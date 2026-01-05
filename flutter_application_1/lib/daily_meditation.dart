@@ -250,7 +250,9 @@ class _DailyMeditationState extends State<DailyMeditation> {
                             width: ((_page.round() == i) ? 16 : 8).toDouble(),
                             height: 8,
                             decoration: BoxDecoration(
-                              color: (_page.round() == i) ? active : Colors.grey,
+                              color: (_page.round() == i)
+                                  ? active
+                                  : Colors.grey,
                               borderRadius: BorderRadius.circular(8),
                             ),
                           );
