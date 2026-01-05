@@ -205,10 +205,11 @@ class _LandingPageState extends State<LandingPage>
               children: [
                 ScaleTransition(
                   scale: _crossAnimation,
-                  child: const Icon(
-                    Icons.church,
-                    size: 80,
-                    color: Colors.black,
+                  child: Image.asset(
+                    'assets/icons/al_mktb.jpg', // Your image path
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.contain,
                   ),
                 ),
                 const SizedBox(height: 14),
