@@ -137,40 +137,40 @@ class _StatisticsState extends State<Statistics> {
               ),
               backgroundColor: Colors.transparent,
               centerTitle: true,
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  iconSize: 30,
-                  tooltip: "حذف البيانات",
-                  onPressed: () async {
-                    bool confirm = await showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: Text("تأكيد الحذف", textDirection: TextDirection.rtl,),
-                        content: Text("هل تريد حذف كل البيانات؟", textDirection: TextDirection.rtl),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(ctx, false),
-                            child: Text("لا"),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(ctx, true),
-                            child: Text("نعم"),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirm) {
-                      await _databaseService.close();
-                      await deleteDatabaseIfExists();
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      await _calculateStatistics(); // reload statistics after deletion
-                    }
-                  },
-                ),
-              ],
+              // actions: [
+              //   IconButton(
+              //     icon: Icon(Icons.delete),
+              //     iconSize: 30,
+              //     tooltip: "حذف البيانات",
+              //     onPressed: () async {
+              //       bool confirm = await showDialog(
+              //         context: context,
+              //         builder: (ctx) => AlertDialog(
+              //           title: Text("تأكيد الحذف", textDirection: TextDirection.rtl,),
+              //           content: Text("هل تريد حذف كل البيانات؟", textDirection: TextDirection.rtl),
+              //           actions: [
+              //             TextButton(
+              //               onPressed: () => Navigator.pop(ctx, false),
+              //               child: Text("لا"),
+              //             ),
+              //             TextButton(
+              //               onPressed: () => Navigator.pop(ctx, true),
+              //               child: Text("نعم"),
+              //             ),
+              //           ],
+              //         ),
+              //       );
+              //       if (confirm) {
+              //         await _databaseService.close();
+              //         await deleteDatabaseIfExists();
+              //         setState(() {
+              //           _isLoading = true;
+              //         });
+              //         await _calculateStatistics(); // reload statistics after deletion
+              //       }
+              //     },
+              //   ),
+              // ],
             ),
             body: Stack(
               children: [

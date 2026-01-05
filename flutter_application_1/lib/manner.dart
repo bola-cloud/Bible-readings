@@ -283,7 +283,7 @@ class _MannerState extends State<Manner> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            color: Colors.white.withOpacity(0.95),
+                            color: cardBackground,
                             child: Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Column(
